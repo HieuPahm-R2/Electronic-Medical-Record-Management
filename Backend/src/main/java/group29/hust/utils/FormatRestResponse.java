@@ -1,4 +1,4 @@
 package group29.hust.utils;
 
-public class FormatResponse {
+public class FormatRestResponse {
 }

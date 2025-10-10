@@ -1,1 +1,34 @@
-spring.application.name=hust
+spring:
+  datasource:
+    username: root
+    password: 12102005
+    url: jdbc:mysql://localhost:3306/emrdb
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate: format_sql:true
+  application:
+    name: Loi QuyPh
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+group29:
+  jwt:
+    base64-secret: qoAEABDke07+AVLepXB4aCMtsT0wMAqR5x2VFyldsnx6e75YQkJH2UcZKTjEyoNgG71SBCXfq5N6NVZxWOfsHQ==
+    access-token-validity-in-seconds: 8640
+    refresh-token-validity-in-seconds: 864000
+api:
+  prefix: /api/v1
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    default-locale: en
+server:
+  port: 8085
+#config upload file
+hieupham:
+  upload-file:
+    base-uri: file:///D:/WhatWeDone-Will/storage/

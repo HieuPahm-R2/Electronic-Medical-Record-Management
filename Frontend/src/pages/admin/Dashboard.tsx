@@ -1,10 +1,9 @@
-import React from 'react'
 import { useState } from "react";
 
-import { Card, Col, Row, Typography, Tooltip, Progress, Upload, message, Button, Timeline, Radio } from "antd";
-import { ToTopOutlined, MenuUnfoldOutlined, RightOutlined, } from "@ant-design/icons";
+import { Card, Col, Row, Typography, Tooltip, Progress, Button, Timeline, Radio } from "antd";
+import { MenuUnfoldOutlined } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
-import LineChart from '../../components/admin/chart/lineChart';
+import LineChart from '../../components/chart/lineChart';
 
 import ava1 from "@/assets/images/logo-shopify.svg";
 import ava2 from "../../assets/images/logo-atlassian.svg";
@@ -18,8 +17,6 @@ import team4 from "../../assets/images/team-4.jpg";
 
 const AdminHome = () => {
     const { Title, Text } = Typography;
-
-    const onChange = (e) => console.log(`radio checked:${e.target.value}`);
 
     const [reverse, setReverse] = useState(false);
     const dollor = [
@@ -237,7 +234,6 @@ const AdminHome = () => {
         },
     ];
 
-
     return (
         <>
             <div className="layout-content">
@@ -292,7 +288,7 @@ const AdminHome = () => {
                                 </div>
                                 <div className="ant-filtertabs">
                                     <div className="antd-pro-pages-dashboard-analysis-style-salesExtra">
-                                        <Radio.Group onChange={onChange} defaultValue="a">
+                                        <Radio.Group defaultValue="a">
                                             <Radio.Button value="a">ALL</Radio.Button>
                                             <Radio.Button value="b">ONLINE</Radio.Button>
                                             <Radio.Button value="c">STORES</Radio.Button>
