@@ -12,12 +12,14 @@ const LayoutAdmin = () => {
     const [visible, setVisible] = useState(false);
     const [sidenavColor, setSideNavColor] = useState("#1890ff");
     const isAdminRoute = window.location.pathname.startsWith('/admin')
-    const user = useSelector(state => state.account.user)
-    const userRole = user.role.name
+    const user = useSelector((state: any) => state.account.user);
+    const userRole = user?.role?.name;
+    const [fixed, setFixed] = useState(false);
+
 
     const openDrawer = () => setVisible(!visible);
-    const handleSidenavColor = (color) => setSideNavColor(color);
-    const handleFixedNavbar = (type) => setFixed(type);
+    const handleSidenavColor = (color: string) => setSideNavColor(color);
+    const handleFixedNavbar = (type: boolean) => setFixed(type);
 
     let { pathname } = useLocation();
     pathname = pathname.replace("/", "");
@@ -26,7 +28,7 @@ const LayoutAdmin = () => {
             className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""
                 } `}
         >
-            {isAdminRoute && userRole === 'ADMIN' &&
+            {isAdminRoute &&
                 <Drawer
                     title={false}
                     placement={"right"}
@@ -51,7 +53,7 @@ const LayoutAdmin = () => {
                     </Layout>
                 </Drawer>
             }
-            {isAdminRoute && userRole === 'ADMIN' &&
+            {isAdminRoute &&
                 <Sider
                     breakpoint="lg"
                     collapsedWidth="0"
@@ -70,7 +72,7 @@ const LayoutAdmin = () => {
 
             <Layout>
                 <Affix>
-                    <AntHeader className={`${"ant-header-fixed"}`}>
+                    <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
                         <HeaderAdmin
                             onPress={openDrawer}
                             name={pathname}
@@ -84,7 +86,7 @@ const LayoutAdmin = () => {
                 <Content className="content-ant">
                     <Outlet />
                 </Content>
-                {isAdminRoute && userRole === 'ADMIN' &&
+                {isAdminRoute &&
                     <FooterAdmin />
                 }
             </Layout>
@@ -92,4 +94,4 @@ const LayoutAdmin = () => {
     )
 }
 
-export default MadContent
+export default LayoutAdmin

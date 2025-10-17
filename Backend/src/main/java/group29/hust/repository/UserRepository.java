@@ -1,7 +1,7 @@
 package group29.hust.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import group29.hust.model.entites.User;
+import group29.hust.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);

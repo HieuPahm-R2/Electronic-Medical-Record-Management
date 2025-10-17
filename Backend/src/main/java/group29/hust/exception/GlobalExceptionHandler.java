@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import group29.hust.response.RestResponse;
+import group29.hust.dtos.response.RestResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

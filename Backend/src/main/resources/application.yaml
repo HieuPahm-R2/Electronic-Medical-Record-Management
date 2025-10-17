@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: 12102005
-    url: jdbc:mysql://localhost:3306/emrdb
+    url: jdbc:mysql://localhost:3307/HustEt3260
   jpa:
     hibernate:
       ddl-auto: update
@@ -10,7 +10,7 @@ spring:
     properties:
       hibernate: format_sql:true
   application:
-    name: Loi QuyPh
+    name: Quan Ly Ben An
   servlet:
     multipart:
       max-file-size: 1000MB

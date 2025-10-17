@@ -1,10 +1,10 @@
 package group29.hust.service;
 
 import group29.hust.exception.BadActionException;
-import group29.hust.model.dtos.PaginationResultDTO;
-import group29.hust.model.dtos.UpdateUserDTO;
-import group29.hust.model.dtos.UserDTO;
-import group29.hust.model.entites.User;
+import group29.hust.dtos.response.PaginationResultDTO;
+import group29.hust.dtos.UpdateUserDTO;
+import group29.hust.dtos.UserDTO;
+import group29.hust.model.User;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
