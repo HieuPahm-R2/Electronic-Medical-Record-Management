@@ -20,13 +20,16 @@ public class WebSecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration, AuthEntryPointConfig authEntryPointConfig)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http)
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointConfig authEntryPointConfig)
             throws Exception {
         String[] whileList = {
                 "/", "/api/v1/", "/ws/**",
@@ -44,8 +47,8 @@ public class WebSecurityConfiguration {
                                 .requestMatchers(whileList).permitAll()
 
                                 .anyRequest().permitAll())
-//                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-//                        .authenticationEntryPoint(authEntryPointConfig))
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(authEntryPointConfig))
                 // Default config
 
                 .formLogin(AbstractHttpConfigurer::disable)

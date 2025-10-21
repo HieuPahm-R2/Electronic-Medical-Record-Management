@@ -19,4 +19,11 @@ public interface IUserService {
     public void delete(Long id) throws BadActionException;
 
     public UpdateUserDTO update(User data) throws BadActionException;
+
+    public User handleGetUserByUsername(String username);
+
+    // Authenticate
+    public User fetchWithTokenAndEmail(String token, String email);
+
+    public void saveRefreshToken(String token, String email);
 }

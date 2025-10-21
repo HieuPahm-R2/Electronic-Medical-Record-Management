@@ -5,12 +5,12 @@ spring:
     url: jdbc:mysql://localhost:3307/HustEt3260
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate: format_sql:true
   application:
-    name: Quan Ly Ben An
+    name: Quan-Ly-Benh-An
   servlet:
     multipart:
       max-file-size: 1000MB
