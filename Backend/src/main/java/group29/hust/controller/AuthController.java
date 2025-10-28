@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}")
 public class AuthController {
-    @Value("${anihoyo.jwt.refresh-token-validity-in-seconds}")
+    @Value("${group29.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpire;
 
     private final IUserService userService;

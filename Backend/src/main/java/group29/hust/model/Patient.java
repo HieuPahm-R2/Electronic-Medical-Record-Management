@@ -2,15 +2,10 @@ package group29.hust.model;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +20,15 @@ import lombok.Setter;
 public class Patient extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(length = 30)
+    @Column(name = "patient_code", length = 30)
     private String patientCode;
 
     @Column(length = 50, nullable = false)
     private String fullName;
 
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Column(length = 100, columnDefinition = "varchar(100) default ''")
@@ -66,7 +62,35 @@ public class Patient extends BaseEntity {
 
     @Column(length = 35, nullable = false)
     private String relativePhone;
+    // --- Relationships ---
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MedicalExam> medicalExaminations;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VitalSign> vitalSigns;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BloodTest> bloodTests;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClinicalInfo> clinicalInfos;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Radiology> radiologies;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<DiagnoseFinal> diagnoseFinals;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
+    @Override
+   protected void onCreate() {
+        super.onCreate();
+        this.generatePatientCode();
+    }
     public void generatePatientCode() {
         if (this.patientCode == null || this.patientCode.isEmpty()) {
             String prefix = String.valueOf(Year.now().getValue());

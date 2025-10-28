@@ -40,13 +40,12 @@ public class WebSecurityConfiguration {
                 "/swagger-ui.html"
         };
         http
-                .csrf(c -> c.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) // This will use the CorsConfigure bean
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers(whileList).permitAll()
-
-                                .anyRequest().permitAll())
+                                .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(authEntryPointConfig))
                 // Default config

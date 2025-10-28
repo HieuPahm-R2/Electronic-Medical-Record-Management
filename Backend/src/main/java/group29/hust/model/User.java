@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "users")
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +30,14 @@ public class User extends BaseEntity {
     @NotBlank(message = "Password not be blank..")
     private String password;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
 
-    @ManyToOne
+    // relationships: ---
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+    private Patient patient; //
 }

@@ -34,10 +34,10 @@ public class AuthorityIntercepter implements HandlerInterceptor {
         System.out.println(">>> httpMethod= " + httpMethod);
         System.out.println(">>> requestURI= " + requestURI);
         // Check Permission
-        String email = SecurityUtils.getCurrentUserLogin().isPresent() == true
+        String email = SecurityUtils.getCurrentUserLogin().isPresent()
                 ? SecurityUtils.getCurrentUserLogin().get()
                 : "";
-        if (email != null && !email.isEmpty()) {
+        if (!email.isEmpty()) {
             User user = this.userService.handleGetUserByUsername(email);
             if (user != null) {
                 Role role = user.getRole();
@@ -45,7 +45,7 @@ public class AuthorityIntercepter implements HandlerInterceptor {
                     List<Permission> permissions = role.getPermissions();
                     boolean isAccepted = permissions.stream()
                             .anyMatch(item -> item.getApiPath().equals(path) && item.getMethod().equals(httpMethod));
-                    if (isAccepted == false) {
+                    if (!isAccepted) {
                         throw new ForbidenException("You don't have permission to access");
                     }
                 }

@@ -5,7 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3307/HustEt3260
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate: format_sql:true

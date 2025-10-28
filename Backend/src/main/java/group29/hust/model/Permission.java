@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import group29.hust.utils.SecurityUtils;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -57,17 +58,17 @@ public class Permission {
 
     @PrePersist
     public void handleBeforeCreate() {
-        // this.createdBy = SecurityUtils.getCurrentUserLogin().isPresent() == true
-        // ? SecurityUtils.getCurrentUserLogin().get()
-        // : " ";
+        this.createdBy = SecurityUtils.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : " ";
         this.createdTime = Instant.now();
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
-        // this.updatedBy = SecurityUtils.getCurrentUserLogin().isPresent() == true
-        // ? SecurityUtils.getCurrentUserLogin().get()
-        // : " ";
+        this.updatedBy = SecurityUtils.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtils.getCurrentUserLogin().get()
+                : " ";
         this.updatedTime = Instant.now();
     }
 }

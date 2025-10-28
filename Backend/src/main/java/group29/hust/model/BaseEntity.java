@@ -1,5 +1,6 @@
 package group29.hust.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -14,14 +15,18 @@ import java.time.Instant;
 @Setter
 @MappedSuperclass
 public class BaseEntity {
+
+    @Column(name = "created_at", updatable = false)
     private Instant createdAt;
+
+    @Column(name = "updated_at")
     private Instant updatedAt;
 
     private String createdBy;
     private String updatedBy;
 
     @PrePersist
-    public void onCreate() {
+    protected void onCreate() {
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
     }
