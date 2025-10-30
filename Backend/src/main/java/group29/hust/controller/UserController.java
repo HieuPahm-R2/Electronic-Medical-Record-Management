@@ -1,5 +1,6 @@
 package group29.hust.controller;
 
+import group29.hust.dtos.request.RegisterDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class UserController {
 
     @PostMapping("/add-user")
     @MessageApi("create new account action")
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody User dataUser) throws BadActionException {
+    public ResponseEntity<RegisterDTO> createUser(@Valid @RequestBody User dataUser) throws BadActionException {
         // User accUser = this.userService.handleCreateUser(dataUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.create(dataUser));
     }

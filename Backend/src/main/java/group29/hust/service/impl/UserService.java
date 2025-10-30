@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import group29.hust.dtos.request.RegisterDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,18 +33,18 @@ public class UserService implements IUserService {
     private final ModelMapper modelMapper;
 
     @Override
-    public UserDTO create(User data) throws BadActionException {
+    public RegisterDTO create(User data) throws BadActionException {
         if (this.userRepository.existsByEmail(data.getEmail())) {
             throw new BadActionException("Email đã được sử dụng, hãy thử email khác!");
         }
         if (data.getRole() != null) {
             Optional<Role> res = this.roleRepository.findById(data.getRole().getId());
-            data.setRole(res.isPresent() ? res.get() : null);
+            data.setRole(res.orElse(null));
         }
         String hashPassword = this.passwordEncoder.encode(data.getPassword());
         data.setPassword(hashPassword);
         this.userRepository.save(data);
-        return this.modelMapper.map(data, UserDTO.class);
+        return this.modelMapper.map(data, RegisterDTO.class);
     }
 
     @Override

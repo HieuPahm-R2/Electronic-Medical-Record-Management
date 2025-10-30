@@ -28,9 +28,12 @@ public class RoleService implements IRoleService {
     }
 
     @Override
-    public Role create(Role data) {
+    public Role create(Role data) throws BadActionException {
         List<Long> pers = data.getPermissions().stream().map(item -> item.getId())
                 .collect(Collectors.toList());
+        if (pers.isEmpty()) {
+            throw new BadActionException("Permission not be blank! Please check again!");
+        }
         List<Permission> allPers = this.permissionRepository.findByIdIn(pers);
         data.setPermissions(allPers);
         return this.roleRepository.save(data);
@@ -38,7 +41,7 @@ public class RoleService implements IRoleService {
 
     @Override
     public Role update(Role data) throws BadActionException {
-        if (Long.valueOf(data.getId()) == null || this.roleRepository.findById(data.getId()).isEmpty()) {
+        if (this.roleRepository.findById(data.getId()).isEmpty()) {
             throw new BadActionException("Không tìm thấy bất kỳ thông tin nào, kiểm tra lại?");
         } else {
             Optional<Role> rOptional = this.roleRepository.findById(data.getId());
@@ -58,7 +61,7 @@ public class RoleService implements IRoleService {
     @Override
     public Role fetchById(Long id) throws BadActionException {
         Optional<Role> check = this.roleRepository.findById(id);
-        if (!check.isPresent()) {
+        if (check.isEmpty()) {
             throw new BadActionException("Không tìm thấy dữ liệu!");
         }
         return check.get();

@@ -1,5 +1,6 @@
 package group29.hust.service;
 
+import group29.hust.dtos.request.RegisterDTO;
 import group29.hust.exception.BadActionException;
 import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.dtos.UpdateUserDTO;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface IUserService {
-    public UserDTO create(User data) throws BadActionException;
+    public RegisterDTO create(User data) throws BadActionException;
 
     public UserDTO getInfo(Long id);
 
