@@ -1,6 +1,8 @@
 package group29.hust.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -81,4 +83,22 @@ public class MedicalExam {
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
+
+    @OneToOne(mappedBy = "medicalExam", cascade = CascadeType.ALL)
+    private VitalSign vitalSign;
+
+    @OneToOne(mappedBy = "medicalExam", cascade = CascadeType.ALL)
+    private ClinicalInfo clinicalInfo;
+
+    @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
+    private DiagnoseFinal diagnoseFinal;
+
+    @OneToMany(mappedBy = "medicalExamination", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Radiology> radiologyResults = new ArrayList<>();
+
+    @OneToMany(mappedBy = "medicalExamination",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<BloodTest> bloodTests = new ArrayList<>();
 }

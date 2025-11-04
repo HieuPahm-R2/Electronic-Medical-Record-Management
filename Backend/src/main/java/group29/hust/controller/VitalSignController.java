@@ -1,5 +1,4 @@
 package group29.hust.controller;
-package group29.hust.controller;
 
 import group29.hust.dtos.request.VitalSignDTO;
 import group29.hust.exception.BadActionException;
@@ -39,7 +38,6 @@ public class VitalSignController {
         if (vitalSignDTO.getId() == null) {
             return ResponseEntity.badRequest().build();
         }
-        
         VitalSignDTO updatedVitalSign = vitalSignService.update(vitalSignDTO);
         return ResponseEntity.ok(updatedVitalSign);
     }
@@ -55,17 +53,12 @@ public class VitalSignController {
     @GetMapping("/patient/{patientId}")
     @MessageApi("Get vital signs for a specific patient")
     public ResponseEntity<?> getVitalSignsByPatientId(@PathVariable Long patientId) {
-        // This would require adding a method in the service layer
-        // You can implement this later if needed
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        //e service layer
+        try {
+            return ResponseEntity.ok(vitalSignService.findVitalSignWithPatientId(patientId));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Error in getVitalSignsByPatientId: " + e.getMessage());
+        }
     }
 }
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("${api.prefix}")
-@RequiredArgsConstructor
-public class VitalSignController {
-}

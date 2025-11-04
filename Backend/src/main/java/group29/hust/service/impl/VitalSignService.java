@@ -2,9 +2,10 @@ package group29.hust.service.impl;
 
 import group29.hust.dtos.request.VitalSignDTO;
 import group29.hust.exception.BadActionException;
-import group29.hust.exception.NotFoundException;
+import group29.hust.model.MedicalExam;
 import group29.hust.model.Patient;
 import group29.hust.model.VitalSign;
+import group29.hust.repository.MedicalExamRepository;
 import group29.hust.repository.PatientRepository;
 import group29.hust.repository.VitalSignRepository;
 import group29.hust.service.IVitalSignService;
@@ -20,17 +21,20 @@ public class VitalSignService implements IVitalSignService {
     private final ModelMapper modelMapper;
     private final VitalSignRepository vitalSignRepository;
     private final PatientRepository patientRepository;
+    private final MedicalExamRepository medicalExamRepository;
 
     @Override
     @Transactional
     public VitalSignDTO insert(VitalSignDTO dto) {
         VitalSign vitalSign = modelMapper.map(dto, VitalSign.class);
-        
         // Set patient relationship
         Patient patient = patientRepository.findById(dto.getPatientId())
                 .orElseThrow(() -> new BadActionException("Patient not found with ID: " + dto.getPatientId()));
         vitalSign.setPatient(patient);
-        
+
+        MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExamId())
+                .orElseThrow(() -> new BadActionException("Medical examination not found with ID: " + dto.getMedicalExamId()));
+        vitalSign.setMedicalExam(medicalExam);
         // Save the entity
         VitalSign savedVitalSign = vitalSignRepository.save(vitalSign);
         
@@ -58,8 +62,7 @@ public class VitalSignService implements IVitalSignService {
         
         // Update fields from DTO
         modelMapper.map(dto, vitalSign);
-        
-        // Update patient relationship if it changed
+
         if (dto.getPatientId() != null && 
             (vitalSign.getPatient() == null || !vitalSign.getPatient().getId().equals(dto.getPatientId()))) {
             Patient patient = patientRepository.findById(dto.getPatientId())
@@ -77,7 +80,14 @@ public class VitalSignService implements IVitalSignService {
         if (!vitalSignRepository.existsById(id)) {
             throw new BadActionException("Vital sign not found with ID: " + id);
         }
-        
         vitalSignRepository.deleteById(id);
+    }
+    @Override
+    public VitalSignDTO findVitalSignWithPatientId(Long patientId) {
+        VitalSign vitalSign = vitalSignRepository.findVitalSignByPatientId(patientId);
+        if (vitalSign == null) {
+            throw new BadActionException("Vital sign not found for patient with ID: " + patientId);
+        }
+        return modelMapper.map(vitalSign, VitalSignDTO.class);
     }
 }

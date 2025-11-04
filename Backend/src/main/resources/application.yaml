@@ -15,10 +15,17 @@ spring:
     multipart:
       max-file-size: 1000MB
       max-request-size: 1000MB
+  #flyway
+  # dẫn tới thư mục chứa các script Flyway
+  flyway:
+    locations: classpath:/db/migration,classpath:/dev/db/migration
+    #Phiên bản baseline sẽ = 1 và không thực hiện bất kỳ thay đổi nào trong DB
+    baseline-on-migrate: true
+    baseline-version: 0
 group29:
   jwt:
     base64-secret: qoAEABDke07+AVLepXB4aCMtsT0wMAqR5x2VFyldsnx6e75YQkJH2UcZKTjEyoNgG71SBCXfq5N6NVZxWOfsHQ==
-    access-token-validity-in-seconds: 8640
+    access-token-validity-in-seconds: 86400
     refresh-token-validity-in-seconds: 864000
 api:
   prefix: /api/v1
@@ -31,4 +38,4 @@ server:
 #config upload file
 hieupham:
   upload-file:
-    base-uri: file:///D:/WhatWeDone-Will/storage/
+    base-uri: file:///D:/WhatWeDone-Will/QuanLyBenhAn/storage/

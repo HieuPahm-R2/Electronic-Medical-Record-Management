@@ -26,10 +26,6 @@ public class Radiology {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinical_service_id", nullable = false, unique = true)
-    private ClinicalService clinicalService;
-
     @Column(name = "image_path")
     private String imagePath;
 
@@ -40,5 +36,13 @@ public class Radiology {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinical_service_id", nullable = false, unique = true)
+    private ClinicalService clinicalService;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medical_examination_id")
+    private MedicalExam medicalExamination;
 
 }

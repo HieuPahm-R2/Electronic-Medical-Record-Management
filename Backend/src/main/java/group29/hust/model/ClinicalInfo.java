@@ -1,18 +1,13 @@
 package group29.hust.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "clinical_info")
@@ -60,7 +55,12 @@ public class ClinicalInfo {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinical_service_id", nullable = false)
-    private ClinicalService clinicalService;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "clinical_info" })
+    @JoinTable(name = "clinical_match", joinColumns = @JoinColumn(name = "clinical_info_id"), inverseJoinColumns = @JoinColumn(name = "clinical_service_id"))
+    private Set<ClinicalService> clinicalServices;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medical_examination_id", unique = true)
+    private MedicalExam medicalExam;
 }

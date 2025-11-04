@@ -1,6 +1,6 @@
 package group29.hust.dtos.request;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,21 +21,32 @@ public class VitalSignDTO {
 
     private BigDecimal weight;
 
+    @JsonProperty("heart_rate")
     private Integer heartRate;
 
+    @JsonProperty("blood_group")
     private String bloodGroup;
 
+    @JsonProperty("blood_type")
     private String bloodType;
 
+    @JsonProperty("systolic_bp")
     private Integer systolicBp;
 
+    @JsonProperty("diastolic_bp")
     private Integer diastolicBp;
 
+    @JsonProperty("pulse_rate")
     private Integer pulseRate;
 
+    @JsonProperty("respiratory_rate")
     private Integer respiratoryRate;
 
     private String notes;
 
+    @JsonProperty("patient_id")
     private Long patientId;
+
+    @JsonProperty("medical_exam_id")
+    private Long medicalExamId;
 }

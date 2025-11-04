@@ -42,7 +42,7 @@ public class JWTConfiguration {
         return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
     }
 
-    // Convert data nằm trong token ==> sau đó lưu vào springsecurity context để
+    // Convert data nằm trong token ==> sau đó lưu vào spring security context để
     // reuse
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
