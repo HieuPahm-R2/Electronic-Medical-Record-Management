@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận lịch hẹn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Xác nhận lịch hẹn y tế</h1>
+        </div>
+        
+        <div class="content">
+            <p>Kính gửi <span th:text="${patient.fullName}">Bệnh nhân</span>,</p>
+            
+            <p>Chúng tôi xác nhận rằng lịch hẹn của bạn đã được chấp nhận với thông tin chi tiết như sau:</p>
+            
+            <div class="info-item">
+                <span class="info-label">Thời gian:</span> 
+                <span th:text="${#temporals.format(appointment.appointmentStartTime, 'dd/MM/yyyy HH:mm')}">01/01/2023 09:00</span>
+            </div>
+            
+            <div class="info-item" th:if="${doctor != null}">
+                <span class="info-label">Bác sĩ:</span> 
+                <span th:text="${doctor.fullName}">Bác sĩ</span>
+            </div>
+            
+            <div class="info-item" th:if="${appointment.clinicalServices != null && !appointment.clinicalServices.isEmpty()}">
+                <span class="info-label">Dịch vụ:</span>
+                <ul>
+                    <li th:each="service : ${appointment.clinicalServices}" th:text="${service.name}">Dịch vụ</li>
+                </ul>
+            </div>
+            
+            <div class="info-item" th:if="${appointment.notes != null && !appointment.notes.isEmpty()}">
+                <span class="info-label">Ghi chú:</span> 
+                <span th:text="${appointment.notes}">Ghi chú</span>
+            </div>
+            
+            <p>Vui lòng đến đúng giờ hẹn. Nếu bạn cần thay đổi hoặc hủy lịch hẹn, vui lòng liên hệ với chúng tôi trước ít nhất 24 giờ.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Đây là email tự động, vui lòng không trả lời.</p>
+            <p>© 2023 Phòng khám của chúng tôi. Mọi quyền được bảo lưu.</p>
+        </div>
+    </div>
+</body>
+</html>

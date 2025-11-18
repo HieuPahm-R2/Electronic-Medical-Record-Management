@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { Layout, Drawer, Affix } from "antd";
-import HeaderAdmin from "../components/Header";
-import FooterAdmin from "../components/Footer";
-import SideNav from "../components/SideBar";
+import HeaderAdmin from "../components/admin/Header";
+import FooterAdmin from "../components/admin/Footer";
+import SideNav from "../components/admin/SideBar";
 import { useSelector } from "react-redux";
+import "../assets/styles/admin/main.scss"
+import "../assets/styles/admin/responsive.scss"
 
 const { Header: AntHeader, Content, Sider } = Layout;
 
@@ -12,8 +14,8 @@ const LayoutAdmin = () => {
     const [visible, setVisible] = useState(false);
     const [sidenavColor, setSideNavColor] = useState("#1890ff");
     const isAdminRoute = window.location.pathname.startsWith('/admin')
-    const user = useSelector((state: any) => state.account.user);
-    const userRole = user?.role?.name;
+    // const user = useSelector((state: any) => state.account.user);
+    // const userRole = user?.role?.name;
     const [fixed, setFixed] = useState(false);
 
 
@@ -53,7 +55,7 @@ const LayoutAdmin = () => {
                     </Layout>
                 </Drawer>
             }
-            {isAdminRoute &&
+            {isAdminRoute == true &&
                 <Sider
                     breakpoint="lg"
                     collapsedWidth="0"
@@ -86,7 +88,7 @@ const LayoutAdmin = () => {
                 <Content className="content-ant">
                     <Outlet />
                 </Content>
-                {isAdminRoute &&
+                {isAdminRoute == true &&
                     <FooterAdmin />
                 }
             </Layout>

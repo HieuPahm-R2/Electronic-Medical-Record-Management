@@ -175,13 +175,13 @@ const setting = [
 ];
 
 const HeaderAdmin = (props) => {
-    const user = useSelector(state => state.account.user);
+    // const user = useSelector(state => state.account.user);
 
     const { name, subName, onPress, handleSidenavColor, handleFixedNavbar } = props;
     const { Title, Text } = Typography
 
     const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
-    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
+    // const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
 
     let items = [
         {
@@ -325,8 +325,8 @@ const HeaderAdmin = (props) => {
                     <Dropdown menu={{ items, onClick: handleMenuClick }} trigger={['click']} >
                         <a style={{ color: "black" }} onClick={(e) => e.preventDefault()}>
                             <Space>
-                                <Avatar src={user?.avatar ? urlAvatar : urlAvatarTemp} />
-                                Welcome_{user?.name}
+                                {/* <Avatar src={user?.avatar ? urlAvatar : urlAvatarTemp} />
+                                Welcome_{user?.name} */}
                                 <DownOutlined />
                             </Space>
                         </a>

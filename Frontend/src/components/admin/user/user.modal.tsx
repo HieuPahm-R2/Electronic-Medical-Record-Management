@@ -1,7 +1,7 @@
 import { ModalForm, ProForm, ProFormDigit, ProFormSelect, ProFormText } from "@ant-design/pro-components";
 import { Col, Form, Row, Select, message, notification } from "antd";
 import { useState, useEffect } from "react";
-import { callCreateUser, callFetchRole, callUpdateUser } from "@/config/api";
+// import { callCreateUser, callFetchRole, callUpdateUser } from "@/config/api";
 import { DebounceSelect } from "./debounce.select";
 import { IUser } from "@/types/backend";
 
@@ -40,73 +40,73 @@ const ModalUser = (props: IProps) => {
         }
     }, [dataInit]);
 
-    const submitUser = async (valuesForm: any) => {
-        const { fullName, email, password, role } = valuesForm;
-        if (dataInit?.id) {
-            //update
-            const user = {
-                id: dataInit.id,
-                fullName,
-                email,
-                password,
-                role: { id: role.value, name: "" },
-            }
+    // const submitUser = async (valuesForm: any) => {
+    //     const { fullName, email, password, role } = valuesForm;
+    //     if (dataInit?.id) {
+    //         //update
+    //         const user = {
+    //             id: dataInit.id,
+    //             fullName,
+    //             email,
+    //             password,
+    //             role: { id: role.value, name: "" },
+    //         }
 
-            const res = await callUpdateUser(user);
-            if (res.data) {
-                message.success("Cập nhật user thành công");
-                handleReset();
-                reloadTable();
-            } else {
-                notification.error({
-                    message: 'Có lỗi xảy ra',
-                    description: res.message
-                });
-            }
-        } else {
-            //create
-            const user = {
-                fullName,
-                email,
-                password,
-                role: { id: role.value, name: "" },
-            }
-            const res = await callCreateUser(user);
-            if (res.data) {
-                message.success("Thêm mới user thành công");
-                handleReset();
-                reloadTable();
-            } else {
-                notification.error({
-                    message: 'Có lỗi xảy ra',
-                    description: res.message
-                });
-            }
-        }
-    }
+    //         // const res = await callUpdateUser(user);
+    //         if (res.data) {
+    //             message.success("Cập nhật user thành công");
+    //             handleReset();
+    //             reloadTable();
+    //         } else {
+    //             notification.error({
+    //                 message: 'Có lỗi xảy ra',
+    //                 description: res.message
+    //             });
+    //         }
+    //     } else {
+    //         //create
+    //         const user = {
+    //             fullName,
+    //             email,
+    //             password,
+    //             role: { id: role.value, name: "" },
+    //         }
+    //         const res = await callCreateUser(user);
+    //         if (res.data) {
+    //             message.success("Thêm mới user thành công");
+    //             handleReset();
+    //             reloadTable();
+    //         } else {
+    //             notification.error({
+    //                 message: 'Có lỗi xảy ra',
+    //                 description: res.message
+    //             });
+    //         }
+    //     }
+    // }
 
-    const handleReset = async () => {
-        form.resetFields();
-        setDataInit(null);
-        setRoles([]);
-        setOpenModal(false);
-    }
+    // const handleReset = async () => {
+    //     form.resetFields();
+    //     setDataInit(null);
+    //     setRoles([]);
+    //     setOpenModal(false);
+    // }
 
     // Usage of DebounceSelect
 
-    async function fetchRoleList(name: string): Promise<ISelect[]> {
-        const res = await callFetchRole(`page=0&size=100&name=/${name}/i`);
-        if (res && res.data) {
-            const list = res.data.result;
-            const temp = list.map(item => {
-                return {
-                    label: item.name as string,
-                    value: item.id as string
-                }
-            })
-            return temp;
-        } else return [];
-    }
+    // async function fetchRoleList(name: string): Promise<ISelect[]> {
+    //     const res = await callFetchRole(`page=0&size=100&name=/${name}/i`);
+    //     if (res && res.data) {
+    //         const list = res.data.result;
+    //         const temp = list.map(item => {
+    //             return {
+    //                 label: item.name as string,
+    //                 value: item.id as string
+    //             }
+    //         })
+    //         return temp;
+    //     } else return [];
+    // }
 
     return (
         <>
@@ -114,8 +114,8 @@ const ModalUser = (props: IProps) => {
                 title={<>{dataInit?.id ? "Cập nhật User" : "Tạo mới User"}</>}
                 open={openModal}
                 modalProps={{
-                    onCancel: () => { handleReset() },
-                    afterClose: () => handleReset(),
+                    // onCancel: () => { handleReset() },
+                    // afterClose: () => handleReset(),
                     destroyOnClose: true,
                     width: 900,
                     keyboard: false,
@@ -126,7 +126,7 @@ const ModalUser = (props: IProps) => {
                 scrollToFirstError={true}
                 preserve={false}
                 form={form}
-                onFinish={submitUser}
+                // onFinish={submitUser}
                 initialValues={dataInit?.id ? dataInit : {}}
             >
                 <Row gutter={16}>
@@ -172,7 +172,7 @@ const ModalUser = (props: IProps) => {
                                 defaultValue={roles}
                                 value={roles}
                                 placeholder="Chọn công vai trò"
-                                fetchOptions={fetchRoleList}
+                                fetchOptions={ }
                                 onChange={(newValue: any) => {
                                     if (newValue?.length === 0 || newValue?.length === 1) {
                                         setRoles(newValue as ISelect[]);
