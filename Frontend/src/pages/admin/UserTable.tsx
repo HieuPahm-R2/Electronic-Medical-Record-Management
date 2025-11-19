@@ -1,20 +1,19 @@
-import DataTable from "@/components/admin/data.table";
-import { useAppDispatch, useAppSelector } from "@/context/hooks";
-import { fetchUser } from "@/context/slice/userSlice";
+import DataTable from "@/components/admin/DataTable";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { fetchUser } from "@/redux/slice/userSlice";
 import { IModelPaginate, IUser } from "@/types/backend";
-import {
-    DeleteOutlined, EditOutlined, PlusOutlined, EyeOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Button, Popconfirm, Space, message, notification } from "antd";
 import { useState, useRef } from "react";
 import dayjs from "dayjs";
 import queryString from "query-string";
-import ModalUser from "@/components/admin/user/user.modal";
-import ViewDetailUser from "@/components/admin/user/user.view";
-import Access from "@/components/share/access";
-import { ALL_PERMISSIONS } from "@/config/permission";
+import ModalUser from "@/components/admin/user/UserModal";
+import ViewDetailUser from "@/components/admin/user/UserView";
+import Access from "@/components/share/Access";
+import { ALL_PERMISSIONS } from "@/constant/permission";
 import { sfLike } from "spring-filter-query-builder";
+import { callDeleteUser } from "@/config/api";
 
 const UserPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -28,20 +27,20 @@ const UserPage = () => {
     const users = useAppSelector((state) => state.user.result);
     const dispatch = useAppDispatch();
 
-    // const handleDeleteUser = async (id: string | undefined) => {
-    //     if (id) {
-    //         const res = await callDeleteUser(id);
-    //         if (+res.statusCode === 200) {
-    //             message.success("Xóa User thành công");
-    //             reloadTable();
-    //         } else {
-    //             notification.error({
-    //                 message: "Có lỗi xảy ra",
-    //                 description: res.message,
-    //             });
-    //         }
-    //     }
-    // };
+    const handleDeleteUser = async (id: string | undefined) => {
+        if (id) {
+            const res = await callDeleteUser(id);
+            if (+res.statusCode === 200) {
+                message.success("Xóa User thành công");
+                reloadTable();
+            } else {
+                notification.error({
+                    message: "Có lỗi xảy ra",
+                    description: res.message,
+                });
+            }
+        }
+    };
 
     const reloadTable = () => {
         tableRef?.current?.reload();
@@ -133,7 +132,7 @@ const UserPage = () => {
                             placement="leftTop"
                             title={"Xác nhận xóa user"}
                             description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            // onConfirm={() => handleDeleteUser(entity.id)}
+                            onConfirm={() => handleDeleteUser(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
@@ -210,7 +209,7 @@ const UserPage = () => {
                     loading={isFetching}
                     columns={columns}
                     dataSource={users}
-                    request={async (params, sort, filter) => {
+                    request={async (params: any, sort: any, filter: any) => {
                         const query = buildQuery(params, sort, filter);
                         const res = await dispatch(fetchUser({ query })).unwrap();
                         const page = res.data as IModelPaginate<IUser> | undefined;
@@ -248,7 +247,7 @@ const UserPage = () => {
                     }}
                 />
             </Access>
-            {/* <ModalUser
+            <ModalUser
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 reloadTable={reloadTable}
@@ -260,7 +259,7 @@ const UserPage = () => {
                 open={openViewDetail}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
-            /> */}
+            />
         </div>
     );
 };
