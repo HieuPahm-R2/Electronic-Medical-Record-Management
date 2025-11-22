@@ -1,7 +1,9 @@
 package group29.hust.service.impl;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -81,6 +83,26 @@ public class PatientService implements IPatientService {
     @Override
     public PaginationResultDTO getAll(Specification<Patient> spec, Pageable pageable) {
         Page<Patient> pageCheck = this.patientRepository.findAll(spec, pageable);
+        // Map to DTOs
+        List<PatientDTO> content = pageCheck.getContent().stream()
+                .map(data -> {
+                    modelMapper.map(data, PatientDTO.class);
+                    return PatientDTO.builder()
+                            .id(data.getId())
+                            .fullName(data.getFullName())
+                            .dateOfBirth(data.getDateOfBirth())
+                            .email(data.getEmail())
+                            .phone(data.getPhone())
+                            .patientCode(data.getPatientCode())
+                            .address(data.getAddress())
+                            .updatedBy(data.getUpdatedBy())
+                            .createdBy(data.getCreatedBy())
+                            .updatedAt(data.getUpdatedAt())
+                            .createdAt(data.getCreatedAt())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
         PaginationResultDTO res = new PaginationResultDTO();
         PaginationResultDTO.Meta mt = new PaginationResultDTO.Meta();
         mt.setPage(pageCheck.getNumber() + 1);
@@ -89,7 +111,7 @@ public class PatientService implements IPatientService {
         mt.setTotal(pageCheck.getTotalElements());
         res.setMeta(mt);
         // remove sensitive data
-        res.setResult(pageCheck.getContent());
+        res.setResult(content);
         return res;
     }
 

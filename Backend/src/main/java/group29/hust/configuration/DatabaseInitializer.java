@@ -116,7 +116,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
             this.permissionRepository.saveAll(arrResult);
         }
-        if (countRole >= 0) {
+        if (countRole == 0) {
             List<Permission> permissions = this.permissionRepository.findAll();
 
             Role initRole = new Role();

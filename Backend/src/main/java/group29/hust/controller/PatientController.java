@@ -53,6 +53,12 @@ public class PatientController {
         return ResponseEntity.ok().body(null);
     }
 
+    @GetMapping("/patient/{id}")
+    @MessageApi("Fetch patient by Id")
+    public ResponseEntity<?> getPatientById(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(this.patientService.getById(id));
+    }
+
     @GetMapping("/patients")
     @MessageApi("Fetch all patients with pagination")
     public ResponseEntity<PaginationResultDTO> getAllPatients(@Filter Specification<Patient> spec,
