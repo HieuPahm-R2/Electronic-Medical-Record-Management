@@ -1,5 +1,11 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Layout, Menu, Button, Typography, Card, Form, Input, Checkbox, message, notification } from "antd";
+import logo1 from "../../assets/images/logos-facebook.svg";
+import logo3 from "../../assets/images/Google__G__Logo.svg.png";
+
+import { Link, useNavigate } from "react-router-dom";
+import { DribbbleOutlined, TwitterOutlined, InstagramOutlined, GithubOutlined } from "@ant-design/icons";
+import { registerAPI } from "../../config/api.fast";
+import { useState } from "react";
 
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
@@ -114,9 +120,6 @@ const RegisterPage = () => {
                         <div className="sign-up-gateways">
                             <Button type="false">
                                 <img src={logo1} alt="logo 1" />
-                            </Button>
-                            <Button type="false">
-                                <img src={logo2} alt="logo 2" />
                             </Button>
                             <Button type="false">
                                 <img src={logo3} alt="logo 3" />

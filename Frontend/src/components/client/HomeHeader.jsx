@@ -1,19 +1,13 @@
-import {
-    Navbar as MTNavbar, Collapse, Button, IconButton, Typography
-} from "@material-tailwind/react";
-import {
-    RectangleStackIcon,
-    UserCircleIcon,
-    CommandLineIcon,
-    XMarkIcon,
-    Bars3Icon,
-} from "@heroicons/react/24/solid";
+import { Navbar as MTNavbar, Collapse, Button, IconButton, Typography } from "@material-tailwind/react";
+import { RectangleStackIcon, UserCircleIcon, CommandLineIcon, XMarkIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { LogoutAPI } from '@/config/api.fast';
+import { runLogoutAction } from '@/redux/slice/accountSlice';
+import { Avatar, Dropdown, message, Space } from 'antd';
+import { DownOutlined } from "@ant-design/icons";
 
-interface NavItemProps {
-    children: React.ReactNode;
-    href?: string;
-}
 const NAV_MENU = [
     {
         name: "Trang chủ",
@@ -30,7 +24,8 @@ const NAV_MENU = [
     },
 ];
 
-const NavItem = ({ children, href }: NavItemProps) => {
+const NavItem = ({ children, href }) => {
+
     return (
         <li>
             <Typography
@@ -49,6 +44,43 @@ const NavItem = ({ children, href }: NavItemProps) => {
 const HomeHeader = () => {
     const [open, setOpen] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const isAuthenticatedb = useSelector(state => state.account.isAuthenticated);
+    const user = useSelector(state => state.account.user);
+    const handleMenuClick = ({ key }) => {
+        if (key === 'account') setIsModalOpen(true);
+        if (key === 'admin') navigate('/admin');
+        if (key === 'logout') handleLogout();
+    }
+    const handleLogout = async () => {
+        await LogoutAPI();
+        dispatch(runLogoutAction(null));
+        message.success("Logout successfully");
+        navigate("/")
+
+    }
+    // link to access avatar
+    // const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
+    // const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
+    let items = [
+        {
+            label: <label>Quản lý tài khoản</label>,
+            key: 'account',
+        },
+        {
+            label: <label>Đăng xuất</label>,
+            key: 'logout',
+        },
+    ];
+    if (user?.role?.name === "ADMIN") {
+        items.unshift({
+            label: <label>Administrator Dashboard</label>,
+            key: 'admin',
+        })
+    }
 
     useEffect(() => {
         window.addEventListener(
@@ -99,9 +131,27 @@ const HomeHeader = () => {
                     ))}
                 </ul>
                 <div className="hidden items-center gap-4 lg:flex">
-                    <Button color={isScrolling ? "gray" : "white"} variant="text" onResize={undefined} onResizeCapture={undefined}>
-                        Đăng nhập
-                    </Button>
+                    {!isAuthenticatedb ?
+                        <Link to={"/login"} className="header__user">
+                            <Button color={isScrolling ? "gray" : "white"} variant="text" onResize={undefined} onResizeCapture={undefined}>
+                                Đăng nhập
+                            </Button>
+                        </Link>
+                        :
+                        <div >
+                            <Dropdown menu={{ items, onClick: handleMenuClick }} trigger={['click']} >
+                                <a style={{ color: "white", cursor: "pointer" }} onClick={(e) => e.preventDefault()}>
+                                    <Space>
+                                        <Avatar src={user?.avatar ? urlAvatar : urlAvatarTemp} />
+                                        Welcome_{user?.name}
+                                        <DownOutlined />
+                                    </Space>
+                                </a>
+                            </Dropdown>
+                            <NotificationBell userId={user?.id} />
+                        </div>
+                    }
+
                     <a href="https://www.material-tailwind.com/blocks" target="_blank">
                         <Button color={isScrolling ? "gray" : "white"} onResize={undefined} onResizeCapture={undefined}>Đặt Lịch Hẹn</Button>
                     </a>

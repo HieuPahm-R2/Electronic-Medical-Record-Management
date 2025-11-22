@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IconButton, Button, Typography } from "@material-tailwind/react";
 import { PlayIcon } from "@heroicons/react/24/solid";
+
 const HomeHero = () => {
+
     return (
         <div className="relative min-h-screen w-full bg-[url('src/assets/images/vinmec-bg.jpg')] bg-cover bg-no-repeat bg-center">
             <div className="absolute inset-0 h-full w-full bg-gray-900/60" />

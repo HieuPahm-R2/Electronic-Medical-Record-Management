@@ -14,8 +14,8 @@ const LayoutAdmin = () => {
     const [visible, setVisible] = useState(false);
     const [sidenavColor, setSideNavColor] = useState("#1890ff");
     const isAdminRoute = window.location.pathname.startsWith('/admin')
-    // const user = useSelector((state: any) => state.account.user);
-    // const userRole = user?.role?.name;
+    const user = useSelector((state: any) => state.account.user);
+    const userRole = user?.role?.name;
     const [fixed, setFixed] = useState(false);
 
 
@@ -30,7 +30,7 @@ const LayoutAdmin = () => {
             className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""
                 } `}
         >
-            {isAdminRoute &&
+            {isAdminRoute && userRole === 'ADMIN' &&
                 <Drawer
                     title={false}
                     placement={"right"}
@@ -55,7 +55,7 @@ const LayoutAdmin = () => {
                     </Layout>
                 </Drawer>
             }
-            {isAdminRoute == true &&
+            {isAdminRoute == true && userRole === 'ADMIN' &&
                 <Sider
                     breakpoint="lg"
                     collapsedWidth="0"
@@ -88,7 +88,7 @@ const LayoutAdmin = () => {
                 <Content className="content-ant">
                     <Outlet />
                 </Content>
-                {isAdminRoute == true &&
+                {isAdminRoute == true && userRole === 'ADMIN' &&
                     <FooterAdmin />
                 }
             </Layout>

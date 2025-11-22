@@ -1,5 +1,5 @@
+import { dispatchFromAnywhere } from "@/redux/dispatch";
 import { setRefreshTokenAction } from "@/redux/slice/accountSlice";
-import { store } from "@/redux/store";
 import { IBackendRes } from "@/types/backend";
 import { notification } from "antd";
 import { Mutex } from "async-mutex";
@@ -60,7 +60,7 @@ instance.interceptors.response.use((res) => res.data,
         ) {
             const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
             //dispatch redux action
-            store.dispatch(setRefreshTokenAction({ status: true, message }));
+            dispatchFromAnywhere(setRefreshTokenAction({ status: true, message }))
         }
 
         if (+error.response.status === 403) {

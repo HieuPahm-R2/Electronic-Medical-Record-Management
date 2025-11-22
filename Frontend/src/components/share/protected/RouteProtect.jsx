@@ -1,5 +1,6 @@
-import Error403 from "@/components/errors/403-page"
+import Error403 from "@/components/errors/ForbiddenPage"
 import { useSelector } from "react-redux"
+import { Navigate } from "react-router-dom"
 
 
 const RoleCheck = (props) => {
