@@ -4,5 +4,5 @@ public enum AppointmentStatus {
     PENDING,
     SCHEDULED,  // Đã lên lịch
     COMPLETED,  // Đã hoàn thành
-    CANCELLED,  // Đã hủy
+    CANCELED,  // Đã hủy
 }

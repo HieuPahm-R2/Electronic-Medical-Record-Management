@@ -7,6 +7,7 @@ import group29.hust.model.ClinicalInfo;
 import group29.hust.model.ClinicalService;
 import group29.hust.repository.ClinicalInfoRepository;
 import group29.hust.repository.ClinicalRepository;
+import group29.hust.repository.MedicalExamRepository;
 import group29.hust.repository.PatientRepository;
 import group29.hust.service.IClinicalInfoService;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +21,18 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ClinicalInfoService implements IClinicalInfoService {
+
     private final ModelMapper modelMapper;
     private final ClinicalInfoRepository clinicalInfoRepository;
     private final PatientRepository patientRepository;
     private final ClinicalRepository clinicalRepository;
+    private final MedicalExamRepository medicalExamRepository;
 
     @Override
     @Transactional
     public ClinicalInfoDTO insert(ClinicalInfoDTO dto) throws BadActionException {
         // Validate patient exists
-        if (!patientRepository.existsById(dto.getPatientId())) {
+        if (!patientRepository.existsById(dto.getPatient().getId())) {
             throw new BadActionException("Patient not found with ID: ");
         }
         ClinicalInfo film = modelMapper.map(dto, ClinicalInfo.class);
@@ -40,6 +43,14 @@ public class ClinicalInfoService implements IClinicalInfoService {
                     .toList();
             Set<ClinicalService> mainCategory = this.clinicalRepository.findByIdIn(reqCate);
             film.setClinicalServices(mainCategory);
+        }
+        if(dto.getPatient() != null){
+            film.setPatient(patientRepository.findById(dto.getPatient().getId())
+                    .orElseThrow(() -> new BadActionException("Patient not found with ID: ")));
+        }
+        if(dto.getMedicalExam() != null){
+            film.setMedicalExam(medicalExamRepository.findById(dto.getMedicalExam().getId())
+            .orElseThrow(() -> new BadActionException("Medical examination not found with ID: ")));
         }
         
         return modelMapper.map(clinicalInfoRepository.save(film), ClinicalInfoDTO.class);
@@ -55,8 +66,6 @@ public class ClinicalInfoService implements IClinicalInfoService {
     @Transactional
     public ClinicalInfoDTO update(ClinicalInfoDTO dto) throws BadActionException {
         // Check if the clinical info exists
-        ClinicalInfo existingInfo = clinicalInfoRepository.findById(dto.getId())
-                .orElseThrow(() -> new BadActionException("Clinical information not found with ID " ));
 
         return modelMapper.map(clinicalInfoRepository.save(modelMapper.map(dto, ClinicalInfo.class)), ClinicalInfoDTO.class);
     }
@@ -77,5 +86,14 @@ public class ClinicalInfoService implements IClinicalInfoService {
             throw new BadActionException("Clinical information not found for patient with ID: " + patientId);
         }
         return modelMapper.map(clinicalInfo, ClinicalInfoDTO.class) ;
+    }
+
+    @Override
+    public ClinicalInfoDTO findClinicalInfoWithMedicalExamId(Long medicalExamId) {
+        ClinicalInfo clinicalInfo = clinicalInfoRepository.findClinicalInfoByMedicalExamId(medicalExamId);
+        if (clinicalInfo == null) {
+            throw new BadActionException("Clinical information not found for medical exam with ID: " + medicalExamId);
+        }
+        return modelMapper.map(clinicalInfo, ClinicalInfoDTO.class);
     }
 }

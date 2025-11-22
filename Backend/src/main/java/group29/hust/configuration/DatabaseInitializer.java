@@ -52,6 +52,52 @@ public class DatabaseInitializer implements CommandLineRunner {
             arrResult
                     .add(new Permission("Get permission with pagination", "/api/v1/permissions", "GET", "PERMISSIONS"));
 
+            arrResult.add(new Permission("Create a Medical Exam", "/api/v1/medical-exams", "POST", "MEDICAL_EXAMS"));
+            arrResult.add(new Permission("Update a Medical Exam", "/api/v1/medical-exams", "PUT", "MEDICAL_EXAMS"));
+            arrResult.add(new Permission("Delete a Medical Exam", "/api/v1/medical-exams/{id}", "DELETE", "MEDICAL_EXAMS"));
+            arrResult.add(new Permission("Get Medical Exam by id", "/api/v1/medical-exams/{id}", "GET", "MEDICAL_EXAMS"));
+            arrResult.add(new Permission("Get Medical Exam by patient id", "/api/v1/medical-exams/patient/{id}", "GET", "MEDICAL_EXAMS"));
+            arrResult.add(new Permission("Get Medical Exam with pagination", "/api/v1/medical-exams", "GET", "MEDICAL_EXAMS"));
+
+            arrResult.add(new Permission("Create a Clinical info", "/api/v1/clinical-info", "POST", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Update a Clinical info", "/api/v1/clinical-info", "PUT", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Delete a Clinical info", "/api/v1/clinical-info/{id}", "DELETE", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Get Clinical info by id", "/api/v1/clinical-info/{id}", "GET", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Get Clinical info by patient Id", "/api/v1/clinical-info/patient/{id}", "GET", "CLINICAL_INFOS"));
+
+            arrResult.add(new Permission("Create a vital sign", "/api/v1/vital-signs", "POST", "VITAL_SIGNS"));
+            arrResult.add(new Permission("Update a vital sign", "/api/v1/vital-signs", "PUT", "VITAL_SIGNS"));
+            arrResult.add(new Permission("Delete a vital sign", "/api/v1/vital-signs/{id}", "DELETE", "VITAL_SIGNS"));
+            arrResult.add(new Permission("Get vital sign by id", "/api/v1/vital-signs/{id}", "GET", "VITAL_SIGNS"));
+            arrResult.add(new Permission("Get vital sign with patient id", "/api/v1/vital-signs/patient/{id}", "GET", "VITAL_SIGNS"));
+
+            arrResult.add(new Permission("Create a blood test", "/api/v1/blood-tests", "POST", "BLOOD_TESTS"));
+            arrResult.add(new Permission("Update a blood test", "/api/v1/blood-tests", "PUT", "BLOOD_TESTS"));
+            arrResult.add(new Permission("Delete a blood test", "/api/v1/blood-tests/{id}", "DELETE", "BLOOD_TESTS"));
+            arrResult.add(new Permission("Get blood test by id", "/api/v1/blood-tests/{id}", "GET", "BLOOD_TESTS"));
+            arrResult.add(new Permission("Get blood test with pagination by patient", "/api/v1/blood-tests/patient/{id}", "GET", "BLOOD_TESTS"));
+            arrResult.add(new Permission("Get blood test with pagination by medical-exam", "/api/v1/blood-tests/medical-exam/{id}", "GET", "BLOOD_TESTS"));
+
+            arrResult.add(new Permission("Create a radiology", "/api/v1/radiology", "POST", "RADIOLOGIES"));
+            arrResult.add(new Permission("Update a radiology", "/api/v1/radiology", "PUT", "RADIOLOGIES"));
+            arrResult.add(new Permission("Delete a radiology", "/api/v1/radiology/{id}", "DELETE", "RADIOLOGIES"));
+            arrResult.add(new Permission("Get radiology by id", "/api/v1/radiology/{id}", "GET", "RADIOLOGIES"));
+            arrResult.add(new Permission("Get radiology with pagination by patient", "/api/v1/radiology/patient/{id}", "GET", "RADIOLOGIES"));
+            arrResult.add(new Permission("Get radiology with pagination by medical exam", "/api/v1/radiology/medical-exam/{id}", "GET", "RADIOLOGIES"));
+
+            arrResult.add(new Permission("Create a diagnose final", "/api/v1/diagnose-final", "POST", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Update a diagnose final", "/api/v1/diagnose-final", "PUT", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Delete a diagnose final", "/api/v1/diagnose-final/{id}", "DELETE", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Get diagnose final by id", "/api/v1/diagnose-final/{id}", "GET", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Get df with pagination by patient", "/api/v1/diagnose-final/patient/{id}", "GET", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Get df with pagination by medical exam", "/api/v1/diagnose-final/medical-exam/{id}", "GET", "DIAGNOSE_FINALS"));
+
+            arrResult.add(new Permission("Create a appointment", "/api/v1/appointments", "POST", "APPOINTMENTS"));
+            arrResult.add(new Permission("Update a appointment", "/api/v1/appointments", "PUT", "APPOINTMENTS"));
+            arrResult.add(new Permission("Delete a appointment", "/api/v1/appointments/{id}", "DELETE", "APPOINTMENTS"));
+            arrResult.add(new Permission("Get appointment by id", "/api/v1/appointments/{id}", "GET", "APPOINTMENTS"));
+            arrResult.add(new Permission("Get appointments with pagination", "/api/v1/appointments", "GET", "APPOINTMENTS"));
+
             arrResult.add(new Permission("Create a role", "/api/v1/add-role", "POST", "ROLES"));
             arrResult.add(new Permission("Update a role", "/api/v1/update-role", "PUT", "ROLES"));
             arrResult.add(new Permission("Delete a role", "/api/v1/delete-role/{id}", "DELETE", "ROLES"));
@@ -67,15 +113,10 @@ public class DatabaseInitializer implements CommandLineRunner {
             arrResult.add(new Permission("Upload video", "/api/v1/upload/video", "POST", "EPISODES"));
             arrResult.add(new Permission("Upload file", "/api/v1/files", "POST", "FILES"));
 
-            arrResult.add(new Permission("Post a comment", "/api/v1/comments/post/{ssId}", "POST", "COMMENTS"));
-            arrResult.add(new Permission("Read comments", "/api/v1/comments/{ssId}", "GET", "COMMENTS"));
-            arrResult.add(
-                    new Permission("Reply a comment", "/api/v1/comments/{ssId}/{parentId}/reply", "POST", "COMMENTS"));
-            arrResult.add(new Permission("React to comment", "/api/v1/comments/{commentId}/like", "POST", "COMMENTS"));
 
             this.permissionRepository.saveAll(arrResult);
         }
-        if (countRole == 0) {
+        if (countRole >= 0) {
             List<Permission> permissions = this.permissionRepository.findAll();
 
             Role initRole = new Role();

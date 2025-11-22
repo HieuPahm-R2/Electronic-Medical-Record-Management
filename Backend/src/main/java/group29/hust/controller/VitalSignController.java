@@ -50,12 +50,12 @@ public class VitalSignController {
     }
 
     // Additional endpoint to get vital signs for a specific patient
-    @GetMapping("/patient/{patientId}")
+    @GetMapping("/patient/{id}")
     @MessageApi("Get vital signs for a specific patient")
-    public ResponseEntity<?> getVitalSignsByPatientId(@PathVariable Long patientId) {
+    public ResponseEntity<?> getVitalSignsByPatientId(@PathVariable Long id) {
         //e service layer
         try {
-            return ResponseEntity.ok(vitalSignService.findVitalSignWithPatientId(patientId));
+            return ResponseEntity.ok(vitalSignService.findVitalSignWithPatientId(id));
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Error in getVitalSignsByPatientId: " + e.getMessage());
         }

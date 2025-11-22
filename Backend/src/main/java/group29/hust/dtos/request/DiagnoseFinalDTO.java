@@ -1,16 +1,15 @@
 package group29.hust.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import group29.hust.dtos.response.MedicalExamRes;
 import group29.hust.model.MedicalExam;
 import group29.hust.model.Patient;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiagnoseFinalDTO {
@@ -32,5 +31,5 @@ public class DiagnoseFinalDTO {
     private Long patientId;
 
     @JsonProperty("medical_exam_id")
-    private Long medicalExamId;
+    private MedicalExamRes medicalExam;
 }

@@ -1,15 +1,13 @@
 package group29.hust.dtos.request;
 
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
 public class ClinicalServiceDTO {
     private Long id;
     private String serviceName;

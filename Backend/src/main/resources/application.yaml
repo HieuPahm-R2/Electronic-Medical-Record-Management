@@ -11,6 +11,14 @@ spring:
       hibernate: format_sql:true
   application:
     name: Quan-Ly-Benh-An
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hieuxitsuki05@gmail.com
+    password: ejdvrfwylicuhvda
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   servlet:
     multipart:
       max-file-size: 1000MB

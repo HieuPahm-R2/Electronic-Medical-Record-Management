@@ -43,15 +43,13 @@ public class BloodTestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<BloodTestDTO>> getBloodTestsByPatientId(@PathVariable Long patientId) {
-        List<BloodTestDTO> bloodTests = ((group29.hust.service.impl.BloodTestService) bloodTestService).getByPatientId(patientId);
-        return ResponseEntity.ok(bloodTests);
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<PaginationResultDTO> getBloodTestsByPatientId(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok().body(bloodTestService.getByPatientId(id, pageable));
     }
-    @GetMapping("/medical-exam/{medicalExamId}")
-    public ResponseEntity<PaginationResultDTO> getByMedicalExamId(@PathVariable Long medicalExamId, Pageable pageable) {
-
-        return ResponseEntity.ok().body(bloodTestService.getByMedicalExamId(medicalExamId, pageable));
+    @GetMapping("/medical-exam/{id}")
+    public ResponseEntity<PaginationResultDTO> getByMedicalExamId(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok().body(bloodTestService.getByMedicalExamId(id, pageable));
     }
 
 

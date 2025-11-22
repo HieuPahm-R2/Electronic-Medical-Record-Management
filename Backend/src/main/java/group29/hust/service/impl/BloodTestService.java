@@ -207,4 +207,33 @@ public PaginationResultDTO getByMedicalExamId(Long medicalExamId, Pageable pagea
     return result;
 }
 
+    @Override
+    public PaginationResultDTO getByPatientId(Long patientId, Pageable pageable) {
+
+        // Create a filter for medicalExam.id property
+        FilterNode node = filterParser.parse("patient.id=" + patientId);
+        FilterSpecification<BloodTest> spec = filterSpecificationConverter.convert(node);
+
+        // Apply the filter and pagination
+        Page<BloodTest> pageResult = bloodTestRepository.findAll(spec, pageable);
+
+        // Map to DTOs
+        List<BloodTestDTO> content = pageResult.getContent().stream()
+                .map(bloodTest -> modelMapper.map(bloodTest, BloodTestDTO.class))
+                .collect(Collectors.toList());
+
+        // Set up pagination result
+        PaginationResultDTO result = new PaginationResultDTO();
+        PaginationResultDTO.Meta meta = new PaginationResultDTO.Meta();
+        meta.setPage(pageResult.getNumber() + 1);
+        meta.setPageSize(pageResult.getSize());
+        meta.setTotal(pageResult.getTotalElements());
+        meta.setPages(pageResult.getTotalPages());
+
+        result.setMeta(meta);
+        result.setResult(content);
+
+        return result;
+    }
+
 }

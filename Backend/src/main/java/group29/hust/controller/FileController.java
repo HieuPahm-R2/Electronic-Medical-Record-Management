@@ -30,7 +30,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/files")
+    @PostMapping("")
     @MessageApi("Upload Single file")
     public ResponseEntity<ResUpFileDTO> uploadData(
             @RequestParam(name = "file", required = false) MultipartFile file,

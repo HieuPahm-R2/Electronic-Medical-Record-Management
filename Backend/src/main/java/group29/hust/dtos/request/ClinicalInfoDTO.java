@@ -3,26 +3,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import group29.hust.model.ClinicalService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class ClinicalInfoDTO {
     private Long id;
 
     @NotNull(message = "Patient ID is required")
     @JsonProperty("patient_id")
-    private Long patientId;
+    private PatientDTO patient;
 
     @JsonProperty("medical_exam_id")
-    private Long medicalExamId;
+    private MedicalExamDTO medicalExam;
 
     @JsonProperty("clinical_services")
     private Set<ClinicalServiceDTO> clinicalServices;

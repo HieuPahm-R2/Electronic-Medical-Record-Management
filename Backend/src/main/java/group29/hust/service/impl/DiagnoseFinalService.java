@@ -1,10 +1,12 @@
 package group29.hust.service.impl;
 
 import group29.hust.dtos.request.DiagnoseFinalDTO;
+import group29.hust.dtos.response.MedicalExamRes;
 import group29.hust.exception.BadActionException;
 import group29.hust.model.DiagnoseFinal;
 import group29.hust.model.MedicalExam;
 import group29.hust.model.Patient;
+import group29.hust.model.Radiology;
 import group29.hust.repository.DiagnoseFinalRepository;
 import group29.hust.repository.MedicalExamRepository;
 import group29.hust.repository.PatientRepository;
@@ -22,6 +24,13 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
     private final MedicalExamRepository medicalExamRepository;
     private final ModelMapper modelMapper;
 
+    private MedicalExamRes convertDtoMedicalExam(DiagnoseFinal data){
+        return MedicalExamRes.builder()
+                .patientId(data.getPatient().getId())
+                .id(data.getId())
+                .build();
+    }
+
     @Override
     @Transactional
     public DiagnoseFinalDTO insert(DiagnoseFinalDTO dto) {
@@ -29,46 +38,45 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
         Patient patient = patientRepository.findById(dto.getPatientId())
                 .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
         
-        MedicalExam medicalExam = null;
-        if (dto.getMedicalExamId() != null) {
-            medicalExam = medicalExamRepository.findById(dto.getMedicalExamId())
-                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: " + dto.getMedicalExamId()));
+        DiagnoseFinal dg = modelMapper.map(dto, DiagnoseFinal.class);
+        dg.setPatient(patient);
+        if (dto.getMedicalExam() != null) {
+            MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExam().getId())
+                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: "));
+            dg.setMedicalExamination(medicalExam);
         }
-        DiagnoseFinal diagnoseFinal = new DiagnoseFinal();
-        diagnoseFinal.setMainDisease(dto.getMainDisease());
-        diagnoseFinal.setComorbidity(dto.getComorbidity());
-        diagnoseFinal.setConclusion(dto.getConclusion());
-        diagnoseFinal.setPrognosis(dto.getPrognosis());
-        diagnoseFinal.setTreatmentPlan(dto.getTreatmentPlan());
-        diagnoseFinal.setPatient(patient);
-        diagnoseFinal.setMedicalExamination(medicalExam);
         
         // Save entity
-        DiagnoseFinal savedDiagnoseFinal = diagnoseFinalRepository.save(diagnoseFinal);
+        DiagnoseFinal savedDiagnoseFinal = this.diagnoseFinalRepository.save(dg);
         
-        // Map entity back to DTO
-        DiagnoseFinalDTO resultDto = modelMapper.map(savedDiagnoseFinal, DiagnoseFinalDTO.class);
-        resultDto.setPatientId(savedDiagnoseFinal.getPatient().getId());
-        if (savedDiagnoseFinal.getMedicalExamination() != null) {
-            resultDto.setMedicalExamId(savedDiagnoseFinal.getMedicalExamination().getId());
-        }
-        
-        return resultDto;
+        return DiagnoseFinalDTO.builder()
+                .comorbidity(savedDiagnoseFinal.getComorbidity())
+                .conclusion(savedDiagnoseFinal.getConclusion())
+                .mainDisease(savedDiagnoseFinal.getMainDisease())
+                .patientId(savedDiagnoseFinal.getPatient().getId())
+                .prognosis(savedDiagnoseFinal.getPrognosis())
+                .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
+                .id(savedDiagnoseFinal.getId())
+                .medicalExam(convertDtoMedicalExam(savedDiagnoseFinal) )
+                .build();
     }
 
     @Override
     @Transactional(readOnly = true)
     public DiagnoseFinalDTO getById(Long id) {
-        DiagnoseFinal diagnoseFinal = diagnoseFinalRepository.findById(id)
+        DiagnoseFinal savedDiagnoseFinal = diagnoseFinalRepository.findById(id)
                 .orElseThrow(() -> new BadActionException("Diagnose final not found with id: " + id));
         
-        DiagnoseFinalDTO dto = modelMapper.map(diagnoseFinal, DiagnoseFinalDTO.class);
-        dto.setPatientId(diagnoseFinal.getPatient().getId());
-        if (diagnoseFinal.getMedicalExamination() != null) {
-            dto.setMedicalExamId(diagnoseFinal.getMedicalExamination().getId());
-        }
-        
-        return dto;
+        return DiagnoseFinalDTO.builder()
+                .comorbidity(savedDiagnoseFinal.getComorbidity())
+                .conclusion(savedDiagnoseFinal.getConclusion())
+                .mainDisease(savedDiagnoseFinal.getMainDisease())
+                .patientId(savedDiagnoseFinal.getPatient().getId())
+                .prognosis(savedDiagnoseFinal.getPrognosis())
+                .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
+                .id(savedDiagnoseFinal.getId())
+                .medicalExam(convertDtoMedicalExam(savedDiagnoseFinal) )
+                .build();
     }
 
     @Override
@@ -97,25 +105,27 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
         }
         
         // Update medical exam if needed
-        if (dto.getMedicalExamId() != null &&
+        if (dto.getMedicalExam() != null &&
             (existingDiagnoseFinal.getMedicalExamination() == null || 
-             !dto.getMedicalExamId().equals(existingDiagnoseFinal.getMedicalExamination().getId()))) {
-            MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExamId())
-                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: " + dto.getMedicalExamId()));
+             !dto.getMedicalExam().getId().equals(existingDiagnoseFinal.getMedicalExamination().getId()))) {
+            MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExam().getId())
+                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: "));
             existingDiagnoseFinal.setMedicalExamination(medicalExam);
         }
         
         // Save an updated entity
-        DiagnoseFinal updatedDiagnoseFinal = diagnoseFinalRepository.save(existingDiagnoseFinal);
+        DiagnoseFinal savedDiagnoseFinal = diagnoseFinalRepository.save(existingDiagnoseFinal);
         
-        // Map entity back to DTO
-        DiagnoseFinalDTO resultDto = modelMapper.map(updatedDiagnoseFinal, DiagnoseFinalDTO.class);
-        resultDto.setPatientId(updatedDiagnoseFinal.getPatient().getId());
-        if (updatedDiagnoseFinal.getMedicalExamination() != null) {
-            resultDto.setMedicalExamId(updatedDiagnoseFinal.getMedicalExamination().getId());
-        }
-        
-        return resultDto;
+        return DiagnoseFinalDTO.builder()
+                .comorbidity(savedDiagnoseFinal.getComorbidity())
+                .conclusion(savedDiagnoseFinal.getConclusion())
+                .mainDisease(savedDiagnoseFinal.getMainDisease())
+                .patientId(savedDiagnoseFinal.getPatient().getId())
+                .prognosis(savedDiagnoseFinal.getPrognosis())
+                .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
+                .id(savedDiagnoseFinal.getId())
+                .medicalExam(convertDtoMedicalExam(savedDiagnoseFinal) )
+                .build();
     }
 
     @Override
@@ -125,5 +135,41 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
             throw new BadActionException("Diagnose final not found with id: " + id);
         }
         diagnoseFinalRepository.deleteById(id);
+    }
+
+    @Override
+    public DiagnoseFinalDTO findDiagnoseFinalWithPatientId(Long patientId) {
+        DiagnoseFinal df = this.diagnoseFinalRepository.findDiagnoseFinalByPatientId(patientId);
+        if(df == null){
+            throw new BadActionException("Diagnose final not found for medical examination with ID: " + patientId);
+        }
+        return DiagnoseFinalDTO.builder()
+                .comorbidity(df.getComorbidity())
+                .conclusion(df.getConclusion())
+                .mainDisease(df.getMainDisease())
+                .patientId(df.getPatient().getId())
+                .prognosis(df.getPrognosis())
+                .treatmentPlan(df.getTreatmentPlan())
+                .id(df.getId())
+                .medicalExam(convertDtoMedicalExam(df))
+                .build();
+    }
+
+    @Override
+    public DiagnoseFinalDTO findDiagnoseFinalWithMedicalExamId(Long medicalExamId) {
+        DiagnoseFinal df = this.diagnoseFinalRepository.findDiagnoseFinalByMedicalExaminationId(medicalExamId);
+        if(df == null){
+            throw new BadActionException("Diagnose final not found for medical examination with ID: " + medicalExamId);
+        }
+        return DiagnoseFinalDTO.builder()
+                .comorbidity(df.getComorbidity())
+                .conclusion(df.getConclusion())
+                .mainDisease(df.getMainDisease())
+                .patientId(df.getPatient().getId())
+                .prognosis(df.getPrognosis())
+                .treatmentPlan(df.getTreatmentPlan())
+                .id(df.getId())
+                .medicalExam(convertDtoMedicalExam(df))
+                .build();
     }
 }

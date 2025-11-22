@@ -5,4 +5,5 @@ import group29.hust.model.ClinicalInfo;
 
 public interface IClinicalInfoService extends ICrudService<ClinicalInfoDTO, Long> {
     ClinicalInfoDTO findClinicalInfoWithPatientId(Long patientId);
+    ClinicalInfoDTO findClinicalInfoWithMedicalExamId(Long medicalExamId);
 }

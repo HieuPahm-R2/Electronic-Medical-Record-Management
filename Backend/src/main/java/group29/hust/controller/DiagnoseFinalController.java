@@ -26,6 +26,17 @@ public class DiagnoseFinalController {
         DiagnoseFinalDTO diagnoseFinalDTO = diagnoseFinalService.getById(id);
         return ResponseEntity.ok(diagnoseFinalDTO);
     }
+
+    @GetMapping("/medical-exam/{id}")
+    public ResponseEntity<DiagnoseFinalDTO> getDiagnoseFinalByPatientId(@PathVariable Long id) {
+        DiagnoseFinalDTO diagnoseFinalDTO = diagnoseFinalService.findDiagnoseFinalWithMedicalExamId(id);
+        return ResponseEntity.ok(diagnoseFinalDTO);
+    }
+    @GetMapping("/medical/{id}")
+    public ResponseEntity<DiagnoseFinalDTO> getDiagnoseFinalByMedicalExamId(@PathVariable Long id) {
+        DiagnoseFinalDTO diagnoseFinalDTO = diagnoseFinalService.findDiagnoseFinalWithPatientId(id);
+        return ResponseEntity.ok(diagnoseFinalDTO);
+    }
     
     @PutMapping("/{id}")
     public ResponseEntity<DiagnoseFinalDTO> updateDiagnoseFinal(@PathVariable Long id, @Valid @RequestBody DiagnoseFinalDTO diagnoseFinalDTO) {

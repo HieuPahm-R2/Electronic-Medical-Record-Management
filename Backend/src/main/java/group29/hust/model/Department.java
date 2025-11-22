@@ -28,7 +28,5 @@ public class Department extends BaseEntity {
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<MedicalExam> medicalExaminations = new LinkedHashSet<>();;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
-    private Set<Appointment> appointments = new LinkedHashSet<>();
 
 }

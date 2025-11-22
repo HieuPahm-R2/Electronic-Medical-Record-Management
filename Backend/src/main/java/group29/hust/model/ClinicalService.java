@@ -1,5 +1,6 @@
 package group29.hust.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,4 +29,8 @@ public class ClinicalService {
     @ManyToMany(mappedBy = "clinicalServices")
     @JsonIgnore
     private Set<ClinicalInfo> clinicalInfos;
+    
+    @ManyToMany(mappedBy = "clinicalServices")
+    @JsonIgnore
+    private Set<Appointment> appointments = new HashSet<>();
 }

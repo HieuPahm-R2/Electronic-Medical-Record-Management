@@ -1,8 +1,10 @@
 package group29.hust.controller;
 
 import group29.hust.dtos.request.RadiologyDTO;
+import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.service.IRadiologyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +42,11 @@ public class RadiologyController {
     }
     
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<RadiologyDTO>> getRadiologyByPatientId(@PathVariable Long patientId) {
-        List<RadiologyDTO> radiologyDTOs = ((group29.hust.service.impl.RadiologyService) radiologyService).getByPatientId(patientId);
-        return ResponseEntity.ok(radiologyDTOs);
+    public ResponseEntity<PaginationResultDTO> getByPatientId(@PathVariable Long patientId, Pageable pageable) {
+        return ResponseEntity.ok().body(radiologyService.getByPatientId(patientId, pageable));
+    }
+    @GetMapping("/medical-exam/{id}")
+    public ResponseEntity<PaginationResultDTO> getByMedicalExamId(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok().body(radiologyService.getByMedicalExamId(id, pageable));
     }
 }

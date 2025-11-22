@@ -61,4 +61,12 @@ public class MedicalExamService implements IMedicalExamService {
         medicalExamRepository.deleteById(id);
     }
 
+    @Override
+    public MedicalExamDTO findMedicalExamWithPatientId(Long patientId) {
+        MedicalExam medicalExam = medicalExamRepository.findMedicalExamByPatientId(patientId);
+        if (medicalExam == null) {
+            throw new BadActionException("Medical examination not found for patient with ID: " + patientId);
+        }
+        return modelMapper.map(medicalExam, MedicalExamDTO.class);
+    }
 }

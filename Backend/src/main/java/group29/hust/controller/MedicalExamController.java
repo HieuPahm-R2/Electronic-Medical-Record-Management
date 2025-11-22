@@ -43,12 +43,16 @@ public class MedicalExamController {
         return ResponseEntity.ok(medicalExamDTO);
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/patient/{id}")
+    @MessageApi("Medical examination retrieved successfully")
+    public ResponseEntity<?> getMedicalExamByPatientId(@PathVariable Long id) {
+        MedicalExamDTO medicalExamDTO = medicalExamService.findMedicalExamWithPatientId(id);
+        return ResponseEntity.ok(medicalExamDTO);
+    }
+
+    @PutMapping
     @MessageApi("Medical examination updated successfully")
-    public ResponseEntity<?> updateMedicalExam(
-            @PathVariable Long id,
-            @RequestBody MedicalExamDTO medicalExamDTO) throws BadActionException {
-        medicalExamDTO.setId(id);
+    public ResponseEntity<?> updateMedicalExam(@RequestBody MedicalExamDTO medicalExamDTO) throws BadActionException {
         MedicalExamDTO updatedMedicalExam = medicalExamService.update(medicalExamDTO);
         return ResponseEntity.ok(updatedMedicalExam);
     }

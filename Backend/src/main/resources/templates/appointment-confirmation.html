@@ -48,24 +48,20 @@
         </div>
         
         <div class="content">
-            <p>Kính gửi <span th:text="${patient.fullName}">Bệnh nhân</span>,</p>
+            <p>Kính gửi <span th:text="${name}">Bệnh nhân</span>,</p>
             
             <p>Chúng tôi xác nhận rằng lịch hẹn của bạn đã được chấp nhận với thông tin chi tiết như sau:</p>
             
             <div class="info-item">
                 <span class="info-label">Thời gian:</span> 
-                <span th:text="${#temporals.format(appointment.appointmentStartTime, 'dd/MM/yyyy HH:mm')}">01/01/2023 09:00</span>
+                <span th:text="${#temporals.format(appointment.time, 'dd/MM/yyyy HH:mm')}">01/01/2023 09:00</span>
             </div>
+
             
-            <div class="info-item" th:if="${doctor != null}">
-                <span class="info-label">Bác sĩ:</span> 
-                <span th:text="${doctor.fullName}">Bác sĩ</span>
-            </div>
-            
-            <div class="info-item" th:if="${appointment.clinicalServices != null && !appointment.clinicalServices.isEmpty()}">
-                <span class="info-label">Dịch vụ:</span>
+            <div class="info-item" th:if="${appointment.clinicalService != null && !appointment.clinicalService.isEmpty()}">
+                <span class="info-label">Dịch vụ đã đăng ký:</span>
                 <ul>
-                    <li th:each="service : ${appointment.clinicalServices}" th:text="${service.name}">Dịch vụ</li>
+                    <li th:each="service : ${appointment.clinicalService}" th:text="${service.title}">Dịch vụ</li>
                 </ul>
             </div>
             
@@ -79,7 +75,7 @@
         
         <div class="footer">
             <p>Đây là email tự động, vui lòng không trả lời.</p>
-            <p>© 2023 Phòng khám của chúng tôi. Mọi quyền được bảo lưu.</p>
+            <p>© 2025 Đại Học Bách Khoa Hà Nội - HUST. Mọi quyền được bảo lưu.</p>
         </div>
     </div>
 </body>
