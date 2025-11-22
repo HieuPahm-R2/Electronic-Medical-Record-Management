@@ -107,11 +107,11 @@ const LoginPage = () => {
     return (
         <>
             <Layout className="layout-default layout-signin">
-                <Header>
+                <Header style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="header-col header-brand">
                         <h5>Group 29 Production</h5>
                     </div>
-                    <div className="header-col header-nav">
+                    <div className="header-col header-nav ">
                         <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
                             <Menu.Item key="1">
                                 <Link to="/">

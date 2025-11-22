@@ -1,34 +1,36 @@
 import DataTable from "@/components/admin/DataTable";
+import Access from "@/components/share/Access";
+import { callDeletePatient } from "@/config/api";
+import { ALL_PERMISSIONS } from "@/constant/permission";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { IRole, IModelPaginate } from "@/types/backend";
+import { fetchPatient } from "@/redux/slice/patientSlice";
+import { IModelPaginate, IPatient } from "@/types/backend";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
-import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
-import { useState, useRef } from "react";
+import { Button, message, notification, Popconfirm, Space } from "antd";
 import dayjs from "dayjs";
-import { callDeleteRole } from "@/config/api";
 import queryString from "query-string";
-import { fetchRole, fetchRoleById } from "@/redux/slice/roleSlice";
-import ModalRole from "@/components/admin/role/ModalRole";
-import { ALL_PERMISSIONS } from "@/constant/permission";
-import Access from "@/components/share/access";
+import { useRef, useState } from "react";
 import { sfLike } from "spring-filter-query-builder";
 
-const RolePage = () => {
+
+const PatientTable = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [dataInit, setDataInit] = useState<IPatient | null>(null);
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
 
     const tableRef = useRef<ActionType>();
 
-    const isFetching = useAppSelector((state) => state.role.isFetching);
-    const meta = useAppSelector((state) => state.role.meta);
-    const roles = useAppSelector((state) => state.role.result);
+    const isFetching = useAppSelector((state) => state.patient.isFetching);
+    const meta = useAppSelector((state) => state.patient.meta);
+    const users = useAppSelector((state) => state.patient.result);
     const dispatch = useAppDispatch();
 
-    const handleDeleteRole = async (id: string | undefined) => {
+    const handleDeleteUser = async (id: string | undefined) => {
         if (id) {
-            const res = await callDeleteRole(id);
-            if (res && res.data === null) {
-                message.success("Xóa Role thành công");
+            const res = await callDeletePatient(id);
+            if (+res.statusCode === 200) {
+                message.success("Xóa User thành công");
                 reloadTable();
             } else {
                 notification.error({
@@ -43,37 +45,39 @@ const RolePage = () => {
         tableRef?.current?.reload();
     };
 
-    const columns: ProColumns<IRole>[] = [
+    const columns: ProColumns<IPatient>[] = [
         {
-            title: "Id",
-            dataIndex: "id",
-            width: 250,
-            render: (text, record, index, action) => {
-                return <span>{record.id}</span>;
+            title: "STT",
+            key: "index",
+            width: 20,
+            align: "center",
+            render: (text, record, index) => {
+                return <>{index + 1 + (meta.page - 1) * meta.pageSize}</>;
             },
             hideInSearch: true,
         },
         {
-            title: "Name",
-            dataIndex: "name",
+            title: "Mã bệnh nhân",
+            dataIndex: "patientCode",
             sorter: true,
         },
         {
-            title: "Trạng thái",
-            dataIndex: "active",
-            render(dom, entity, index, action, schema) {
-                return (
-                    <>
-                        <Tag color={entity.active ? "lime" : "red"}>
-                            {entity.active ? "ACTIVE" : "INACTIVE"}
-                        </Tag>
-                    </>
-                );
-            },
-            hideInSearch: true,
+            title: "Họ và Tên",
+            dataIndex: "fullName",
+            sorter: true,
         },
         {
-            title: "CreatedAt",
+            title: "Số điện thoại",
+            dataIndex: "phone",
+            sorter: true,
+        },
+        {
+            title: "Địa chỉ",
+            dataIndex: "address",
+            sorter: true,
+        },
+        {
+            title: "Thời gian tạo",
             dataIndex: "createdAt",
             width: 200,
             sorter: true,
@@ -89,7 +93,7 @@ const RolePage = () => {
             hideInSearch: true,
         },
         {
-            title: "UpdatedAt",
+            title: "Thời gian cập nhật",
             dataIndex: "updatedAt",
             width: 200,
             sorter: true,
@@ -110,7 +114,7 @@ const RolePage = () => {
             width: 50,
             render: (_value, entity, _index, _action) => (
                 <Space>
-                    <Access permission={ALL_PERMISSIONS.ROLES.UPDATE} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
                         <EditOutlined
                             style={{
                                 fontSize: 20,
@@ -118,17 +122,18 @@ const RolePage = () => {
                             }}
                             type=""
                             onClick={() => {
-                                dispatch(fetchRoleById(entity.id as string));
                                 setOpenModal(true);
+                                setDataInit(entity);
                             }}
                         />
                     </Access>
-                    <Access permission={ALL_PERMISSIONS.ROLES.DELETE} hideChildren>
+
+                    <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa role"}
-                            description={"Bạn có chắc chắn muốn xóa role này ?"}
-                            onConfirm={() => handleDeleteRole(entity.id)}
+                            title={"Xác nhận xóa user"}
+                            description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            onConfirm={() => handleDeleteUser(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
@@ -148,22 +153,29 @@ const RolePage = () => {
     ];
 
     const buildQuery = (params: any, sort: any, filter: any) => {
-        const clone = { ...params };
         const q: any = {
             page: (params.current || 1) - 1,
             size: params.pageSize,
             filter: "",
         };
 
+        const clone = { ...params };
         if (clone.name) q.filter = `${sfLike("name", clone.name)}`;
+        if (clone.email) {
+            q.filter = clone.name
+                ? q.filter + " and " + `${sfLike("email", clone.email)}`
+                : `${sfLike("email", clone.email)}`;
+        }
 
         if (!q.filter) delete q.filter;
-
         let temp = queryString.stringify(q);
 
         let sortBy = "";
         if (sort && sort.name) {
             sortBy = sort.name === "ascend" ? "sort=name,asc" : "sort=name,desc";
+        }
+        if (sort && sort.email) {
+            sortBy = sort.email === "ascend" ? "sort=email,asc" : "sort=email,desc";
         }
         if (sort && sort.createdAt) {
             sortBy =
@@ -184,23 +196,24 @@ const RolePage = () => {
         } else {
             temp = `${temp}&${sortBy}`;
         }
+
         return temp;
     };
 
     return (
         <div>
-            <Access permission={ALL_PERMISSIONS.ROLES.GET_PAGINATE}>
-                <DataTable<IRole>
+            <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE}>
+                <DataTable<IPatient>
                     actionRef={tableRef}
-                    headerTitle="Danh sách Roles (Vai Trò)"
+                    headerTitle="Danh sách Users"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
-                    dataSource={roles}
-                    request={async (params, sort, filter) => {
+                    dataSource={users}
+                    request={async (params: any, sort: any, filter: any) => {
                         const query = buildQuery(params, sort, filter);
-                        const res = await dispatch(fetchRole({ query })).unwrap();
-                        const page = res.data as IModelPaginate<IRole> | undefined;
+                        const res = await dispatch(fetchPatient({ query })).unwrap();
+                        const page = res.data as IModelPaginate<IPatient> | undefined;
                         return {
                             data: page?.result ?? [],
                             total: page?.meta?.total ?? 0,
@@ -235,13 +248,16 @@ const RolePage = () => {
                     }}
                 />
             </Access>
-            <ModalRole
+            {/* <ModalUser
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 reloadTable={reloadTable}
-            />
+                dataInit={dataInit}
+                setDataInit={setDataInit}
+            /> */}
+
         </div>
     );
 };
 
-export default RolePage;
+export default PatientTable

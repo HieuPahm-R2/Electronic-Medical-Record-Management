@@ -50,6 +50,7 @@ const HomeHeader = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const isAuthenticatedb = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
+    console.log(user)
     const handleMenuClick = ({ key }) => {
         if (key === 'account') setIsModalOpen(true);
         if (key === 'admin') navigate('/admin');
@@ -63,8 +64,8 @@ const HomeHeader = () => {
 
     }
     // link to access avatar
-    // const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
-    // const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
+    const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
     let items = [
         {
             label: <label>Quản lý tài khoản</label>,
@@ -148,7 +149,6 @@ const HomeHeader = () => {
                                     </Space>
                                 </a>
                             </Dropdown>
-                            <NotificationBell userId={user?.id} />
                         </div>
                     }
 

@@ -24,8 +24,32 @@ export interface IUser {
         name: string;
     };
     createdBy?: string;
-    createdTime?: string;
-    updatedTime?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+export interface IPatient {
+    id?: string;
+    fullName?: string;
+    patientCode?: string;
+    dateOfBirth?: string;
+    email?: string;
+    phone?: number;
+    nationality?: string;
+    address?: string;
+    identityCard?: string;
+    insuranceNumber?: string;
+    insuranceExpired?: string;
+    gender?: string;
+    career?: string;
+    relativeName?: string;
+    relativePhone?: string;
+    ethnicity?: string;
+    religion?: string;
+
+    createdAt?: string;
+    updatedAt?: string;
+    createdBy?: string;
+
 }
 export interface IPermission {
     id?: string;
@@ -48,6 +72,6 @@ export interface IRole {
     permissions: IPermission[] | string[];
 
     createdBy?: string;
-    createdTime?: string;
-    updatedTime?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

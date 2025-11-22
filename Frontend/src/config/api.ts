@@ -1,5 +1,5 @@
 import instance from './axios.custom';
-import { IBackendRes, IModelPaginate, IPermission, IRole, IUser } from '@/types/backend';
+import { IBackendRes, IModelPaginate, IPatient, IPermission, IRole, IUser } from '@/types/backend';
 
 export const callCreateRole = (role: IRole): Promise<IBackendRes<IRole>> => {
     return instance.post('/api/v1/add-role', { ...role })
@@ -52,6 +52,16 @@ export const callDeleteUser = (id: string): Promise<IBackendRes<IUser>> => {
 
 export const callFetchUser = (query: string): Promise<IBackendRes<IModelPaginate<IUser>>> => {
     return instance.get(`/api/v1/users?${query}`);
+}
+/**
+ * 
+Module Patient
+ */
+export const callFetchPatient = (query: string): Promise<IBackendRes<IModelPaginate<IPatient>>> => {
+    return instance.get(`/api/v1/patients?${query}`);
+}
+export const callDeletePatient = (id: string): Promise<IBackendRes<IPatient>> => {
+    return instance.delete(`/api/v1/delete-patient/${id}`);
 }
 
 

@@ -3,7 +3,9 @@ import roleReducer from '@/redux/slice/roleSlice';
 import accountReducer from './slice/accountSlice';
 import permissionReducer from './slice/permissionSlice';
 import userReducer from './slice/userSlice';
+import patientReducer from './slice/patientSlice';
 import { injectStore } from './dispatch';
+
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +13,7 @@ export const store = configureStore({
         role: roleReducer,
         permission: permissionReducer,
         user: userReducer,
+        patient: patientReducer,
     }
 })
 injectStore(store.dispatch);

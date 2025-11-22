@@ -74,15 +74,15 @@ const SideNav = (props) => {
                     </NavLink>
                 </Menu.Item>
                 <Menu.Item className="menu-item-header" key="6">
-                    Table Manage
+                    Quản lý các bảng
                 </Menu.Item>
 
                 <Menu.Item key="2">
-                    <NavLink to="/admin/table-users" className={({ isActive }) => isActive ? 'active' : ''}>
+                    <NavLink to="/admin/table-patients" className={({ isActive }) => isActive ? 'active' : ''}>
                         <span
                             className="icon"
                             style={{
-                                background: page === "admintable-users" ? color : "",
+                                background: page === "table-patients" ? color : "",
                             }}
                         >
                             {tables}
@@ -91,11 +91,11 @@ const SideNav = (props) => {
                     </NavLink>
                 </Menu.Item>
                 <Menu.Item key="3">
-                    <NavLink to="/admin/table-films" className={({ isActive }) => isActive ? 'active' : ''}>
+                    <NavLink to="/admin/table-summary" className={({ isActive }) => isActive ? 'active' : ''}>
                         <span
                             className="icon"
                             style={{
-                                background: page === "table-films" ? color : "",
+                                background: page === "table-summary" ? color : "",
                             }}
                         >
                             {tables}
@@ -104,11 +104,11 @@ const SideNav = (props) => {
                     </NavLink>
                 </Menu.Item>
                 <Menu.Item key="3">
-                    <NavLink to="/admin/table-films" className={({ isActive }) => isActive ? 'active' : ''}>
+                    <NavLink to="/admin/table-appointment" className={({ isActive }) => isActive ? 'active' : ''}>
                         <span
                             className="icon"
                             style={{
-                                background: page === "table-films" ? color : "",
+                                background: page === "ttable-appointment" ? color : "",
                             }}
                         >
                             {tables}
@@ -146,12 +146,12 @@ const SideNav = (props) => {
                         <span className="label">Quản Lý Quyền Hạn</span>
                     </NavLink>
                 </Menu.Item>
-                <Menu.Item key="5">
-                    <NavLink to="/admin/table-permission" className={({ isActive }) => isActive ? 'active' : ''}>
+                <Menu.Item key="7">
+                    <NavLink to="/admin/table-users" className={({ isActive }) => isActive ? 'active' : ''}>
                         <span
                             className="icon"
                             style={{
-                                background: page === "table-permission" ? color : "",
+                                background: page === "table-users" ? color : "",
                             }}
                         >
                             {tables}

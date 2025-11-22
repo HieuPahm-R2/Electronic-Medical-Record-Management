@@ -7,12 +7,14 @@ import LayoutAdmin from "../layout/LayoutAdmin";
 import Error404 from "../components/errors/NotFoundPage";
 import LayoutClient from "@/layout/LayoutClient";
 import HomePageClient from "@/pages/client/HomePageClient";
-
 import RolePage from "@/pages/admin/RoleTable";
 
 import PermissionPage from "@/pages/admin/PermissionTable";
 import LayoutApp from "@/components/share/LayoutApp";
 import ProtectedRoute from "@/components/share/protected/RouteProtect";
+import PatientTable from "@/pages/admin/PatientTable";
+import AppointmentTable from "@/pages/admin/AppointmentTable";
+import SummaryRecord from "@/pages/admin/SummaryRecord";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,21 @@ const router = createBrowserRouter([
             <AdminHome />
           </ProtectedRoute>
 
+      },
+      {
+        path: "table-patients",
+        element:
+          <PatientTable />
+      },
+      {
+        path: "table-appointment",
+        element:
+          <AppointmentTable />
+      },
+      {
+        path: "table-summary",
+        element:
+          <SummaryRecord />
       },
       {
         path: "table-users",

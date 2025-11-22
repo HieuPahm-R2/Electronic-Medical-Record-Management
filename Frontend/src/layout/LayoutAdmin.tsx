@@ -7,6 +7,7 @@ import SideNav from "../components/admin/SideBar";
 import { useSelector } from "react-redux";
 import "../assets/styles/admin/main.scss"
 import "../assets/styles/admin/responsive.scss"
+import Error403 from "@/components/errors/ForbiddenPage";
 
 const { Header: AntHeader, Content, Sider } = Layout;
 
@@ -25,52 +26,50 @@ const LayoutAdmin = () => {
 
     let { pathname } = useLocation();
     pathname = pathname.replace("/", "");
-    return (
+    return isAdminRoute && userRole === 'ADMIN' ? (
         <Layout
-            className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""
-                } `}
+            className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""} `}
         >
-            {isAdminRoute && userRole === 'ADMIN' &&
-                <Drawer
-                    title={false}
-                    placement={"right"}
-                    closable={false}
-                    onClose={() => setVisible(false)}
-                    key={"right"}
-                    width={250}
-                    className={`drawer-sidebar`}
+            <Drawer
+                title={false}
+                placement={"right"}
+                closable={false}
+                onClose={() => setVisible(false)}
+                key={"right"}
+                width={250}
+                className={`drawer-sidebar`}
+            >
+                <Layout
+                    className={`layout-dashboard`}
                 >
-                    <Layout
-                        className={`layout-dashboard`}
+                    <Sider
+                        trigger={null}
+                        width={250}
+                        theme="light"
+                        className={`sider-primary ant-layout-sider-primary `}
+                        style={{ background: "transparent" }}
                     >
-                        <Sider
-                            trigger={null}
-                            width={250}
-                            theme="light"
-                            className={`sider-primary ant-layout-sider-primary `}
-                            style={{ background: "transparent" }}
-                        >
-                            <SideNav color={sidenavColor} />
-                        </Sider>
-                    </Layout>
-                </Drawer>
-            }
-            {isAdminRoute == true && userRole === 'ADMIN' &&
-                <Sider
-                    breakpoint="lg"
-                    collapsedWidth="0"
-                    onCollapse={(collapsed, type) => {
-                        console.log(collapsed, type);
-                    }}
-                    trigger={null}
-                    width={250}
-                    theme="light"
-                    className={`sider-primary ant-layout-sider-primary`}
-                    style={{ background: "transparent" }}
-                >
-                    <SideNav color={sidenavColor} />
-                </Sider>
-            }
+                        <SideNav color={sidenavColor} />
+                    </Sider>
+                </Layout>
+            </Drawer>
+
+
+            <Sider
+                breakpoint="lg"
+                collapsedWidth="0"
+                onCollapse={(collapsed, type) => {
+                    console.log(collapsed, type);
+                }}
+                trigger={null}
+                width={250}
+                theme="light"
+                className={`sider-primary ant-layout-sider-primary`}
+                style={{ background: "transparent" }}
+            >
+                <SideNav color={sidenavColor} />
+            </Sider>
+
 
             <Layout>
                 <Affix>
@@ -88,12 +87,12 @@ const LayoutAdmin = () => {
                 <Content className="content-ant">
                     <Outlet />
                 </Content>
-                {isAdminRoute == true && userRole === 'ADMIN' &&
-                    <FooterAdmin />
-                }
+
+                <FooterAdmin />
+
             </Layout>
         </Layout>
-    )
+    ) : <Error403 />;
 }
 
 export default LayoutAdmin

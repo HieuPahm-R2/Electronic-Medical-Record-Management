@@ -59,7 +59,7 @@ const UserPage = () => {
         },
         {
             title: "Username",
-            dataIndex: "fullName",
+            dataIndex: "username",
             sorter: true,
         },
         {
@@ -77,14 +77,14 @@ const UserPage = () => {
 
         {
             title: "Thời gian tạo",
-            dataIndex: "createdTime",
+            dataIndex: "createdAt",
             width: 200,
             sorter: true,
             render: (text, record, index, action) => {
                 return (
                     <>
-                        {record.createdTime
-                            ? dayjs(record.createdTime).format("DD-MM-YYYY HH:mm:ss")
+                        {record.createdAt
+                            ? dayjs(record.createdAt).format("DD-MM-YYYY HH:mm:ss")
                             : ""}
                     </>
                 );
@@ -93,14 +93,14 @@ const UserPage = () => {
         },
         {
             title: "Thời gian cập nhật",
-            dataIndex: "updatedTime",
+            dataIndex: "updatedAt",
             width: 200,
             sorter: true,
             render: (text, record, index, action) => {
                 return (
                     <>
-                        {record.updatedTime
-                            ? dayjs(record.updatedTime).format("DD-MM-YYYY HH:mm:ss")
+                        {record.updatedAt
+                            ? dayjs(record.updatedAt).format("DD-MM-YYYY HH:mm:ss")
                             : ""}
                     </>
                 );
@@ -176,22 +176,22 @@ const UserPage = () => {
         if (sort && sort.email) {
             sortBy = sort.email === "ascend" ? "sort=email,asc" : "sort=email,desc";
         }
-        if (sort && sort.createdTime) {
+        if (sort && sort.createdAt) {
             sortBy =
-                sort.createdTime === "ascend"
-                    ? "sort=createdTime,asc"
-                    : "sort=createdTime,desc";
+                sort.createdAt === "ascend"
+                    ? "sort=createdAt,asc"
+                    : "sort=createdAt,desc";
         }
-        if (sort && sort.updatedTime) {
+        if (sort && sort.updatedAt) {
             sortBy =
-                sort.updatedTime === "ascend"
-                    ? "sort=updatedTime,asc"
-                    : "sort=updatedTime,desc";
+                sort.updatedAt === "ascend"
+                    ? "sort=updatedAt,asc"
+                    : "sort=updatedAt,desc";
         }
 
         //mặc định sort theo updated time
         if (Object.keys(sortBy).length === 0) {
-            temp = `${temp}&sort=updatedTime,desc`;
+            temp = `${temp}&sort=updatedAt,desc`;
         } else {
             temp = `${temp}&${sortBy}`;
         }
