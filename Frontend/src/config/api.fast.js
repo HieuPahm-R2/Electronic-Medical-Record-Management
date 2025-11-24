@@ -31,3 +31,4 @@ export const callFetchAccountAPI = () => {
 export const LogoutAPI = () => {
     return instance.post('/api/v1/auth/logout')
 }
+// Create at the same time when creating a patient API

@@ -4,7 +4,7 @@ import accountReducer from './slice/accountSlice';
 import permissionReducer from './slice/permissionSlice';
 import userReducer from './slice/userSlice';
 import patientReducer from './slice/patientSlice';
-import { injectStore } from './dispatch';
+import { injectStore } from '../config/axios.custom';
 
 
 export const store = configureStore({

@@ -1,4 +1,6 @@
 import DataTable from "@/components/admin/DataTable";
+import ModalPatient from "@/components/admin/patients/ModalPatient";
+import ModalPatientCreate from "@/components/admin/patients/ModalPatientCreate";
 import Access from "@/components/share/Access";
 import { callDeletePatient } from "@/config/api";
 import { ALL_PERMISSIONS } from "@/constant/permission";
@@ -17,7 +19,7 @@ import { sfLike } from "spring-filter-query-builder";
 const PatientTable = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<IPatient | null>(null);
-    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const tableRef = useRef<ActionType>();
 
@@ -240,7 +242,7 @@ const PatientTable = () => {
                             <Button
                                 icon={<PlusOutlined />}
                                 type="primary"
-                                onClick={() => setOpenModal(true)}
+                                onClick={() => setOpenModalCreate(true)}
                             >
                                 Thêm mới
                             </Button>
@@ -248,14 +250,18 @@ const PatientTable = () => {
                     }}
                 />
             </Access>
-            {/* <ModalUser
+            <ModalPatient
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 reloadTable={reloadTable}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
-            /> */}
-
+            />
+            <ModalPatientCreate
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                reloadTable={reloadTable}
+            />
         </div>
     );
 };

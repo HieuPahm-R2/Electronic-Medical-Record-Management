@@ -1,5 +1,5 @@
 import instance from './axios.custom';
-import { IBackendRes, IModelPaginate, IPatient, IPermission, IRole, IUser } from '@/types/backend';
+import { IBackendRes, IBloodTest, IClinicalInfo, IDiagnose, IMedicalExam, IModelPaginate, IPatient, IPermission, IRadiology, IRole, IUser, IVitalSign } from '@/types/backend';
 
 export const callCreateRole = (role: IRole): Promise<IBackendRes<IRole>> => {
     return instance.post('/api/v1/add-role', { ...role })
@@ -63,5 +63,32 @@ export const callFetchPatient = (query: string): Promise<IBackendRes<IModelPagin
 export const callDeletePatient = (id: string): Promise<IBackendRes<IPatient>> => {
     return instance.delete(`/api/v1/delete-patient/${id}`);
 }
+export const callCreatePatient = (user: IPatient): Promise<IBackendRes<IPatient>> => {
+    return instance.post('/api/v1/add-patient', { ...user })
+}
 
-
+export const callUpdatePatient = (user: IPatient): Promise<IBackendRes<IPatient>> => {
+    return instance.put(`/api/v1/update-patient`, { ...user })
+}
+/**
+ * 
+Module medical Exam
+ */
+export const callCreateMedicalExam = (md: IMedicalExam): Promise<IBackendRes<IMedicalExam>> => {
+    return instance.post(`/api/v1/medical-exams`, { ...md })
+}
+export const callCreateVitalSign = (vs: IVitalSign): Promise<IBackendRes<IVitalSign>> => {
+    return instance.post(`/api/v1/vital-signs`, { ...vs })
+}
+export const callCreateBloodTest = (bl: IBloodTest): Promise<IBackendRes<IBloodTest>> => {
+    return instance.post(`/api/v1/blood-tests`, { ...bl })
+}
+export const callCreateClinicalInfo = (ci: IClinicalInfo): Promise<IBackendRes<IClinicalInfo>> => {
+    return instance.post(`/api/v1/clinical-info`, { ...ci })
+}
+export const callCreateRadioloy = (ra: IRadiology): Promise<IBackendRes<IRadiology>> => {
+    return instance.post(`/api/v1/radiology`, { ...ra })
+}
+export const callCreateDiagnose = (dig: IDiagnose): Promise<IBackendRes<IDiagnose>> => {
+    return instance.post(`/api/v1/diagnose-final`, { ...dig })
+}   

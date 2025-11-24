@@ -1,4 +1,3 @@
-import { dispatchFromAnywhere } from "@/redux/dispatch";
 import { setRefreshTokenAction } from "@/redux/slice/accountSlice";
 import { IBackendRes } from "@/types/backend";
 import { notification } from "antd";
@@ -38,6 +37,7 @@ instance.interceptors.request.use(function (config) {
 // Add a response interceptor
 instance.interceptors.response.use((res) => res.data,
     async (error) => {
+        console.log(error)
         if (error.config && error.response
             && +error.response.status === 401
             && error.config.url !== '/api/v1/auth/login'
@@ -54,13 +54,22 @@ instance.interceptors.response.use((res) => res.data,
 
         if (
             error.config && error.response
-            && +error.response.status === 400
+            && +error.response.status === 401
             && error.config.url === '/api/v1/auth/refresh'
             && location.pathname.startsWith("/admin")
         ) {
             const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
             //dispatch redux action
-            dispatchFromAnywhere(setRefreshTokenAction({ status: true, message }))
+            dispatch(setRefreshTokenAction({ status: true, message: `${message}` }))
+        }
+        if (
+            error.config && error.response
+            && +error.response.status === 401
+            && error.config.url === '/api/v1/auth/refresh'
+        ) {
+            const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
+            //dispatch redux action
+            dispatch(setRefreshTokenAction({ status: true, message }))
         }
 
         if (+error.response.status === 403) {
@@ -73,3 +82,9 @@ instance.interceptors.response.use((res) => res.data,
         return error?.response?.data ?? Promise.reject(error);
     });
 export default instance
+
+let dispatch: any;
+
+export const injectStore = (_dispatch: any) => {
+    dispatch = _dispatch;
+};

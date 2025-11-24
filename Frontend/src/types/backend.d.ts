@@ -51,6 +51,131 @@ export interface IPatient {
     createdBy?: string;
 
 }
+
+export interface IMedicalExam {
+    id?: number;
+    arrivalTime?: string; // LocalDate -> string
+    receptionTime?: string;
+    referralSource?: string;
+    symptoms?: string;
+    reason?: string;
+    daysOfSymptoms?: number;
+
+    hasAllergy?: boolean;
+    allergyMonths?: number;
+
+    usesDrugs?: boolean;
+    drugsMonths?: number;
+
+    usesAlcohol?: boolean;
+    alcoholMonths?: number;
+
+    usesTobacco?: boolean;
+    tobaccoMonths?: number;
+
+    hasOther?: boolean;
+    otherMonths?: number;
+    otherDescription?: string;
+
+    personalMedicalHistory?: string;
+    familyMedicalHistory?: string;
+
+    patient?: IPatient;
+    department?: IDepartment;
+}
+
+export interface IVitalSign {
+    id: number;
+    temperature: number;
+    height: number;
+    weight: number;
+    heart_rate: number;
+    blood_group: string;
+    blood_type: string;
+    systolic_bp: number;
+    diastolic_bp: number;
+    pulse_rate: number;
+    respiratory_rate?: number;
+    notes?: string;
+    patient_id?: number;
+    medical_exam_id?: IMedicalExamRes;
+}
+
+export interface IBloodTest {
+    id?: number;
+    conclusion?: string;
+    glucose?: number;
+    urea?: number;
+    rbc?: number;
+    hb?: number;
+    hct?: number;
+    mcv?: number;
+    mch?: number;
+    wbc?: number;
+    neut?: number;
+    blood_group?: string;
+    blood_type?: string;
+    image_url?: string;
+    patient_id?: number;
+    clinical_services?: IClinicalService;
+    medical_exam_id?: MedicalExamDTO;
+}
+
+export interface IRadiology {
+    id?: number;
+    image_path?: string;
+    conclusion?: string;
+    patient_id?: number;
+    clinical_service_id?: IClinicalService; // 
+    medical_exam_id?: IMedicalExamRes;
+}
+
+export interface IDiagnose {
+    id?: number;
+    main_disease?: string;
+    comorbidity?: string;
+    conclusion?: string;
+    prognosis?: string;
+    treatment_plan?: string;
+    patient_id?: number;
+    medical_exam_id?: MedicalExamRes;
+}
+
+export interface IClinicalInfo {
+    id?: number;
+    patient_id?: IPatient; // Lưu ý: Java đặt tên biến là 'patient' nhưng JsonProperty là 'patient_id'
+    medical_exam_id?: IMedicalExam; // Java: medicalExam -> Json: medical_exam_id
+    clinical_services?: IClinicalService[]; // Set -> Array
+
+    circulatory_diagnosis?: string;
+    respiratory_diagnosis?: string;
+    genitourinary_diagnosis?: string;
+    bone_diagnosis?: string;
+    rhm_diagnosis?: string;
+    digestive_diagnosis?: string;
+    nervous_diagnosis?: string;
+    ent_diagnosis?: string;
+    other_diagnoses?: string;
+    syndrome?: string;
+}
+
+export interface IDepartment {
+    id?: number;
+    name?: string;
+}
+
+export interface IClinicalService {
+    id?: number;
+    serviceName?: string;
+
+}
+
+export interface IMedicalExamRes {
+    id?: number;
+    patientId?: number;
+    department?: string;
+}
+
 export interface IPermission {
     id?: string;
     name?: string;
