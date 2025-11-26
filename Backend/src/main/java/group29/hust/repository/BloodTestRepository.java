@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 public interface BloodTestRepository extends JpaRepository<BloodTest, Long>, JpaSpecificationExecutor<BloodTest> {
-    List<BloodTest> findByPatientId(Long patientId);
+    BloodTest findByPatientId(Long patientId);
     
     // For finding tests linked to a clinical service
     BloodTest findByClinicalServices_Id(Long clinicalServiceId);
     
     // For finding tests associated with a medical exam
-    List<BloodTest> findByMedicalExamination_Id(Long medicalExamId);
+    BloodTest findByMedicalExamination_Id(Long medicalExamId);
 }

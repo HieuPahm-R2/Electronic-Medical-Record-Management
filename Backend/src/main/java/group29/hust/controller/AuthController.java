@@ -86,20 +86,25 @@ public class AuthController {
 
     @GetMapping("/auth/account")
     public ResponseEntity<ResLoginDTO.GetAccountUser> getAccount() {
-        String emailLogin = SecurityUtils.getCurrentUserLogin().isPresent()
-                ? SecurityUtils.getCurrentUserLogin().get()
-                : "";
-        User userCreated = this.userService.handleGetUserByUsername(emailLogin);
-        ResLoginDTO.UserData userData = new ResLoginDTO.UserData();
-        ResLoginDTO.GetAccountUser info = new ResLoginDTO.GetAccountUser();
-        if (userCreated != null) {
-            userData.setId(userCreated.getId());
-            userData.setEmail(userCreated.getEmail());
-            userData.setName(userCreated.getUsername());
-            userData.setRole(userCreated.getRole());
-            info.setUser(userData);
+        try{
+            String emailLogin = SecurityUtils.getCurrentUserLogin().isPresent()
+                    ? SecurityUtils.getCurrentUserLogin().get()
+                    : "";
+            User userCreated = this.userService.handleGetUserByUsername(emailLogin);
+            ResLoginDTO.UserData userData = new ResLoginDTO.UserData();
+            ResLoginDTO.GetAccountUser info = new ResLoginDTO.GetAccountUser();
+            if (userCreated != null) {
+                userData.setId(userCreated.getId());
+                userData.setEmail(userCreated.getEmail());
+                userData.setName(userCreated.getUsername());
+                userData.setRole(userCreated.getRole());
+                info.setUser(userData);
+            }
+            return ResponseEntity.ok().body(info);
+        }catch(Exception ex){
+            throw new RuntimeException(ex);
         }
-        return ResponseEntity.ok().body(info);
+
     }
 
     @GetMapping("/auth/refresh")
@@ -149,7 +154,8 @@ public class AuthController {
                 .maxAge(refreshTokenExpire)
                 .build();
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, resCookies.toString()).body(resLoginDTO);
+                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                .body(resLoginDTO);
     }
 
     @PostMapping("/auth/logout")

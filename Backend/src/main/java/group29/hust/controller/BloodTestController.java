@@ -44,12 +44,12 @@ public class BloodTestController {
     }
 
     @GetMapping("/patient/{id}")
-    public ResponseEntity<PaginationResultDTO> getBloodTestsByPatientId(@PathVariable Long id, Pageable pageable) {
-        return ResponseEntity.ok().body(bloodTestService.getByPatientId(id, pageable));
+    public ResponseEntity<BloodTestDTO> getBloodTestsByPatientId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(bloodTestService.getByPatientId(id));
     }
     @GetMapping("/medical-exam/{id}")
-    public ResponseEntity<PaginationResultDTO> getByMedicalExamId(@PathVariable Long id, Pageable pageable) {
-        return ResponseEntity.ok().body(bloodTestService.getByMedicalExamId(id, pageable));
+    public ResponseEntity<BloodTestDTO> getByMedicalExamId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(bloodTestService.getByMedicalExamId(id));
     }
 
 

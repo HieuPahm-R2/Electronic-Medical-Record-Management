@@ -1,6 +1,7 @@
 package group29.hust.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import group29.hust.dtos.response.MedicalExamRes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,5 +49,5 @@ public class VitalSignDTO {
     private Long patientId;
 
     @JsonProperty("medical_exam_id")
-    private Long medicalExamId;
+    private MedicalExamRes medicalExam;
 }

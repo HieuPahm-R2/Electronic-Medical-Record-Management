@@ -2,9 +2,11 @@ package group29.hust.service.impl;
 
 import group29.hust.dtos.request.ClinicalInfoDTO;
 import group29.hust.dtos.request.ClinicalServiceDTO;
+import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.exception.BadActionException;
 import group29.hust.model.ClinicalInfo;
 import group29.hust.model.ClinicalService;
+import group29.hust.model.Permission;
 import group29.hust.repository.ClinicalInfoRepository;
 import group29.hust.repository.ClinicalRepository;
 import group29.hust.repository.MedicalExamRepository;
@@ -12,6 +14,9 @@ import group29.hust.repository.PatientRepository;
 import group29.hust.service.IClinicalInfoService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,5 +100,21 @@ public class ClinicalInfoService implements IClinicalInfoService {
             throw new BadActionException("Clinical information not found for medical exam with ID: " + medicalExamId);
         }
         return modelMapper.map(clinicalInfo, ClinicalInfoDTO.class);
+    }
+
+    @Override
+    public PaginationResultDTO getAll(Specification<ClinicalService> spec, Pageable pageable) {
+        Page<ClinicalService> page = this.clinicalRepository.findAll(spec, pageable);
+        PaginationResultDTO rs = new PaginationResultDTO();
+        PaginationResultDTO.Meta mt = new PaginationResultDTO.Meta();
+
+        mt.setPage(page.getNumber() + 1);
+        mt.setPageSize(page.getSize());
+        mt.setPages(page.getTotalPages());
+        mt.setTotal(page.getTotalElements());
+
+        rs.setMeta(mt);
+        rs.setResult(page.getContent());
+        return rs;
     }
 }

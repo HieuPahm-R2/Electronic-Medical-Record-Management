@@ -20,7 +20,7 @@ public class MedicalExam {
     @Column(name = "arrival_time")
     private LocalDate arrivalTime;
 
-    @Column(name = "reception_time", nullable = false)
+    @Column(name = "reception_time")
     private LocalDate receptionTime;
 
     @Column(name = "referral_source")
@@ -29,37 +29,37 @@ public class MedicalExam {
     @Column(name = "symptoms", columnDefinition = "TEXT")
     private String symptoms;
 
-    @Column(name = "reason", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "reason", columnDefinition = "TEXT")
     private String reason;
 
     @Column(name = "days_of_symptoms")
     private Integer daysOfSymptoms;
 
-    @Column(name = "has_allergy", nullable = false)
+    @Column(name = "has_allergy")
     private boolean hasAllergy = false;
 
     @Column(name = "allergy_months")
     private Integer allergyMonths;
 
-    @Column(name = "uses_drugs", nullable = false)
+    @Column(name = "uses_drugs")
     private boolean usesDrugs = false;
 
     @Column(name = "drugs_months")
     private Integer drugsMonths;
 
-    @Column(name = "uses_alcohol", nullable = false)
+    @Column(name = "uses_alcohol")
     private boolean usesAlcohol = false;
 
     @Column(name = "alcohol_months")
     private Integer alcoholMonths;
 
-    @Column(name = "uses_tobacco", nullable = false)
+    @Column(name = "uses_tobacco")
     private boolean usesTobacco = false;
 
     @Column(name = "tobacco_months")
     private Integer tobaccoMonths;
 
-    @Column(name = "has_other", nullable = false)
+    @Column(name = "has_other")
     private boolean hasOther = false;
 
     @Column(name = "other_months")
@@ -81,7 +81,7 @@ public class MedicalExam {
     private Patient patient;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "department_id")
     private Department department;
 
     @OneToOne(mappedBy = "medicalExam", cascade = CascadeType.ALL)
@@ -93,12 +93,9 @@ public class MedicalExam {
     @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
     private DiagnoseFinal diagnoseFinal;
 
-    @OneToMany(mappedBy = "medicalExamination", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Radiology> radiologyResults = new ArrayList<>();
+    @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
+    private Radiology radiologyResults;
 
-    @OneToMany(mappedBy = "medicalExamination",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<BloodTest> bloodTests = new ArrayList<>();
+    @OneToOne(mappedBy = "medicalExamination")
+    private BloodTest bloodTests;
 }

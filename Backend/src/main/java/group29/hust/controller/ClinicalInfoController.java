@@ -1,12 +1,18 @@
 package group29.hust.controller;
 
+import com.turkraft.springfilter.boot.Filter;
 import group29.hust.dtos.request.ClinicalInfoDTO;
+import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.exception.BadActionException;
+import group29.hust.model.ClinicalService;
+import group29.hust.model.Patient;
 import group29.hust.repository.ClinicalInfoRepository;
 import group29.hust.service.IClinicalInfoService;
 import group29.hust.utils.anotation.MessageApi;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +80,11 @@ public class ClinicalInfoController {
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Error in getVitalSignsByPatientId: " + e.getMessage());
         }
+    }
+    @GetMapping("/service-name")
+    @MessageApi("Fetch all patients with pagination")
+    public ResponseEntity<PaginationResultDTO> getAllPatients(@Filter Specification<ClinicalService> spec,
+                                                              Pageable pageable) {
+        return ResponseEntity.ok().body(this.clinicalInfoService.getAll(spec, pageable));
     }
 }

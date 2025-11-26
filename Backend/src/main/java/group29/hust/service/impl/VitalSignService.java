@@ -32,8 +32,8 @@ public class VitalSignService implements IVitalSignService {
                 .orElseThrow(() -> new BadActionException("Patient not found with ID: " + dto.getPatientId()));
         vitalSign.setPatient(patient);
 
-        MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExamId())
-                .orElseThrow(() -> new BadActionException("Medical examination not found with ID: " + dto.getMedicalExamId()));
+        MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExam().getId())
+                .orElseThrow(() -> new BadActionException("Medical examination not found with ID: " + dto.getMedicalExam()));
         vitalSign.setMedicalExam(medicalExam);
         // Save the entity
         VitalSign savedVitalSign = vitalSignRepository.save(vitalSign);

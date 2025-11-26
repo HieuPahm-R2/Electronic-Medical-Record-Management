@@ -26,10 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -163,77 +160,22 @@ public class BloodTestService implements IBloodTestService {
         }
         bloodTestRepository.deleteById(id);
     }
-    
-    @Transactional(readOnly = true)
-    public List<BloodTestDTO> getByPatientId(Long patientId) {
-        return bloodTestRepository.findByPatientId(patientId).stream()
-                .map(bloodTest -> modelMapper.map(bloodTest, BloodTestDTO.class))
-                .collect(Collectors.toList());
-    }
 
 @Override
-public PaginationResultDTO getByMedicalExamId(Long medicalExamId, Pageable pageable) {
-    if (medicalExamId == null) {
-        throw new BadActionException("Medical exam ID cannot be null");
-    }
-
-    if (!medicalExamRepository.existsById(medicalExamId)) {
-        throw new BadActionException("Medical exam ID not found");
-    }
-
-    // Create a filter for medicalExam.id property
-    FilterNode node = filterParser.parse("medicalExamination.id=" + medicalExamId);
-    FilterSpecification<BloodTest> spec = filterSpecificationConverter.convert(node);
-    
-    // Apply the filter and pagination
-    Page<BloodTest> pageResult = bloodTestRepository.findAll(spec, pageable);
-    
-    // Map to DTOs
-    List<BloodTestDTO> content = pageResult.getContent().stream()
-            .map(bloodTest -> modelMapper.map(bloodTest, BloodTestDTO.class))
-            .collect(Collectors.toList());
-    
-    // Set up pagination result
-    PaginationResultDTO result = new PaginationResultDTO();
-    PaginationResultDTO.Meta meta = new PaginationResultDTO.Meta();
-    meta.setPage(pageResult.getNumber() + 1);
-    meta.setPageSize(pageResult.getSize());
-    meta.setTotal(pageResult.getTotalElements());
-    meta.setPages(pageResult.getTotalPages());
-    
-    result.setMeta(meta);
-    result.setResult(content);
-    
-    return result;
+public BloodTestDTO getByMedicalExamId(Long medicalExamId) {
+        BloodTest res = bloodTestRepository.findByMedicalExamination_Id(medicalExamId);
+        if(res != null) {
+            return modelMapper.map(res, BloodTestDTO.class);
+        }
+        throw new BadActionException("Blood test not found with id: ");
 }
 
     @Override
-    public PaginationResultDTO getByPatientId(Long patientId, Pageable pageable) {
-
-        // Create a filter for medicalExam.id property
-        FilterNode node = filterParser.parse("patient.id=" + patientId);
-        FilterSpecification<BloodTest> spec = filterSpecificationConverter.convert(node);
-
-        // Apply the filter and pagination
-        Page<BloodTest> pageResult = bloodTestRepository.findAll(spec, pageable);
-
-        // Map to DTOs
-        List<BloodTestDTO> content = pageResult.getContent().stream()
-                .map(bloodTest -> modelMapper.map(bloodTest, BloodTestDTO.class))
-                .collect(Collectors.toList());
-
-        // Set up pagination result
-        PaginationResultDTO result = new PaginationResultDTO();
-        PaginationResultDTO.Meta meta = new PaginationResultDTO.Meta();
-        meta.setPage(pageResult.getNumber() + 1);
-        meta.setPageSize(pageResult.getSize());
-        meta.setTotal(pageResult.getTotalElements());
-        meta.setPages(pageResult.getTotalPages());
-
-        result.setMeta(meta);
-        result.setResult(content);
-
-        return result;
+    public BloodTestDTO getByPatientId(Long patientId) {
+        BloodTest res = bloodTestRepository.findByPatientId(patientId);
+        if(res != null) {
+            return modelMapper.map(res, BloodTestDTO.class);
+        }
+        throw new BadActionException("Blood test not found with id: ");
     }
-
 }

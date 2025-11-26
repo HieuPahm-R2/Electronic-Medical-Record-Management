@@ -66,7 +66,8 @@ public class BloodTest {
     @JoinColumn(name = "clinical_service_id", nullable = false)
     private ClinicalService clinicalServices;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medical_examination_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "medical_examination_id", unique = true)
     private MedicalExam medicalExamination;
+
 }

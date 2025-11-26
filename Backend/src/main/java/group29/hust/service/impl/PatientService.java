@@ -1,10 +1,13 @@
 package group29.hust.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import group29.hust.model.*;
+import group29.hust.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,20 +17,59 @@ import org.springframework.stereotype.Service;
 import group29.hust.exception.BadActionException;
 import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.dtos.request.PatientDTO;
-import group29.hust.model.Patient;
-import group29.hust.repository.PatientRepository;
 import group29.hust.service.IPatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class PatientService implements IPatientService {
     private final PatientRepository patientRepository;
+    private final RadiologyRepository radiologyRepository;
+    private final ClinicalInfoRepository clinicalInfoRepository;
+    private final MedicalExamRepository medicalExamRepository;
+    private final VitalSignRepository vitalSignRepository;
+    private final BloodTestRepository bloodTestRepository;
+    private final DiagnoseFinalRepository diagnoseFinalRepository;
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public PatientDTO insert(PatientDTO dto) {
-        return modelMapper.map(patientRepository.save(modelMapper.map(dto, Patient.class)), PatientDTO.class);
+        Patient res = patientRepository.save(modelMapper.map(dto, Patient.class));
+        // init
+        MedicalExam me = new MedicalExam();
+        VitalSign vt = new VitalSign();
+        Radiology rg = new Radiology();
+        ClinicalInfo clinicalInfo = new ClinicalInfo();
+        BloodTest bt = new BloodTest();
+        DiagnoseFinal dg = new DiagnoseFinal();
+
+        me.setPatient(res);
+        MedicalExam meFinal = medicalExamRepository.save(me);
+        // set value vital sign
+        vt.setPatient(res);
+        vt.setMedicalExam(meFinal);
+        vitalSignRepository.save(vt);
+        // set value blood test
+        bt.setPatient(res);
+        bt.setMedicalExamination(meFinal);
+        bloodTestRepository.save(bt);
+
+        // set value radiology
+        rg.setPatient(res);
+        rg.setMedicalExamination(meFinal);
+        radiologyRepository.save(rg);
+        // set value clinical info
+        clinicalInfo.setPatient(res);
+        clinicalInfo.setMedicalExam(meFinal);
+        clinicalInfoRepository.save(clinicalInfo);
+        // set value diagnose final
+        dg.setPatient(res);
+        dg.setMedicalExamination(meFinal);
+        diagnoseFinalRepository.save(dg);
+
+        return modelMapper.map((res), PatientDTO.class);
     }
 
     @Override
@@ -36,6 +78,7 @@ public class PatientService implements IPatientService {
                 () -> new NoSuchElementException("Patient not found with id: " + id)), PatientDTO.class);
     }
 
+    @Transactional
     @Override
     public PatientDTO update(PatientDTO dto) throws BadActionException {
         Optional<Patient> patient = patientRepository.findById(dto.getId());
@@ -75,6 +118,7 @@ public class PatientService implements IPatientService {
         return modelMapper.map(patientRepository.save(patient.get()), PatientDTO.class);
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         this.patientRepository.deleteById(id);
