@@ -4,7 +4,7 @@ import {
     Layout, Menu, Button, Row, Col, Form, Input, Switch, message, notification,
     Typography,
 } from "antd";
-import signinbg from "../../assets/images/login-intro1.jpg";
+import signinbg from "../../../public/vin1.jpg";
 import { DribbbleOutlined, TwitterOutlined, InstagramOutlined, GithubOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { runLoginAction } from "../../redux/slice/accountSlice";

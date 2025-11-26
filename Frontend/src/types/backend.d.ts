@@ -102,7 +102,7 @@ export interface IVitalSign {
 }
 
 export interface IBloodTest {
-    id?: number;
+    id?: string;
     conclusion?: string;
     glucose?: number;
     urea?: number;
@@ -116,9 +116,9 @@ export interface IBloodTest {
     blood_group?: string;
     blood_type?: string;
     image_url?: string;
-    patient_id?: number;
+    patient_id?: string;
     clinical_services?: IClinicalService;
-    medical_exam_id?: MedicalExamDTO;
+    medical_exam_id?: IMedicalExam;
 }
 
 export interface IRadiology {
@@ -165,7 +165,7 @@ export interface IDepartment {
 }
 
 export interface IClinicalService {
-    id?: number;
+    id?: string;
     serviceName?: string;
 
 }

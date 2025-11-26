@@ -1,38 +1,77 @@
-import { callCreatePatient } from '@/config/api';
-import { Col, DatePicker, Divider, Form, Input, Modal, Row, Select } from 'antd';
+import { callCreatePatient, callUpdatePatient } from '@/config/api';
+import { IPatient } from '@/types/backend';
+import { Col, DatePicker, DatePickerProps, Divider, Form, Input, message, Modal, notification, Row, Select } from 'antd';
 import { useState } from 'react';
 
-const ModalPatientCreate = (props) => {
-    const { openModalCreate, setOpenModalCreate, reloadTable } = props;
+interface IProps {
+    openModalCreate: boolean;
+    setOpenModalCreate: (v: boolean) => void;
+    dataInit?: IPatient | null;
+    setDataInit: (v: any) => void;
+    reloadTable: () => void;
+}
+
+const MPatientCreateAndUpdate = (props: IProps) => {
+    const { openModalCreate, setOpenModalCreate, reloadTable, dataInit, setDataInit } = props;
 
     const [form] = Form.useForm();
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
 
-    const onFinish = async (values) => {
-        const { fullName, dateOfBirth, email, phone, nationality, address, identityCard, insuranceNumber, insuranceExpired, gender, career, relativeName, relativePhone, ethnicity, religion } = values;
-
-        setIsSubmit(true);
-        const res = await callCreatePatient(fullName, dateOfBirth, email, phone, nationality, address, identityCard, insuranceNumber, insuranceExpired, gender, career, relativeName, relativePhone, ethnicity, religion);
-        if (res && res.data) {
-            notification.success({
-                message: 'Thành công',
-                description: 'Tạo thành công!'
-            })
-            setOpenModalCreate(false);
-            form.resetFields();
-
-            await reloadTable();
-        } else {
-            notification.error({
-                message: 'Lỗi',
-                description: 'Thao tác không thành công!'
-            })
-        }
-        setIsSubmit(false);
+    const handleReset = async () => {
+        form.resetFields();
+        setDataInit(null);
+        setOpenModalCreate(false);
     }
-    const onChangeDate = (date, dateString) => {
+
+    const onFinish = async (values: any) => {
+        const { fullName, dateOfBirth, email, phone, nationality, address, identityCard, insuranceNumber, insuranceExpired, gender, career, relativeName, relativePhone, ethnicity, religion } = values;
+        setIsSubmit(true);
+
+        if (dataInit?.id) {
+            //update
+            const user = {
+                id: dataInit.id,
+                fullName, dateOfBirth, email, phone,
+                nationality, address, identityCard, insuranceNumber, insuranceExpired,
+                gender, career, relativeName, relativePhone, ethnicity, religion
+            }
+
+            const res = await callUpdatePatient(user);
+            if (res.data) {
+                message.success("Cập nhật user thành công");
+                handleReset();
+                reloadTable();
+            } else {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: res.message
+                });
+            }
+        } else {
+            //create
+            const user = {
+                fullName, dateOfBirth, email, phone,
+                nationality, address, identityCard, insuranceNumber, insuranceExpired,
+                gender, career, relativeName, relativePhone, ethnicity, religion
+            }
+            const res = await callCreatePatient(user);
+            if (res.data) {
+                message.success("Thêm mới user thành công");
+                handleReset();
+                reloadTable();
+            } else {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: res.message
+                });
+            }
+        }
+
+
+    }
+    const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
         console.log(date, dateString);
     };
     return (
@@ -226,4 +265,4 @@ const ModalPatientCreate = (props) => {
     )
 }
 
-export default ModalPatientCreate
+export default MPatientCreateAndUpdate

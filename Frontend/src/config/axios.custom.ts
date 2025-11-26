@@ -17,9 +17,14 @@ const instance = axios.create({
 // sending bearer token with axios
 const handleRefreshToken = async (): Promise<string | null> => {
     return await mutex.runExclusive(async () => {
-        const res = await instance.get<IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh');
-        if (res && res.data) return res.data.access_token;
-        else return null;
+        try {
+            const res = await instance.get<IBackendRes<AccessTokenResponse>>('/api/v1/auth/refresh');
+            if (res && res.data) return res.data.access_token;
+            else return null;
+        } catch (error) {
+            console.log("ERROR IN REFRESH TOKEN:", error)
+            throw error;
+        }
     });
 };
 // Add a request interceptor
@@ -37,10 +42,10 @@ instance.interceptors.request.use(function (config) {
 // Add a response interceptor
 instance.interceptors.response.use((res) => res.data,
     async (error) => {
-        console.log(error)
         if (error.config && error.response
             && +error.response.status === 401
             && error.config.url !== '/api/v1/auth/login'
+            && error.config.url !== '/api/v1/auth/refresh'
             && !error.config.headers[NO_RETRY_HEADER]
         ) {
             const access_token = await handleRefreshToken();
@@ -50,6 +55,26 @@ instance.interceptors.response.use((res) => res.data,
                 localStorage.setItem('access_token', access_token)
                 return instance.request(error.config);
             }
+
+        }
+
+        // console.log("Check refresh token error:", {
+        //     status: error?.response?.status,
+        //     url: error?.config?.url,
+        //     hasResponse: !!error.response,
+        //     hasConfig: !!error.config
+        // })
+
+        if (
+            error.response
+            && +error.response.status === 401
+            && error.config
+            && error.config.url === '/api/v1/auth/refresh'
+        ) {
+            const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
+            console.log("REFRESH TOKEN ERROR:", message)
+            //dispatch redux action
+            dispatch(setRefreshTokenAction({ status: true, message }))
         }
 
         if (
@@ -62,15 +87,7 @@ instance.interceptors.response.use((res) => res.data,
             //dispatch redux action
             dispatch(setRefreshTokenAction({ status: true, message: `${message}` }))
         }
-        if (
-            error.config && error.response
-            && +error.response.status === 401
-            && error.config.url === '/api/v1/auth/refresh'
-        ) {
-            const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
-            //dispatch redux action
-            dispatch(setRefreshTokenAction({ status: true, message }))
-        }
+
 
         if (+error.response.status === 403) {
             notification.error({

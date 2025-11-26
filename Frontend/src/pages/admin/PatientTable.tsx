@@ -1,6 +1,8 @@
 import DataTable from "@/components/admin/DataTable";
-import ModalPatient from "@/components/admin/patients/ModalPatient";
-import ModalPatientCreate from "@/components/admin/patients/ModalPatientCreate";
+import ManageMedical from "@/components/admin/patients/ManageMedical";
+import ModalPatient from "@/components/admin/patients/ManageMedical";
+import MPatientCreateAndUpdate from "@/components/admin/patients/PatientModal";
+import ModalPatientCreate from "@/components/admin/patients/PatientModal";
 import Access from "@/components/share/Access";
 import { callDeletePatient } from "@/config/api";
 import { ALL_PERMISSIONS } from "@/constant/permission";
@@ -207,7 +209,7 @@ const PatientTable = () => {
             <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE}>
                 <DataTable<IPatient>
                     actionRef={tableRef}
-                    headerTitle="Danh sách Users"
+                    headerTitle="Danh sách bệnh nhân"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
@@ -250,18 +252,22 @@ const PatientTable = () => {
                     }}
                 />
             </Access>
-            <ModalPatient
+            <ManageMedical
                 openModal={openModal}
                 setOpenModal={setOpenModal}
+                setOpenModalCreate={setOpenModalCreate}
                 reloadTable={reloadTable}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
             />
-            <ModalPatientCreate
+            <MPatientCreateAndUpdate
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 reloadTable={reloadTable}
+                dataInit={dataInit}
+                setDataInit={setDataInit}
             />
+
         </div>
     );
 };
