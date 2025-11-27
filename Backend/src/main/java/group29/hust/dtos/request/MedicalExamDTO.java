@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,9 +16,9 @@ import java.time.LocalDate;
 public class MedicalExamDTO {
     private Long id;
 
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
-    private LocalDate receptionTime;
+    private LocalDateTime receptionTime;
 
     private String referralSource;
 

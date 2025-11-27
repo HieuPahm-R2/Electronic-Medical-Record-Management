@@ -1,6 +1,7 @@
 package group29.hust.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +19,10 @@ public class MedicalExam {
     private Long id;
 
     @Column(name = "arrival_time")
-    private LocalDate arrivalTime;
+    private LocalDateTime arrivalTime;
 
     @Column(name = "reception_time")
-    private LocalDate receptionTime;
+    private LocalDateTime receptionTime;
 
     @Column(name = "referral_source")
     private String referralSource;
