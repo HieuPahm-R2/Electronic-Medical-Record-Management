@@ -30,6 +30,7 @@ export interface IUser {
 export interface IPatient {
     id?: string;
     fullName?: string;
+    avatar?: string;
     patientCode?: string;
     dateOfBirth?: string;
     email?: string;

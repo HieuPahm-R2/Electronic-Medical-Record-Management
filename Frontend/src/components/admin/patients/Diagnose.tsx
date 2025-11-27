@@ -1,5 +1,6 @@
 import { ProForm, ProFormSelect, ProFormTextArea } from "@ant-design/pro-components";
 import { Button, Row, Col } from "antd";
+
 interface IProps {
     openModal: boolean;
     setOpenModal: (v: boolean) => void;
@@ -7,7 +8,6 @@ interface IProps {
     reloadTable: () => void;
 }
 
-// ✅ Component 2: Cập nhật hồ sơ khám bệnh
 export const Diagnose = (props: IProps) => {
     return (
         <div style={{ background: "#fff", padding: 24, borderRadius: 8 }}>

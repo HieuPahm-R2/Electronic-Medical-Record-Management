@@ -1,3 +1,5 @@
+import { IBloodTest } from '@/types/backend';
+import { LabTableData, LabTestConfig } from '@/types/medical';
 import { grey, green, blue, red, orange } from '@ant-design/colors';
 export function colorMethod(method: "POST" | "PUT" | "GET" | "DELETE" | string) {
     switch (method) {
@@ -50,3 +52,69 @@ export const convertSlug = (str: string) => {
 
     return str;
 }
+
+// 1. Định nghĩa cấu hình hiển thị, KEY phải trùng với tên trường trong IBloodTest
+// Sử dụng Partial<Record<keyof IBloodTest, LabTestConfig>> để đảm bảo type safety
+const LAB_TEST_DEFINITIONS: Partial<Record<keyof IBloodTest, LabTestConfig>> = {
+    glucose: {
+        label: 'Đường trong máu (GLU)',
+        normalRange: '4.1 - 5.9',
+        unit: 'mmol/L'
+    },
+    urea: {
+        label: 'Ure (Ure máu)',
+        normalRange: '2.5 - 7.5',
+        unit: 'mmol/L'
+    },
+    rbc: {
+        label: 'Số lượng hồng cầu (RBC)',
+        normalRange: '4.2 - 5.4 (nam)\n4.0 - 4.9 (nữ)',
+        unit: 'Tera/L'
+    },
+    hb: {
+        label: 'Lượng huyết sắc tố (Hb)',
+        normalRange: '130 - 160 (nam)\n125 - 142 (nữ)',
+        unit: 'g/L'
+    },
+    hct: {
+        label: 'Khối hồng cầu (HCT)',
+        normalRange: '42 - 47 (nam)\n37 - 42 (nữ)',
+        unit: '%'
+    },
+    mcv: {
+        label: 'Thể tích trung bình hồng cầu (MCV)',
+        normalRange: '80 - 100',
+        unit: 'fL'
+    }
+};
+
+/**
+ * Hàm chuyển đổi object IBloodTest thành mảng dữ liệu cho Table
+ * @param data Object (có thể undefined hoặc null)
+ */
+export const mapApiToTable = (data?: IBloodTest): LabTableData[] => {
+    if (!data) return [];
+
+    const tableData: LabTableData[] = [];
+
+    // Duyệt qua từng key đã định nghĩa trong LAB_TEST_DEFINITIONS
+    // Cách này giúp ta chỉ lấy những trường cần hiển thị và lọc bỏ các trường rác (id, image_url...)
+    (Object.keys(LAB_TEST_DEFINITIONS) as Array<keyof IBloodTest>).forEach((key) => {
+        const config = LAB_TEST_DEFINITIONS[key];
+        const value = data[key];
+
+        // Chỉ push vào bảng nếu có config và giá trị không phải undefined/null
+        // (Hoặc bạn có thể bỏ điều kiện check value nếu muốn hiển thị dòng trống)
+        if (config && value !== undefined && value !== null && typeof value !== 'object') {
+            tableData.push({
+                key: key,             // Dùng tên trường làm key cho row (vd: 'glucose')
+                label: config.label,
+                normalRange: config.normalRange,
+                unit: config.unit,
+                result: value         // Giá trị lấy từ object
+            });
+        }
+    });
+
+    return tableData;
+};
