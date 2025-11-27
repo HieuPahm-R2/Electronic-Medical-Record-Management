@@ -52,11 +52,6 @@ const ManageMedical = (props: IProps) => {
 
     const items = [
         {
-            key: 'info',
-            label: `Hồ sơ bệnh nhân`,
-            children: <MPatientCreateAndUpdate setDataInit={setDataInit} dataInit={dataInit} openModalCreate={true} setOpenModalCreate={setOpenModalCreate} reloadTable={reloadTable} />
-        },
-        {
             key: 'exam',
             label: `Quá trình thăm khám`,
             children: <MedicalExam dataInit={dataInit} openModal={openModal} setOpenModal={setOpenModal} reloadTable={reloadTable} />

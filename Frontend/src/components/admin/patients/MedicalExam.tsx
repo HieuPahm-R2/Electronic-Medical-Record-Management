@@ -57,8 +57,8 @@ const MedicalExam = () => {
                     console.log('Form Values:', values);
                 }}
             >
-                {/* --- Hàng 1: Thời gian và Địa điểm --- */}
                 <ProFormDateTimePicker
+                    placeholder="-- thời gian đến --"
                     name="arrivalTime"
                     label={<span>Thời gian đến <span style={{ color: 'red' }}>*</span></span>}
                     colProps={{ md: 6, xs: 12 }}
@@ -92,7 +92,7 @@ const MedicalExam = () => {
                     ]}
                 />
 
-                {/* --- Hàng 2: Triệu chứng và Lý do --- */}
+                {/* --- Triệu chứng và Lý do --- */}
                 <ProFormText
                     name="symptoms"
                     label="Triệu chứng"
@@ -107,16 +107,15 @@ const MedicalExam = () => {
                     rules={[{ required: true, message: 'Vui lòng nhập lý do' }]}
                 />
 
-                {/* --- Hàng 3: Số ngày --- */}
+                {/* --- Hàng 3 --- */}
                 <ProFormText
                     name="daysManifested"
                     label="Số ngày biểu hiện"
                     colProps={{ md: 4, xs: 12 }}
                 />
-                {/* Spacer để giữ layout đẹp nếu cần */}
                 <Col span={20} />
 
-                {/* --- Hàng 4: Tiền sử bệnh --- */}
+                {/* --- Hàng 4--- */}
                 <ProFormTextArea
                     name="personalHistory"
                     label="Tiền sử bệnh của bản thân"

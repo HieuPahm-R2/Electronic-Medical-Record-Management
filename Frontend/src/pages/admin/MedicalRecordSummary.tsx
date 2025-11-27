@@ -3,9 +3,9 @@ import { Row, Col, Typography, Button, Collapse, Spin, Tag } from 'antd';
 import { FilePdfOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import moment from 'moment'; // Cần cài: npm install moment
 
-import { PatientProfile } from './PatientProfile';
+import { PatientProfile } from '../../components/admin/summary/PatientProfile';
 import { IBloodTest, IMedicalExam } from '@/types/backend';
-import { VisitDetailTabs } from './VisitDetail';
+import { VisitDetailTabs } from '../../components/admin/summary/VisitDetail';
 
 
 const { Title, Text } = Typography;

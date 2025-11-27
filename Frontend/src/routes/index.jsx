@@ -14,7 +14,7 @@ import LayoutApp from "@/components/share/LayoutApp";
 import ProtectedRoute from "@/components/share/protected/RouteProtect";
 import PatientTable from "@/pages/admin/PatientTable";
 import AppointmentTable from "@/pages/admin/AppointmentTable";
-import SummaryRecord from "@/pages/admin/SummaryRecord";
+import MedicalRecordSummary from "@/pages/admin/MedicalRecordSummary";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       {
         path: "table-summary",
         element:
-          <SummaryRecord />
+          <MedicalRecordSummary />
       },
       {
         path: "table-users",

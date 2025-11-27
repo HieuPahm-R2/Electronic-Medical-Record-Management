@@ -9,7 +9,7 @@ import { ALL_PERMISSIONS } from "@/constant/permission";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { fetchPatient } from "@/redux/slice/patientSlice";
 import { IModelPaginate, IPatient } from "@/types/backend";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Button, message, notification, Popconfirm, Space } from "antd";
 import dayjs from "dayjs";
@@ -69,6 +69,25 @@ const PatientTable = () => {
             title: "Họ và Tên",
             dataIndex: "fullName",
             sorter: true,
+        },
+        {
+            title: "Secret",
+            dataIndex: "nationality",
+        },
+        {
+            title: "Secret",
+            dataIndex: "indetityCard",
+            hidden: true
+        },
+        {
+            title: "Secret",
+            dataIndex: "relativeName",
+            hidden: true
+        },
+        {
+            title: "Secret",
+            dataIndex: "relativePhone",
+            hidden: true
         },
         {
             title: "Số điện thoại",
@@ -131,6 +150,19 @@ const PatientTable = () => {
                             }}
                         />
                     </Access>
+                    <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
+                        <UserSwitchOutlined
+                            style={{
+                                fontSize: 20,
+                                color: "blue",
+                            }}
+                            type=""
+                            onClick={() => {
+                                setOpenModalCreate(true)
+                                setDataInit(entity);
+                            }}
+                        />
+                    </Access>
 
                     <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
                         <Popconfirm
@@ -151,6 +183,8 @@ const PatientTable = () => {
                             </span>
                         </Popconfirm>
                     </Access>
+
+
                 </Space>
             ),
         },
@@ -226,9 +260,7 @@ const PatientTable = () => {
                     }}
                     scroll={{ x: true }}
                     pagination={{
-
                         showSizeChanger: true,
-
                         showTotal: (total, range) => {
                             return (
                                 <div>

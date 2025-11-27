@@ -1,11 +1,13 @@
 import { IBloodTest, IClinicalService, IPatient } from '@/types/backend';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
+import { UploadProps, Upload } from 'antd';
 import { Button, Col, Form, Input, message, notification, Row, Select } from 'antd';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ISelect } from '../user/UserModal';
 import { callCreateBloodTest, callFetchBloodTestByPatientId, callUpdateBloodTest, fetchAllClinicalSerives } from '@/config/api';
 import { DebounceSelect } from '../user/debounce.select';
 import TextArea from 'antd/es/input/TextArea';
+import { InboxOutlined } from '@ant-design/icons';
 
 interface IProps {
     openModal: boolean;
@@ -13,6 +15,26 @@ interface IProps {
     dataInit?: IPatient | null;
     reloadTable: () => void;
 }
+const { Dragger } = Upload;
+const props: UploadProps = {
+    name: 'file',
+    multiple: true,
+    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    onChange(info) {
+        const { status } = info.file;
+        if (status !== 'uploading') {
+            console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully.`);
+        } else if (status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+    },
+    onDrop(e) {
+        console.log('Dropped files', e.dataTransfer.files);
+    },
+};
 const fieldsetStyle = {
     border: '1px solid #722ed1', // Màu tím giống hình
     borderRadius: '8px',
@@ -151,24 +173,15 @@ const BloodTest = (props: IProps) => {
     }
     return (
         <>
-            <ModalForm
-                title={<>{dataUpdateBl?.id ? "Cập nhật" : "Tạo mới"}</>}
-                open={openModal}
-                modalProps={{
-                    onCancel: () => { handleReset() },
-                    afterClose: () => handleReset(),
-                    destroyOnClose: true,
-                    width: 900,
-                    keyboard: false,
-                    maskClosable: false,
-                    okText: <>{dataUpdateBl?.id ? "Cập nhật" : "Tạo mới"}</>,
-                    cancelText: "Hủy"
+            <ProForm
+                submitter={{
+                    render: () => (
+                        <Button type="primary" icon={<span>＋</span>}>
+                            Thêm Mới
+                        </Button>
+                    ),
                 }}
-                scrollToFirstError={true}
-                preserve={false}
-                form={form}
-                onFinish={submitUser}
-                initialValues={dataUpdateBl?.id ? dataUpdateBl : {}}
+                onFinish={(values) => console.log(values)}
             >
                 <Row gutter={48}>
                     <Col xs={24} lg={12}>
@@ -200,7 +213,16 @@ const BloodTest = (props: IProps) => {
                             name="imagePath"
                             rules={[{ required: true, message: 'Vui lòng nhập đường dẫn ảnh!' }]}
                         >
-                            <Input placeholder="Nhập đường dẫn ảnh" />
+                            <Dragger {...props}>
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                <p className="ant-upload-hint">
+                                    Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+                                    banned files.
+                                </p>
+                            </Dragger>
                         </Form.Item>
 
                         <Form.Item
@@ -294,7 +316,7 @@ const BloodTest = (props: IProps) => {
                         Lưu kết quả
                     </Button>
                 </Row>
-            </ModalForm>
+            </ProForm>
         </>
     )
 }

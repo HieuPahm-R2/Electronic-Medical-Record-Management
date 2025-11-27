@@ -1,7 +1,9 @@
 import { callCreatePatient, callUpdatePatient } from '@/config/api';
 import { IPatient } from '@/types/backend';
+import { ModalForm } from '@ant-design/pro-components';
 import { Col, DatePicker, DatePickerProps, Divider, Form, Input, message, Modal, notification, Row, Select } from 'antd';
-import { useState } from 'react';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 interface IProps {
     openModalCreate: boolean;
@@ -13,10 +15,17 @@ interface IProps {
 
 const MPatientCreateAndUpdate = (props: IProps) => {
     const { openModalCreate, setOpenModalCreate, reloadTable, dataInit, setDataInit } = props;
-
     const [form] = Form.useForm();
+    console.log(dataInit)
+    useEffect(() => {
+        if (dataInit) {
+            form.setFieldsValue({
+                dateOfBirth: dayjs(dataInit.dateOfBirth)   // "2005-05-15"
+            });
+        }
+    }, [dataInit]);
 
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
 
     const handleReset = async () => {
@@ -26,17 +35,17 @@ const MPatientCreateAndUpdate = (props: IProps) => {
     }
 
     const onFinish = async (values: any) => {
-        const { fullName, dateOfBirth, email, phone, nationality, address, identityCard, insuranceNumber, insuranceExpired, gender, career, relativeName, relativePhone, ethnicity, religion } = values;
+        const payload = {
+            ...values,
+            id: dataInit?.id,
+            dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
+            insuranceExpired: values.insuranceExpired.format("YYYY-MM-DD")
+        }
         setIsSubmit(true);
 
         if (dataInit?.id) {
             //update
-            const user = {
-                id: dataInit.id,
-                fullName, dateOfBirth, email, phone,
-                nationality, address, identityCard, insuranceNumber, insuranceExpired,
-                gender, career, relativeName, relativePhone, ethnicity, religion
-            }
+            const user = payload
 
             const res = await callUpdatePatient(user);
             if (res.data) {
@@ -52,9 +61,9 @@ const MPatientCreateAndUpdate = (props: IProps) => {
         } else {
             //create
             const user = {
-                fullName, dateOfBirth, email, phone,
-                nationality, address, identityCard, insuranceNumber, insuranceExpired,
-                gender, career, relativeName, relativePhone, ethnicity, religion
+                ...values,
+                dateOfBirth: values.dateOfBirth.format("YYYY-MM-DD"),
+                insuranceExpired: values.insuranceExpired.format("YYYY-MM-DD")
             }
             const res = await callCreatePatient(user);
             if (res.data) {
@@ -76,20 +85,24 @@ const MPatientCreateAndUpdate = (props: IProps) => {
     };
     return (
         <>
-            <Modal
-                title="Thêm bệnh nhân"
+            <ModalForm
+                title={<>{dataInit?.id ? "Cập nhật Bệnh nhân" : "Tạo mới Bệnh nhân"}</>}
                 open={openModalCreate}
-                onOk={() => { form.submit() }}
-                okText={"Tạo mới"}
-                onCancel={() => {
-                    form.resetFields();
-                    setOpenModalCreate(false);
+                modalProps={{
+                    onCancel: () => { handleReset() },
+                    afterClose: () => handleReset(),
+                    destroyOnClose: true,
+                    width: 900,
+                    keyboard: false,
+                    maskClosable: false,
+                    okText: <>{dataInit?.id ? "Cập nhật" : "Tạo mới"}</>,
+                    cancelText: "Hủy"
                 }}
-                cancelText={"Hủy"}
-                confirmLoading={isSubmit}
-                width={"50vw"}
-                //do not close when click fetchBook
-                maskClosable={false}
+                scrollToFirstError={true}
+                preserve={false}
+                form={form}
+                onFinish={onFinish}
+                initialValues={dataInit?.id ? dataInit : {}}
             >
                 <Divider />
 
@@ -260,7 +273,7 @@ const MPatientCreateAndUpdate = (props: IProps) => {
                         </Col>
                     </Row>
                 </Form>
-            </Modal>
+            </ModalForm>
         </>
     )
 }

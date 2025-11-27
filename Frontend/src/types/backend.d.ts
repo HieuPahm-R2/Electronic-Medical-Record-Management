@@ -176,7 +176,16 @@ export interface IMedicalExamRes {
     patientId?: number;
     department?: string;
 }
-
+export interface IAppointment {
+    key: number;
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    createdAt?: string;
+    updatedAt?: string;
+    status?: 'PENDING' | 'SCHEDULED' | 'CANCELED';
+}
 export interface IPermission {
     id?: string;
     name?: string;
