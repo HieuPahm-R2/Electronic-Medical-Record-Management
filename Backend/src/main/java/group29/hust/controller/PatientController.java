@@ -38,9 +38,8 @@ public class PatientController {
 
     @PutMapping("/update-patient")
     @MessageApi("Update patient info")
-    public ResponseEntity<Void> updatePatient(@RequestBody PatientDTO dto) {
-        patientService.update(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> updatePatient(@RequestBody PatientDTO dto) {
+        return ResponseEntity.ok( patientService.update(dto));
     }
 
     @DeleteMapping("/delete-patient/{id}")

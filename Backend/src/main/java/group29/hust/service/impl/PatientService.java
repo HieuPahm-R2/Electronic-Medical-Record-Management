@@ -109,11 +109,26 @@ public class PatientService implements IPatientService {
         if (dto.getInsuranceNumber() != null) {
             patient.get().setInsuranceNumber(dto.getInsuranceNumber());
         }
+        if(dto.getInsuranceExpired() != null){
+            patient.get().setInsuranceExpired(dto.getInsuranceExpired());
+        }
         if (dto.getRelativeName() != null) {
             patient.get().setRelativeName(dto.getRelativeName());
         }
         if (dto.getRelativePhone() != null) {
             patient.get().setRelativePhone(dto.getRelativePhone());
+        }
+        if (dto.getGender() != null) {
+            patient.get().setGender(dto.getGender());
+        }
+        if (dto.getCareer() != null) {
+            patient.get().setCareer(dto.getCareer());
+        }
+        if (dto.getEthnicity() != null) {
+            patient.get().setEthnicity(dto.getEthnicity());
+        }
+        if (dto.getReligion() != null) {
+            patient.get().setReligion(dto.getReligion());
         }
         return modelMapper.map(patientRepository.save(patient.get()), PatientDTO.class);
     }
@@ -135,10 +150,19 @@ public class PatientService implements IPatientService {
                             .id(data.getId())
                             .fullName(data.getFullName())
                             .dateOfBirth(data.getDateOfBirth())
+                            .nationality(data.getNationality())
+                            .identityCard(data.getIdentityCard())
+                            .insuranceNumber(data.getInsuranceNumber())
+                            .relativeName(data.getRelativeName())
+                            .relativePhone(data.getRelativePhone())
+                            .gender(data.getGender())
+                            .career(data.getCareer())
                             .email(data.getEmail())
                             .phone(data.getPhone())
                             .patientCode(data.getPatientCode())
                             .address(data.getAddress())
+                            .ethnicity(data.getEthnicity())
+                            .religion(data.getReligion())
                             .updatedBy(data.getUpdatedBy())
                             .createdBy(data.getCreatedBy())
                             .updatedAt(data.getUpdatedAt())

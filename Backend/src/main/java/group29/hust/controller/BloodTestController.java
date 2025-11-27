@@ -30,9 +30,8 @@ public class BloodTestController {
         return ResponseEntity.ok(bloodTestDTO);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BloodTestDTO> updateBloodTest(@PathVariable Long id, @Valid @RequestBody BloodTestDTO bloodTestDTO) {
-        bloodTestDTO.setId(id);
+    @PutMapping
+    public ResponseEntity<BloodTestDTO> updateBloodTest( @Valid @RequestBody BloodTestDTO bloodTestDTO) {
         BloodTestDTO updatedBloodTest = bloodTestService.update(bloodTestDTO);
         return ResponseEntity.ok(updatedBloodTest);
     }

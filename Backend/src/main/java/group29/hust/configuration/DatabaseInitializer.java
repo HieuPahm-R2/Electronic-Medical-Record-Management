@@ -63,6 +63,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             arrResult.add(new Permission("Update a Clinical info", "/api/v1/clinical-info", "PUT", "CLINICAL_INFOS"));
             arrResult.add(new Permission("Delete a Clinical info", "/api/v1/clinical-info/{id}", "DELETE", "CLINICAL_INFOS"));
             arrResult.add(new Permission("Get Clinical info by id", "/api/v1/clinical-info/{id}", "GET", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Get All Clinical services", "/api/v1/clinical-info/service-name", "GET", "CLINICAL_INFOS"));
             arrResult.add(new Permission("Get Clinical info by patient Id", "/api/v1/clinical-info/patient/{id}", "GET", "CLINICAL_INFOS"));
 
             arrResult.add(new Permission("Create a vital sign", "/api/v1/vital-signs", "POST", "VITAL_SIGNS"));

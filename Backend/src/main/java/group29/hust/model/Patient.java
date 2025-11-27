@@ -62,25 +62,31 @@ public class Patient extends BaseEntity {
 
     @Column(length = 35, nullable = false)
     private String relativePhone;
+
+    @Column(length = 35, nullable = false)
+    private String ethnicity;
+
+    @Column(length = 35, nullable = false, name = "religion")
+    private String religion;
     // --- Relationships ---
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MedicalExam> medicalExaminations;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<VitalSign> vitalSigns;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private VitalSign vitalSigns;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BloodTest> bloodTests;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BloodTest bloodTests;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ClinicalInfo> clinicalInfos;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ClinicalInfo clinicalInfos;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Radiology> radiologies;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Radiology radiologies;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DiagnoseFinal> diagnoseFinals;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private DiagnoseFinal diagnoseFinals;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)

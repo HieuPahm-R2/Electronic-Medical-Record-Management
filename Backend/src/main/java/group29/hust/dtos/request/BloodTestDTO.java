@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class BloodTestDTO {
     private Long id;
     

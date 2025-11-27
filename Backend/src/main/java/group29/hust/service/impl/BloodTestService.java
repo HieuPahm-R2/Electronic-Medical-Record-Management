@@ -52,7 +52,7 @@ public class BloodTestService implements IBloodTestService {
         boolean medicalExamExists = medicalExamRepository.existsById(medicalExamId);
 
         if (clinicalServiceExists && medicalExamExists) {
-            throw new BadActionException("Đã tồn tại dữ liệu, Lỗi trùng lặp !");
+            throw new BadActionException("Đã tồn tại dữ liệu, Lỗi trùng lặp hihi !");
         }
     }
     
@@ -108,16 +108,7 @@ public class BloodTestService implements IBloodTestService {
         
         BloodTest existingBloodTest = bloodTestRepository.findById(dto.getId())
                 .orElseThrow(() -> new BadActionException("Blood test not found with id: " + dto.getId()));
-
-        if (dto.getClinicalServices() != null && dto.getMedicalExamination() != null) {
-            if(!Objects.equals(dto.getClinicalServices().getId(), existingBloodTest.getClinicalServices().getId())){
-                validateClinicalServiceAndMedicalExamExist(
-                        dto.getClinicalServices().getId(),
-                        dto.getMedicalExamination().getId()
-                );
-            }
-
-        }
+        
         // Update patient if needed
         if (dto.getPatientId() != null && 
             (existingBloodTest.getPatient() == null || !dto.getPatientId().equals(existingBloodTest.getPatient().getId()))) {

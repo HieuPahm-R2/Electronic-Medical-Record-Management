@@ -28,20 +28,22 @@ public class PatientDTO {
     private String identityCard;
     @JsonProperty("insuranceNumber")
     private String insuranceNumber;
-    @JsonProperty("insurance_expired")
-    private String insuranceExpired;
+    @JsonProperty("insuranceExpired")
+    private LocalDate insuranceExpired;
     private String gender;
     private String career;
-    @JsonProperty("relative_name")
+    @JsonProperty("relativeName")
     private String relativeName;
     @JsonProperty("relativePhone")
     private String relativePhone;
+    private String ethnicity;
+    private String religion;
 
     @JsonProperty("createdAt")
     private Instant createdAt;
     @JsonProperty("updatedAt")
     private Instant updatedAt;
-    @Column(name = "created_by")
+    @Column(name = "createdBy")
     private String createdBy;
     @Column(name = "updatedBy")
     private String updatedBy;
