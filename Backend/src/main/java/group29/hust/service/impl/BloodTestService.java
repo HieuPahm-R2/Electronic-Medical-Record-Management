@@ -60,11 +60,8 @@ public class BloodTestService implements IBloodTestService {
     @Override
     @Transactional
     public BloodTestDTO insert(BloodTestDTO dto) {
-        Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
         
         BloodTest bloodTest = modelMapper.map(dto, BloodTest.class);
-        bloodTest.setPatient(patient);
         try{
             if (dto.getClinicalServices() != null && dto.getMedicalExamination() != null) {
                 validateClinicalServiceAndMedicalExamExist(
@@ -109,14 +106,7 @@ public class BloodTestService implements IBloodTestService {
         
         BloodTest existingBloodTest = bloodTestRepository.findById(dto.getId())
                 .orElseThrow(() -> new BadActionException("Blood test not found with id: " + dto.getId()));
-        
-        // Update patient if needed
-        if (dto.getPatientId() != null && 
-            (existingBloodTest.getPatient() == null || !dto.getPatientId().equals(existingBloodTest.getPatient().getId()))) {
-            Patient patient = patientRepository.findById(dto.getPatientId())
-                    .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
-            existingBloodTest.setPatient(patient);
-        }
+
         if (dto.getClinicalServices() != null) {
             ClinicalService cs = clinicalRepository.findById(dto.getClinicalServices().getId()).orElseThrow(
                     () -> new BadActionException("Clinical service not found with ID: " + dto.getClinicalServices().getId()));
@@ -156,7 +146,6 @@ public class BloodTestService implements IBloodTestService {
                 .urea(updatedBloodTest.getUrea())
                 .conclusion(updatedBloodTest.getConclusion())
                 .imageUrl(updatedBloodTest.getImageUrl())
-                .patientId(updatedBloodTest.getPatient().getId())
                 .clinicalServices(ClinicalServiceDTO.builder()
                         .id(updatedBloodTest.getClinicalServices().getId())
                         .serviceName(updatedBloodTest.getClinicalServices().getServiceName())
@@ -179,43 +168,35 @@ public class BloodTestService implements IBloodTestService {
 @Override
 public BloodTestDTO getByMedicalExamId(Long medicalExamId) {
         BloodTest res = bloodTestRepository.findByMedicalExamination_Id(medicalExamId);
-        if(res != null) {
-            return modelMapper.map(res, BloodTestDTO.class);
-        }
-        throw new BadActionException("Blood test not found with id: ");
-}
-
-    @Override
-    public BloodTestDTO getByPatientId(Long patientId) {
-        BloodTest res = bloodTestRepository.findByPatientId(patientId);
         if(res == null) {
             throw new BadActionException("Blood test not found with id: ");
         }
-        var clinical = res.getClinicalServices();
-        ClinicalServiceDTO cs = ClinicalServiceDTO.builder()
-                .id(clinical != null ? res.getClinicalServices().getId() : null)
-                .serviceName(clinical != null ? res.getClinicalServices().getServiceName() : "")
-                .build();
-        MedicalExamDTO me = MedicalExamDTO.builder()
-                .id(res.getMedicalExamination().getId())
-                .build();
-        return BloodTestDTO.builder()
-                .id(res.getId())
-                .hb(res.getHb())
-                .glucose(res.getGlucose())
-                .hct(res.getHct())
-                .mch(res.getMch())
-                .mcv(res.getMcv())
-                .neut(res.getNeut())
-                .wbc(res.getWbc())
-                .urea(res.getUrea())
-                .bloodGroup(res.getBloodGroup())
-                .bloodType(res.getBloodType())
-                .conclusion(res.getConclusion())
-                .imageUrl(res.getImageUrl())
-                .patientId(res.getPatient().getId())
-                .medicalExamination(me)
-                .clinicalServices(cs)
-                .build();
-    }
+    var clinical = res.getClinicalServices();
+    ClinicalServiceDTO cs = ClinicalServiceDTO.builder()
+            .id(clinical != null ? res.getClinicalServices().getId() : null)
+            .serviceName(clinical != null ? res.getClinicalServices().getServiceName() : "")
+            .build();
+    MedicalExamDTO me = MedicalExamDTO.builder()
+            .id(res.getMedicalExamination().getId())
+            .build();
+    return BloodTestDTO.builder()
+            .id(res.getId())
+            .hb(res.getHb())
+            .glucose(res.getGlucose())
+            .hct(res.getHct())
+            .mch(res.getMch())
+            .mcv(res.getMcv())
+            .neut(res.getNeut())
+            .wbc(res.getWbc())
+            .urea(res.getUrea())
+            .bloodGroup(res.getBloodGroup())
+            .bloodType(res.getBloodType())
+            .conclusion(res.getConclusion())
+            .imageUrl(res.getImageUrl())
+            .medicalExamination(me)
+            .clinicalServices(cs)
+            .build();
+}
+
+
 }

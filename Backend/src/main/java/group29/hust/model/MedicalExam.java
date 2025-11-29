@@ -85,7 +85,7 @@ public class MedicalExam {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToOne(mappedBy = "medicalExam", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
     private VitalSign vitalSign;
 
     @OneToOne(mappedBy = "medicalExam", cascade = CascadeType.ALL)

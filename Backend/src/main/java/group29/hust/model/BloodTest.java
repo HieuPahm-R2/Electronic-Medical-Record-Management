@@ -58,9 +58,7 @@ public class BloodTest {
     @Column(name = "image_url",columnDefinition = "nvarchar(4000)")
     private String imageUrl;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinical_service_id", nullable = false)

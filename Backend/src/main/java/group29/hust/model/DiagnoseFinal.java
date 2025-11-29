@@ -33,9 +33,6 @@ public class DiagnoseFinal {
     private String treatmentPlan;
 
     // relationships
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medical_examination_id", unique = true)

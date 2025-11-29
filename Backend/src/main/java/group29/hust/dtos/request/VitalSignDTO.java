@@ -45,8 +45,6 @@ public class VitalSignDTO {
 
     private String notes;
 
-    @JsonProperty("patient_id")
-    private Long patientId;
 
     @JsonProperty("medical_exam_id")
     private MedicalExamRes medicalExam;

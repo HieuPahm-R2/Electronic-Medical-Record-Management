@@ -27,9 +27,6 @@ public class DiagnoseFinalDTO {
     @JsonProperty("treatment_plan")
     private String treatmentPlan;
 
-    @JsonProperty("patient_id")
-    private Long patientId;
-
     @JsonProperty("medical_exam_id")
     private MedicalExamRes medicalExam;
 }

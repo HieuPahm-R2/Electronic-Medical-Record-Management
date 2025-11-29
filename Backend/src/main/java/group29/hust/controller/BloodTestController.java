@@ -42,15 +42,10 @@ public class BloodTestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/patient/{id}")
-    public ResponseEntity<BloodTestDTO> getBloodTestsByPatientId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(bloodTestService.getByPatientId(id));
-    }
     @GetMapping("/medical-exam/{id}")
     public ResponseEntity<BloodTestDTO> getByMedicalExamId(@PathVariable Long id) {
         return ResponseEntity.ok().body(bloodTestService.getByMedicalExamId(id));
     }
-
 
 }
 

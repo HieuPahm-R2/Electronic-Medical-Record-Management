@@ -15,12 +15,8 @@ import java.util.Set;
 public class ClinicalInfoDTO {
     private Long id;
 
-    @NotNull(message = "Patient ID is required")
-    @JsonProperty("patient_id")
-    private PatientDTO patient;
-
     @JsonProperty("medical_exam_id")
-    private MedicalExamDTO medicalExam;
+    private Long medicalExam;
 
     @JsonProperty("clinical_services")
     private Set<ClinicalServiceDTO> clinicalServices;

@@ -33,12 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RadiologyService implements IRadiologyService {
 
-    @Autowired
-    FilterBuilder fb;
-    @Autowired
-    private FilterParser filterParser;
-    @Autowired
-    private FilterSpecificationConverter filterSpecificationConverter;
 
     private final RadiologyRepository radiologyRepository;
     private final PatientRepository patientRepository;
@@ -49,7 +43,6 @@ public class RadiologyService implements IRadiologyService {
     private MedicalExamRes convertDtoMedicalExam(Radiology data){
         return MedicalExamRes.builder()
                 .department(data.getMedicalExamination().getDepartment().getName())
-                .patientId(data.getPatient().getId())
                 .id(data.getId())
                 .build();
     }
@@ -63,12 +56,8 @@ public class RadiologyService implements IRadiologyService {
     @Override
     @Transactional
     public RadiologyDTO insert(RadiologyDTO dto) {
-        // Validate patient exists
-        Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
 
         Radiology radiology = modelMapper.map(dto, Radiology.class);
-        radiology.setPatient(patient);
 
         // Handle clinical service association
         if (dto.getClinicalService() != null) {
@@ -88,7 +77,6 @@ public class RadiologyService implements IRadiologyService {
         Radiology savedRadiology = radiologyRepository.save(radiology);
 
         return RadiologyDTO.builder()
-                .patientId(savedRadiology.getPatient().getId())
                 .id(savedRadiology.getId())
                 .imagePath(savedRadiology.getImagePath())
                 .conclusion(savedRadiology.getConclusion())
@@ -119,13 +107,6 @@ public class RadiologyService implements IRadiologyService {
         existingRadiology.setImagePath(dto.getImagePath());
         existingRadiology.setConclusion(dto.getConclusion());
 
-        // Update patient association if needed
-        if (dto.getPatientId() != null &&
-                (existingRadiology.getPatient() == null || !dto.getPatientId().equals(existingRadiology.getPatient().getId()))) {
-            Patient patient = patientRepository.findById(dto.getPatientId())
-                    .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
-            existingRadiology.setPatient(patient);
-        }
 
         // Update clinical service association if needed
         if (dto.getClinicalService() != null) {
@@ -146,7 +127,6 @@ public class RadiologyService implements IRadiologyService {
         Radiology updatedRadiology = radiologyRepository.save(existingRadiology);
 
         return RadiologyDTO.builder()
-                .patientId(updatedRadiology.getPatient().getId())
                 .id(updatedRadiology.getId())
                 .imagePath(updatedRadiology.getImagePath())
                 .conclusion(updatedRadiology.getConclusion())
@@ -163,88 +143,20 @@ public class RadiologyService implements IRadiologyService {
         }
         radiologyRepository.deleteById(id);
     }
-    
-    @Transactional(readOnly = true)
-    public PaginationResultDTO getByPatientId(Long id, Pageable pageable) {
 
-        if (!patientRepository.existsById(id)) {
-            throw new BadActionException(" ID not found");
-        }
-
-        // Create a filter for medicalExam.id property
-        FilterNode node = filterParser.parse("patient.id=" + id);
-        FilterSpecification<Radiology> spec = filterSpecificationConverter.convert(node);
-
-        // Apply the filter and pagination
-        Page<Radiology> pageResult = radiologyRepository.findAll(spec, pageable);
-
-        // Map to DTOs
-        List<RadiologyDTO> content = pageResult.getContent().stream()
-                .map(data -> {
-                    modelMapper.map(data, RadiologyDTO.class);
-                    return RadiologyDTO.builder()
-                            .id(data.getId())
-                            .imagePath(data.getImagePath())
-                            .conclusion(data.getConclusion())
-                            .clinicalService(convertDtoClinical(data))
-                            .medicalExam(convertDtoMedicalExam(data))
-                            .patientId(id).build();
-                })
-                .collect(Collectors.toList());
-
-        // Set up pagination result
-        PaginationResultDTO result = new PaginationResultDTO();
-        PaginationResultDTO.Meta meta = new PaginationResultDTO.Meta();
-        meta.setPage(pageResult.getNumber() + 1);
-        meta.setPageSize(pageResult.getSize());
-        meta.setTotal(pageResult.getTotalElements());
-        meta.setPages(pageResult.getTotalPages());
-
-        result.setMeta(meta);
-        result.setResult(content);
-
-        return result;
-    }
 
     @Override
-    public PaginationResultDTO getByMedicalExamId(Long id, Pageable pageable) {
-
-        if (!medicalExamRepository.existsById(id)) {
-            throw new BadActionException("Medical exam ID not found");
-        }
-
-        // Create a filter for medicalExam.id property
-        FilterNode node = filterParser.parse("medicalExamination.id=" + id);
-        FilterSpecification<Radiology> spec = filterSpecificationConverter.convert(node);
-
-        // Apply the filter and pagination
-        Page<Radiology> pageResult = radiologyRepository.findAll(spec, pageable);
-
-        // Map to DTOs
-        List<RadiologyDTO> content = pageResult.getContent().stream()
-                .map(data -> {
-                    modelMapper.map(data, RadiologyDTO.class);
-                    return RadiologyDTO.builder()
-                            .id(data.getId())
-                            .imagePath(data.getImagePath())
-                            .conclusion(data.getConclusion())
-                            .clinicalService(convertDtoClinical(data))
-                            .medicalExam(convertDtoMedicalExam(data))
-                            .patientId(id).build();
-                })
-                .collect(Collectors.toList());
-
-        // Set up pagination result
-        PaginationResultDTO result = new PaginationResultDTO();
-        PaginationResultDTO.Meta meta = new PaginationResultDTO.Meta();
-        meta.setPage(pageResult.getNumber() + 1);
-        meta.setPageSize(pageResult.getSize());
-        meta.setTotal(pageResult.getTotalElements());
-        meta.setPages(pageResult.getTotalPages());
-
-        result.setMeta(meta);
-        result.setResult(content);
-
-        return result;
+    public RadiologyDTO getByMedicalExamId(Long id) {
+       Radiology updatedRadiology = this.radiologyRepository.findByMedicalExamination_Id(id);
+       if(updatedRadiology == null){
+           throw new BadActionException("Radiology not found with medical examination ID: " + id);
+       }
+        return RadiologyDTO.builder()
+                .id(updatedRadiology.getId())
+                .imagePath(updatedRadiology.getImagePath())
+                .conclusion(updatedRadiology.getConclusion())
+                .clinicalService(convertDtoClinical(updatedRadiology))
+                .medicalExam(convertDtoMedicalExam(updatedRadiology))
+                .build();
     }
 }

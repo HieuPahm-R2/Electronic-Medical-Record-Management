@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface RadiologyRepository extends JpaRepository<Radiology, Long>, JpaSpecificationExecutor<Radiology> {
-    List<Radiology> findByPatientId(Long patientId);
+    Radiology findByMedicalExamination_Id(Long medicalExamId);
 }
+

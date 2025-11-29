@@ -41,12 +41,9 @@ public class RadiologyController {
         return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<PaginationResultDTO> getByPatientId(@PathVariable Long patientId, Pageable pageable) {
-        return ResponseEntity.ok().body(radiologyService.getByPatientId(patientId, pageable));
-    }
+
     @GetMapping("/medical-exam/{id}")
-    public ResponseEntity<PaginationResultDTO> getByMedicalExamId(@PathVariable Long id, Pageable pageable) {
-        return ResponseEntity.ok().body(radiologyService.getByMedicalExamId(id, pageable));
+    public ResponseEntity<?> getByMedicalExamId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(radiologyService.getByMedicalExamId(id));
     }
 }

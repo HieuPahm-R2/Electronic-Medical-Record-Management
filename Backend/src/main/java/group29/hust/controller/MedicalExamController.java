@@ -1,10 +1,12 @@
 package group29.hust.controller;
 
 import group29.hust.dtos.request.MedicalExamDTO;
+import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.exception.BadActionException;
 import group29.hust.service.IMedicalExamService;
 import group29.hust.utils.anotation.MessageApi;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -43,9 +45,8 @@ public class MedicalExamController {
 
     @GetMapping("/patient/{id}")
     @MessageApi("Medical examination retrieved successfully")
-    public ResponseEntity<?> getMedicalExamByPatientId(@PathVariable Long id) {
-        MedicalExamDTO medicalExamDTO = medicalExamService.findMedicalExamWithPatientId(id);
-        return ResponseEntity.ok(medicalExamDTO);
+    public ResponseEntity<PaginationResultDTO> getMedicalExamByPatientId(@PathVariable Long id,Pageable pageable) {
+        return ResponseEntity.ok(medicalExamService.findMedicalExamWithPatientId(id,pageable));
     }
 
     @PutMapping

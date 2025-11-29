@@ -71,16 +71,7 @@ public class ClinicalInfoController {
         clinicalInfoService.delete(id);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/patient/{patientId}")
-    @MessageApi("Get vital signs for a specific patient")
-    public ResponseEntity<?> getByPatientId(@PathVariable Long patientId) {
-        //e service layer
-        try {
-            return ResponseEntity.ok(clinicalInfoService.findClinicalInfoWithPatientId(patientId));
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Error in getVitalSignsByPatientId: " + e.getMessage());
-        }
-    }
+
     @GetMapping("/service-name")
     @MessageApi("Fetch all patients with pagination")
     public ResponseEntity<PaginationResultDTO> getAllPatients(@Filter Specification<ClinicalService> spec,

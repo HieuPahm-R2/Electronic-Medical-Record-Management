@@ -32,6 +32,13 @@ public class VitalSignController {
         return ResponseEntity.ok(vitalSignDTO);
     }
 
+    @GetMapping("/medical-exam/{id}")
+    @MessageApi("Get vital sign record by ID")
+    public ResponseEntity<VitalSignDTO> getVitalSignByMedicalExamId(@PathVariable Long id) {
+        VitalSignDTO vitalSignDTO = vitalSignService.findVitalSignWithMedicalExamId(id);
+        return ResponseEntity.ok(vitalSignDTO);
+    }
+
     @PutMapping
     @MessageApi("Update vital sign record")
     public ResponseEntity<VitalSignDTO> updateVitalSign(@Valid @RequestBody VitalSignDTO vitalSignDTO) throws BadActionException {
@@ -50,15 +57,6 @@ public class VitalSignController {
     }
 
     // Additional endpoint to get vital signs for a specific patient
-    @GetMapping("/patient/{id}")
-    @MessageApi("Get vital signs for a specific patient")
-    public ResponseEntity<?> getVitalSignsByPatientId(@PathVariable Long id) {
-        //e service layer
-        try {
-            return ResponseEntity.ok(vitalSignService.findVitalSignWithPatientId(id));
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Error in getVitalSignsByPatientId: " + e.getMessage());
-        }
-    }
+
 }
 

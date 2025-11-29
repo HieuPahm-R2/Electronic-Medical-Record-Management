@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface IBloodTestService extends ICrudService<BloodTestDTO, Long> {
     BloodTestDTO getByMedicalExamId(Long medicalExamId);
-    BloodTestDTO getByPatientId(Long patientId);
 
 }
 

@@ -44,10 +44,6 @@ public class BloodTestDTO {
     
     @JsonProperty("image_url")
     private String imageUrl;
-    
-    @NotNull(message = "Patient ID is required")
-    @JsonProperty("patient_id")
-    private Long patientId;
 
     @JsonProperty("clinical_services")
     private ClinicalServiceDTO clinicalServices;

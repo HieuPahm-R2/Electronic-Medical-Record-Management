@@ -74,20 +74,6 @@ public class Patient extends BaseEntity {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MedicalExam> medicalExaminations;
 
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private VitalSign vitalSigns;
-
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private BloodTest bloodTests;
-
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ClinicalInfo clinicalInfos;
-
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Radiology radiologies;
-
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private DiagnoseFinal diagnoseFinals;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)

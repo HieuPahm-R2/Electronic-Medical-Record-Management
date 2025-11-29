@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface IClinicalInfoService extends ICrudService<ClinicalInfoDTO, Long> {
-    ClinicalInfoDTO findClinicalInfoWithPatientId(Long patientId);
+
     ClinicalInfoDTO findClinicalInfoWithMedicalExamId(Long medicalExamId);
     PaginationResultDTO getAll(Specification<ClinicalService> spec, Pageable pageable);
 }

@@ -51,9 +51,6 @@ public class ClinicalInfo {
     private String syndrome;
 
     // relationships
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "clinical_info" })

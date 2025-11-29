@@ -48,24 +48,19 @@ public class PatientService implements IPatientService {
         me.setPatient(res);
         MedicalExam meFinal = medicalExamRepository.save(me);
         // set value vital sign
-        vt.setPatient(res);
-        vt.setMedicalExam(meFinal);
+        vt.setMedicalExamination(meFinal);
         vitalSignRepository.save(vt);
         // set value blood test
-        bt.setPatient(res);
         bt.setMedicalExamination(meFinal);
         bloodTestRepository.save(bt);
 
         // set value radiology
-        rg.setPatient(res);
         rg.setMedicalExamination(meFinal);
         radiologyRepository.save(rg);
         // set value clinical info
-        clinicalInfo.setPatient(res);
         clinicalInfo.setMedicalExam(meFinal);
         clinicalInfoRepository.save(clinicalInfo);
         // set value diagnose final
-        dg.setPatient(res);
         dg.setMedicalExamination(meFinal);
         diagnoseFinalRepository.save(dg);
 

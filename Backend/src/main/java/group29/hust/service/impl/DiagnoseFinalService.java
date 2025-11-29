@@ -26,7 +26,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
 
     private MedicalExamRes convertDtoMedicalExam(DiagnoseFinal data){
         return MedicalExamRes.builder()
-                .patientId(data.getPatient().getId())
                 .id(data.getId())
                 .build();
     }
@@ -34,12 +33,8 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
     @Override
     @Transactional
     public DiagnoseFinalDTO insert(DiagnoseFinalDTO dto) {
-        // Get Patient and MedicalExam entities
-        Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
-        
+
         DiagnoseFinal dg = modelMapper.map(dto, DiagnoseFinal.class);
-        dg.setPatient(patient);
         if (dto.getMedicalExam() != null) {
             MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExam().getId())
                     .orElseThrow(() -> new BadActionException("Medical examination not found with id: "));
@@ -53,7 +48,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
                 .comorbidity(savedDiagnoseFinal.getComorbidity())
                 .conclusion(savedDiagnoseFinal.getConclusion())
                 .mainDisease(savedDiagnoseFinal.getMainDisease())
-                .patientId(savedDiagnoseFinal.getPatient().getId())
                 .prognosis(savedDiagnoseFinal.getPrognosis())
                 .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
                 .id(savedDiagnoseFinal.getId())
@@ -71,7 +65,7 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
                 .comorbidity(savedDiagnoseFinal.getComorbidity())
                 .conclusion(savedDiagnoseFinal.getConclusion())
                 .mainDisease(savedDiagnoseFinal.getMainDisease())
-                .patientId(savedDiagnoseFinal.getPatient().getId())
+
                 .prognosis(savedDiagnoseFinal.getPrognosis())
                 .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
                 .id(savedDiagnoseFinal.getId())
@@ -96,14 +90,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
         existingDiagnoseFinal.setPrognosis(dto.getPrognosis());
         existingDiagnoseFinal.setTreatmentPlan(dto.getTreatmentPlan());
         
-        // Update patient if needed
-        if (dto.getPatientId() != null && 
-            (existingDiagnoseFinal.getPatient() == null || !dto.getPatientId().equals(existingDiagnoseFinal.getPatient().getId()))) {
-            Patient patient = patientRepository.findById(dto.getPatientId())
-                    .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getPatientId()));
-            existingDiagnoseFinal.setPatient(patient);
-        }
-        
         // Update medical exam if needed
         if (dto.getMedicalExam() != null &&
             (existingDiagnoseFinal.getMedicalExamination() == null || 
@@ -120,7 +106,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
                 .comorbidity(savedDiagnoseFinal.getComorbidity())
                 .conclusion(savedDiagnoseFinal.getConclusion())
                 .mainDisease(savedDiagnoseFinal.getMainDisease())
-                .patientId(savedDiagnoseFinal.getPatient().getId())
                 .prognosis(savedDiagnoseFinal.getPrognosis())
                 .treatmentPlan(savedDiagnoseFinal.getTreatmentPlan())
                 .id(savedDiagnoseFinal.getId())
@@ -137,23 +122,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
         diagnoseFinalRepository.deleteById(id);
     }
 
-    @Override
-    public DiagnoseFinalDTO findDiagnoseFinalWithPatientId(Long patientId) {
-        DiagnoseFinal df = this.diagnoseFinalRepository.findDiagnoseFinalByPatientId(patientId);
-        if(df == null){
-            throw new BadActionException("Diagnose final not found for medical examination with ID: " + patientId);
-        }
-        return DiagnoseFinalDTO.builder()
-                .comorbidity(df.getComorbidity())
-                .conclusion(df.getConclusion())
-                .mainDisease(df.getMainDisease())
-                .patientId(df.getPatient().getId())
-                .prognosis(df.getPrognosis())
-                .treatmentPlan(df.getTreatmentPlan())
-                .id(df.getId())
-                .medicalExam(convertDtoMedicalExam(df))
-                .build();
-    }
 
     @Override
     public DiagnoseFinalDTO findDiagnoseFinalWithMedicalExamId(Long medicalExamId) {
@@ -165,7 +133,6 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
                 .comorbidity(df.getComorbidity())
                 .conclusion(df.getConclusion())
                 .mainDisease(df.getMainDisease())
-                .patientId(df.getPatient().getId())
                 .prognosis(df.getPrognosis())
                 .treatmentPlan(df.getTreatmentPlan())
                 .id(df.getId())

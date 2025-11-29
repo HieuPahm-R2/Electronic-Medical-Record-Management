@@ -49,7 +49,7 @@ public class AppointmentService implements IAppointmentService {
         appointment.setContact(dto.getContact());
         appointment.setNotes(dto.getNotes());
         if(dto.getClinicalServices() != null){
-            List<Long> reqSkills = dto.getClinicalServices().stream().map(ClinicalService::getId).collect(Collectors.toList());
+            Set<Long> reqSkills = dto.getClinicalServices().stream().map(ClinicalService::getId).collect(Collectors.toSet());
             Set<ClinicalService> mainSkills = this.skillRepository.findByIdIn(reqSkills);
             dto.setClinicalServices(mainSkills);
             appointment.setClinicalServices(dto.getClinicalServices());
