@@ -1,52 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Typography, Button, Collapse, Spin, Tag } from 'antd';
-import { FilePdfOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Row, Col, Typography, Button, Collapse, Spin, Tag, Result } from 'antd';
+import { FilePdfOutlined, ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import moment from 'moment'; // Cần cài: npm install moment
 
 import { PatientProfile } from '../../components/admin/summary/PatientProfile';
-import { IBloodTest, IMedicalExam } from '@/types/backend';
+import { IBloodTest, IMedicalExam, IPatient } from '@/types/backend';
 import { VisitDetailTabs } from '../../components/admin/summary/VisitDetail';
+import SearchPatient from '@/components/admin/summary/SearchPatient';
+import { callFetchBloodTestByMex, callFetchMexByPatientId } from '@/config/api';
 
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
-// Mock Data Bệnh nhân (Giữ nguyên)
-const MOCK_PATIENT = {
-    name: "Nguyễn Minh Anh",
-    id: "BN1655829553",
-    dob: "18/06/2000",
-    gender: "Nữ",
-    job: "Sinh viên/học sinh",
-    nationality: "Việt Nam",
-    ethnicity: "Kinh",
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-};
 
 const MedicalRecordSummary: React.FC = () => {
     // State lưu danh sách các lần khám
     const [exams, setExams] = useState<IMedicalExam[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-
+    const [openModalSearch, setOpenModalSearch] = useState<boolean>(false);
+    const [selectedPatient, setSelectedPatient] = useState<IPatient | null>(null);
     // State lưu kết quả xét nghiệm (Map theo examId để cache dữ liệu)
     // Key là medicalExamId, Value là IBloodTest
-    const [bloodTestResults, setBloodTestResults] = useState<Record<number, IBloodTest>>({});
+    const [bloodTestResults, setBloodTestResults] = useState<Record<string, IBloodTest>>({});
 
     useEffect(() => {
         fetchExams();
     }, []);
 
     // 1. Logic Gọi API và Sắp xếp
-    const fetchExams = async () => {
+    const fetchExams = async (patientId?: string | number) => {
         setLoading(true);
         try {
-            // Giả lập API trả về danh sách lộn xộn
-            const mockApiReponse: IMedicalExam[] = [
-                { id: 101, arrivalTime: '2022-07-09T15:27:00' }, // Lần 1
-                { id: 103, arrivalTime: '2022-07-09T17:43:00' }, // Lần 3
-                { id: 104, arrivalTime: '2022-08-06T16:19:00' }, // Lần 4 (Mới nhất)
-                { id: 102, arrivalTime: '2022-07-09T17:14:00' }, // Lần 2
-            ];
+            const apiRaw = await callFetchMexByPatientId(patientId ? String(patientId) : '');
+            // Normalize different possible shapes of response to an array of exams
+            let mockApiReponse: IMedicalExam[] = [];
+            if (Array.isArray(apiRaw)) {
+                mockApiReponse = apiRaw;
+            } else if (apiRaw && typeof apiRaw === 'object') {
+                // Try common shapes: { data: { result: [...] } } or { data: [...] }
+                if (Array.isArray((apiRaw as any).data?.result)) {
+                    mockApiReponse = (apiRaw as any).data.result;
+                } else if (Array.isArray((apiRaw as any).data)) {
+                    mockApiReponse = (apiRaw as any).data;
+                } else if (Array.isArray((apiRaw as any).result)) {
+                    mockApiReponse = (apiRaw as any).result;
+                }
+            }
 
             // --- LOGIC SẮP XẾP QUAN TRỌNG ---
             const sortedExams = mockApiReponse.sort((a, b) => {
@@ -73,19 +73,20 @@ const MedicalRecordSummary: React.FC = () => {
     };
 
     // Hàm giả lập lấy chi tiết xét nghiệm theo ID lần khám
-    const fetchBloodTestForExam = async (examId: number) => {
+    const fetchBloodTestForExam = async (examId: string | number) => {
+        const key = String(examId);
         // Nếu đã có dữ liệu rồi thì không gọi lại
-        if (bloodTestResults[examId]) return;
+        if (bloodTestResults[key]) return;
 
-        // Giả lập API get blood-test by medical_exam_id
-        const mockTestResult: IBloodTest = {
-            id: `KQ-${examId}`,
-            glucose: 5.0 + (examId % 3), // Random số liệu chút
-            urea: 5.3,
-            // ... mapping data
-        };
-
-        setBloodTestResults(prev => ({ ...prev, [examId]: mockTestResult }));
+        // Gọi API lấy xét nghiệm theo medical_exam_id
+        try {
+            const res = await callFetchBloodTestByMex(key);
+            // Normalize possible API wrapper (e.g., { data: ..., result: ... })
+            const testData = res && (res as any).data ? (res as any).data : res;
+            setBloodTestResults(prev => ({ ...prev, [key]: testData as IBloodTest }));
+        } catch (err) {
+            console.error('Lỗi lấy kết quả xét nghiệm:', err);
+        }
     };
 
     // Hàm render Header cho Panel để giống thiết kế
@@ -102,49 +103,74 @@ const MedicalRecordSummary: React.FC = () => {
             </span>
         );
     };
+    const handleOpenModal = () => {
+        setOpenModalSearch(true)
+    }
+
+    const handleSelectPatient = (patient: IPatient) => {
+        setSelectedPatient(patient);
+        // Try to fetch exams for the selected patient. Use id if present, otherwise patientCode.
+        const idToUse = (patient as any).id ?? patient.patientCode;
+        fetchExams(idToUse as string | number);
+    }
 
     return (
         <div style={{ background: '#f0f2f5', padding: 24, minHeight: '100vh' }}>
-            {/* ... Phần Header giữ nguyên ... */}
+            <Button type="primary" icon={<SearchOutlined />}
+                onClick={() => handleOpenModal()}
+                style={{ marginBottom: '15px', fontSize: "15px" }}>
+                Chọn bệnh nhân thăm khám
+            </Button>
 
             <div style={{ background: '#fff', padding: 24, borderRadius: '0 0 8px 8px' }}>
-                <Row gutter={24}>
-                    <Col xs={24} md={6}>
-                        <PatientProfile patient={MOCK_PATIENT} />
-                    </Col>
+                {selectedPatient === null ?
+                    <Result
+                        title="Nhấn nút chọn bệnh nhân để hiện thị kết quả tương ứng"
+                        extra={
+                            <Button type="primary" key="console">
+                                Go Console
+                            </Button>
+                        }
+                    /> :
+                    <Row gutter={24}>
+                        <Col xs={24} md={6}>
+                            <PatientProfile patient={selectedPatient} />
+                        </Col>
+                        <Col xs={24} md={18}>
+                            {loading ? <Spin style={{ display: 'block', margin: '20px auto' }} /> : (
+                                <Collapse
+                                    expandIconPosition="end"
+                                    ghost
+                                    onChange={(keys) => {
+                                        // Logic Lazy load: Khi user mở tab nào thì mới gọi API lấy máu của tab đó
+                                        const key = Array.isArray(keys) ? keys[keys.length - 1] : keys;
+                                        if (key) fetchBloodTestForExam(key as string | number);
+                                    }}
+                                >
+                                    {/* Render danh sách động từ mảng exams đã sort */}
+                                    {exams.map((exam, index) => {
+                                        const examId = typeof exam.id === 'number' ? exam.id : index;
+                                        return (
+                                            <Panel
+                                                header={renderPanelHeader(exam, index)}
+                                                key={examId}
+                                                style={{ marginBottom: 16, border: '1px solid #f0f0f0', borderRadius: 8 }}
+                                            >
+                                                {/* Truyền dữ liệu xét nghiệm tương ứng với exam này vào */}
+                                                <VisitDetailTabs labData={bloodTestResults[examId]} />
+                                            </Panel>
+                                        );
+                                    })}
+                                </Collapse>
 
-                    <Col xs={24} md={18}>
-                        {loading ? <Spin style={{ display: 'block', margin: '20px auto' }} /> : (
+                            )}
+                        </Col>
+                    </Row>
 
-                            <Collapse
-                                expandIconPosition="end"
-                                ghost
-                                onChange={(keys) => {
-                                    // Logic Lazy load: Khi user mở tab nào thì mới gọi API lấy máu của tab đó
-                                    const key = Array.isArray(keys) ? keys[keys.length - 1] : keys;
-                                    if (key) fetchBloodTestForExam(Number(key));
-                                }}
-                            >
-                                {/* Render danh sách động từ mảng exams đã sort */}
-                                {exams.map((exam, index) => {
-                                    const examId = typeof exam.id === 'number' ? exam.id : index;
-                                    return (
-                                        <Panel
-                                            header={renderPanelHeader(exam, index)}
-                                            key={examId}
-                                            style={{ marginBottom: 16, border: '1px solid #f0f0f0', borderRadius: 8 }}
-                                        >
-                                            {/* Truyền dữ liệu xét nghiệm tương ứng với exam này vào */}
-                                            <VisitDetailTabs labData={bloodTestResults[examId]} />
-                                        </Panel>
-                                    );
-                                })}
-                            </Collapse>
+                }
 
-                        )}
-                    </Col>
-                </Row>
             </div>
+            <SearchPatient openModalSearch={openModalSearch} setOpenModalSearch={setOpenModalSearch} onSelectPatient={handleSelectPatient} />
         </div>
     );
 };

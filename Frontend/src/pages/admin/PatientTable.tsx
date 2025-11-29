@@ -7,7 +7,7 @@ import { ALL_PERMISSIONS } from "@/constant/permission";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { fetchPatient } from "@/redux/slice/patientSlice";
 import { IModelPaginate, IPatient } from "@/types/backend";
-import { DeleteOutlined, EditOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { BookOutlined, DeleteOutlined, EditOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Button, message, notification, Popconfirm, Space } from "antd";
 import dayjs from "dayjs";
@@ -20,6 +20,7 @@ const PatientTable = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<IPatient | null>(null);
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+    const [openModalMex, setOpenModalMex] = useState<boolean>(false);
 
     const tableRef = useRef<ActionType>();
 
@@ -167,6 +168,7 @@ const PatientTable = () => {
                             }}
                         />
                     </Access>
+
 
                     <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
                         <Popconfirm

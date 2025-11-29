@@ -7,7 +7,7 @@ import { IPatient } from '@/types/backend';
 const { Title, Text } = Typography;
 
 interface PatientProfileProps {
-    patient: IPatient;
+    patient: IPatient | null;
 }
 
 export const PatientProfile: React.FC<PatientProfileProps> = ({ patient }) => {
@@ -17,19 +17,19 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ patient }) => {
                 <div style={{ textAlign: 'center', marginBottom: 20 }}>
                     <Avatar
                         size={100}
-                        src={patient.avatar}
+                        src={patient?.avatar}
                         icon={<UserOutlined />}
                         style={{ border: '4px solid #e6f7ff', marginBottom: 10 }}
                     />
-                    <Title level={4} style={{ margin: 0, color: '#333' }}>{patient.fullName}</Title>
-                    <Text type="secondary">{patient.patientCode}</Text>
+                    <Title level={4} style={{ margin: 0, color: '#333' }}>{patient?.fullName}</Title>
+                    <Text type="secondary">{patient?.patientCode}</Text>
                 </div>
 
-                <InfoRow label="Ngày sinh" value={patient.dateOfBirth as string} />
+                <InfoRow label="Ngày sinh" value={patient?.dateOfBirth as string} />
                 <Divider style={{ margin: '12px 0' }} />
-                <InfoRow label="Giới tính" value={patient.gender as string} />
+                <InfoRow label="Giới tính" value={patient?.gender as string} />
                 <Divider style={{ margin: '12px 0' }} />
-                <InfoRow label="Nghề nghiệp" value={patient.career as string} />
+                <InfoRow label="Nghề nghiệp" value={patient?.career as string} />
             </Card>
 
             <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#fff' }}>
@@ -37,8 +37,8 @@ export const PatientProfile: React.FC<PatientProfileProps> = ({ patient }) => {
                     Chi tiết
                 </div>
                 <div style={{ padding: 16 }}>
-                    <DetailItem label="🏁 Quốc tịch" value={patient.nationality as string} />
-                    <DetailItem label="❤️ Dân tộc" value={patient.ethnicity as string} />
+                    <DetailItem label="🏁 Quốc tịch" value={patient?.nationality as string} />
+                    <DetailItem label="❤️ Dân tộc" value={patient?.ethnicity as string} />
                 </div>
             </div>
         </div>

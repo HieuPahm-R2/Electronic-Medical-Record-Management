@@ -9,15 +9,12 @@ import {
 } from '@ant-design/pro-components';
 import { Row, Col, Typography, Space, Button, Form, message, notification, Select } from 'antd';
 import { useEffect, useState } from "react";
-import { callCreateMedicalExam, callFetchMexByPatientId, callUpdateMedicamExam, getAllDepartments } from "@/config/api";
+import { callCreateMedicalExam, callFetchMexById, callUpdateMedicamExam, getAllDepartments } from "@/config/api";
 import { ISelect } from "../user/UserModal";
 interface IProps {
-    openModal: boolean;
-    setOpenModal: (v: boolean) => void;
     setDataInit: (v: any) => void;
-    dataInit?: IPatient | null;
     reloadTable: () => void;
-    isReset: boolean;
+    dataLab?: IMedicalExam | null
 }
 const { Text } = Typography;
 const relatedDiseasesLeft = [
@@ -32,21 +29,23 @@ const relatedDiseasesRight = [
 ];
 
 const MedicalExam = (props: IProps) => {
-    const { openModal, setOpenModal, reloadTable, dataInit, isReset, setDataInit } = props;
+    const { reloadTable, setDataInit, dataLab } = props;
     const [dataUpdateMex, setDataUpdateMex] = useState<IMedicalExam>();
     const [departments, setDepartments] = useState<ISelect[]>([]);
     const [initalVal, setInitalVal] = useState<any>();
     const [form] = Form.useForm();
 
     useEffect(() => {
-        if (isReset) {
-            handleReset()
+        if (dataLab?.id) {
+            form.resetFields();
         }
-    }, [isReset]);
+    }, [dataLab?.id]);
 
     useEffect(() => {
         const fetchMexs = async () => {
-            const res = await callFetchMexByPatientId(dataInit?.id as string);
+            console.log(dataLab)
+            const res = await callFetchMexById(dataLab?.id as string);
+            console.log(res)
             if (res && res.data) {
                 setDataUpdateMex(res.data)
             }
@@ -66,18 +65,17 @@ const MedicalExam = (props: IProps) => {
             }
         }
         fetchAllDepart()
-        console.log(dataInit)
-        if (dataInit?.id) {
+        if (dataLab?.id) {
             fetchMexs()
         }
-    }, [dataInit?.id])
+    }, [dataLab?.id])
 
     useEffect(() => {
         if (dataUpdateMex?.id) {
             console.log(departments)
             const initialValue = {
                 id: dataUpdateMex?.id,
-                patient_id: dataInit?.id,
+                patient_id: dataLab?.patient,
                 arrivalTime: dataUpdateMex.arrivalTime,
                 receptionTime: dataUpdateMex.receptionTime,
                 referralSource: dataUpdateMex.referralSource,
@@ -104,14 +102,14 @@ const MedicalExam = (props: IProps) => {
             form.setFieldsValue(initialValue)
 
         }
-    }, [dataUpdateMex, dataInit?.id]);
+    }, [dataUpdateMex, dataLab?.id]);
 
     const submitUser = async (valuesForm: any) => {
         if (dataUpdateMex?.id) {
             //update
             const bl = {
                 id: dataUpdateMex.id,
-                patient: dataInit?.id,
+                patient: dataUpdateMex?.patient,
                 arrivalTime: valuesForm.arrivalTime,
                 receptionTime: valuesForm.receptionTime,
                 referralSource: valuesForm.referralSource,
@@ -169,7 +167,6 @@ const MedicalExam = (props: IProps) => {
         setDataInit(null)
         reloadTable()
         setDepartments([])
-        setOpenModal(false);
     }
     return (
         <div style={{ padding: 24, background: '#f5f5f5' }}>

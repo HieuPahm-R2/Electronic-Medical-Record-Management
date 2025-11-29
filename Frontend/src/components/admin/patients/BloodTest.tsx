@@ -1,4 +1,4 @@
-import { IBloodTest, IClinicalService, IPatient } from '@/types/backend';
+import { IBloodTest, IClinicalService, IMedicalExam, IPatient } from '@/types/backend';
 import { ProForm } from '@ant-design/pro-components';
 import { Upload, ConfigProvider, Modal } from 'antd';
 import { Button, Col, Form, Input, message, notification, Row, Select } from 'antd';
@@ -9,7 +9,7 @@ export interface ISelect {
     value: string;
     key?: string;
 }
-import { callCreateBloodTest, callFetchBloodTestByPatientId, callUpdateBloodTest, fetchAllClinicalSerives } from '@/config/api';
+import { callCreateBloodTest, callFetchBloodTestByMex, callFetchBloodTestByPatientId, callUpdateBloodTest, fetchAllClinicalSerives } from '@/config/api';
 import TextArea from 'antd/es/input/TextArea';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { callUploadImage } from '@/config/api.fast';
@@ -17,13 +17,9 @@ import { v4 as uuidv4 } from 'uuid';
 import enUS from 'antd/lib/locale/en_US';
 
 interface IProps {
-    openModal: boolean;
-    setOpenModal: (v: boolean) => void;
-    dataInit?: IPatient | null;
     setDataInit: (v: any) => void;
     reloadTable: () => void;
-    isReset: boolean;
-    setIsReset: (v: boolean) => void;
+    dataLab?: IMedicalExam | null
 }
 
 const fieldsetStyle = {
@@ -47,7 +43,7 @@ const BloodTest = (props: IProps) => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [loadingUpload, setLoadingUpload] = useState<boolean>(false);
-    const { openModal, setOpenModal, reloadTable, dataInit, isReset, setIsReset, setDataInit } = props;
+    const { reloadTable, setDataInit, dataLab } = props;
     const [clinicalServices, setClinicalServices] = useState<ISelect[]>([]);
     const [dataUpdateBl, setDataUpdateBl] = useState<IBloodTest>();
     const [initalVal, setInitalVal] = useState<any>();
@@ -56,14 +52,8 @@ const BloodTest = (props: IProps) => {
 
 
     useEffect(() => {
-        if (isReset) {
-            handleReset()
-        }
-    }, [isReset]);
-
-    useEffect(() => {
         const fetchBls = async () => {
-            const res = await callFetchBloodTestByPatientId(dataInit?.id as string);
+            const res = await callFetchBloodTestByMex(dataLab?.id as string);
             if (res && res.data) {
                 setDataUpdateBl(res.data)
             }
@@ -82,11 +72,11 @@ const BloodTest = (props: IProps) => {
             } else setClinicalServices([])
         }
         fetchList()
-        if (dataInit?.id) {
+        if (dataLab?.id) {
             fetchBls();
         }
 
-    }, [dataInit?.id])
+    }, [dataLab?.id])
 
     useEffect(() => {
         if (dataUpdateBl?.id) {
@@ -114,7 +104,6 @@ const BloodTest = (props: IProps) => {
                 imagePath: {
                     fileList: arrThumbnail
                 },
-                patient_id: dataInit?.id,
                 serviceName: clinicalServices[0],
                 medicalExam: dataUpdateBl?.medical_exam_id,
             }
@@ -125,7 +114,7 @@ const BloodTest = (props: IProps) => {
             form.setFieldsValue(initialValue)
         }
         return () => { form.resetFields() };
-    }, [dataUpdateBl, dataInit?.id]);
+    }, [dataUpdateBl, dataLab?.id]);
 
     const handleRemoveFile = () => {
         setDataLogo([]);
@@ -213,7 +202,6 @@ const BloodTest = (props: IProps) => {
             //update
             const bl = {
                 id: dataUpdateBl.id,
-                patient_id: dataInit?.id,
                 conclusion: comment,
                 glucose: glu,
                 urea: ure,
@@ -237,7 +225,6 @@ const BloodTest = (props: IProps) => {
             if (res.data) {
                 message.success("Cập nhật thành công");
                 handleReset();
-                setIsReset
                 reloadTable();
             } else {
                 notification.error({
@@ -268,8 +255,6 @@ const BloodTest = (props: IProps) => {
         form.resetFields();
         setClinicalServices([])
         setDataInit(null)
-        setIsReset(false)
-        setOpenModal(false);
     }
     return (
         <>

@@ -54,7 +54,7 @@ export interface IPatient {
 }
 
 export interface IMedicalExam {
-    id?: number;
+    id?: string;
     arrivalTime?: string; // LocalDate -> string
     receptionTime?: string;
     referralSource?: string;

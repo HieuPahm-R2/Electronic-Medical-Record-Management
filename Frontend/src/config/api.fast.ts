@@ -1,6 +1,7 @@
+import { IRole } from "@/types/backend";
 import instance from "./axios.custom";
 
-export const callUploadImage = (file, folder) => {
+export const callUploadImage = (file: any, folder: string) => {
     const bodyFormData = new FormData();
     bodyFormData.append('file', file);
     bodyFormData.append('folder', folder);
@@ -14,7 +15,7 @@ export const callUploadImage = (file, folder) => {
     });
 }
 // authentication
-export const registerAPI = (fullName, email, password, roleId) => {
+export const registerAPI = (fullName: string, email: string, password: string, roleId: IRole) => {
     return instance.post(`/api/v1/auth/register`, {
         fullName, email, password,
         role: {
@@ -22,7 +23,7 @@ export const registerAPI = (fullName, email, password, roleId) => {
         }
     })
 }
-export const loginAPI = (username, password) => {
+export const loginAPI = (username: string, password: string) => {
     return instance.post(`/api/v1/auth/login`, { username, password })
 }
 export const callFetchAccountAPI = () => {
