@@ -75,18 +75,19 @@ instance.interceptors.response.use((res) => res.data,
             console.log("REFRESH TOKEN ERROR:", message)
             //dispatch redux action
             dispatch(setRefreshTokenAction({ status: true, message }))
+            console.log("điiđii")
         }
 
-        if (
-            error.config && error.response
-            && +error.response.status === 401
-            && error.config.url === '/api/v1/auth/refresh'
-            && location.pathname.startsWith("/admin")
-        ) {
-            const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
-            //dispatch redux action
-            dispatch(setRefreshTokenAction({ status: true, message: `${message}` }))
-        }
+        // if (
+        //     error.config && error.response
+        //     && +error.response.status === 401
+        //     && error.config.url === '/api/v1/auth/refresh'
+        //     && location.pathname.startsWith("/admin")
+        // ) {
+        //     const message = error?.response?.data?.error ?? "Có lỗi xảy ra, vui lòng login.";
+        //     //dispatch redux action
+        //     dispatch(setRefreshTokenAction({ status: true, message: `${message}` }))
+        // }
 
 
         if (+error.response.status === 403) {

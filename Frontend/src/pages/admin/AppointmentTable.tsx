@@ -4,7 +4,6 @@ import type { ColumnsType } from 'antd/es/table';
 import { IAppointment } from '@/types/backend';
 
 
-
 // 2. Dữ liệu mẫu (Mock data) giống trong ảnh
 const initialData: IAppointment[] = [
     { key: 19, id: 19, name: 'Lavina Hodkiewicz', email: 'ottilie.kohler@example.net', phone: '0962763847', updatedAt: '2024-05-09 05:36:22', status: 'PENDING' },
@@ -41,18 +40,16 @@ const AppointmentTable: React.FC = () => {
             key: 'action',
             render: (_, record) => {
                 if (currentTab === 'pending') {
-                    // Nút bấm ở tab Chờ xác nhận
                     return (
                         <Button
                             type="primary"
-                            style={{ backgroundColor: '#5bc0de', borderColor: '#46b8da' }} // Màu xanh giống ảnh
+                            style={{ backgroundColor: '#5bc0de', borderColor: '#46b8da' }}
                             onClick={() => handleConfirm(record.id)}
                         >
                             Chờ xác nhận
                         </Button>
                     );
                 } else {
-                    // Hiển thị text/tag ở tab Đã xác nhận
                     return <Tag color="green">Đã xác nhận</Tag>;
                 }
             },
@@ -99,7 +96,7 @@ const AppointmentTable: React.FC = () => {
                 <Tabs
                     defaultActiveKey="1"
                     items={items}
-                    type="card" // Kiểu card để có background màu ở tab active
+                    type="card"
                     tabBarStyle={{
                         marginBottom: 0,
                         background: '#fff',

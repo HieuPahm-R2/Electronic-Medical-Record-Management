@@ -20,9 +20,7 @@ function App() {
   return (
     <>
       {
-        isLoading === false || window.location.pathname === '/login' || window.location.pathname === '/register'
-          || window.location.pathname === '/'
-          ? <RouterProvider router={router} /> : <Loading />
+        <RouterProvider router={router} />
       }
     </>
   );

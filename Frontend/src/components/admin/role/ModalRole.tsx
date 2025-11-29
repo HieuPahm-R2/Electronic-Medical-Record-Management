@@ -1,5 +1,5 @@
 import { FooterToolbar, ModalForm, ProCard, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Col, Form, Row, message, notification } from "antd";
+import { Button, Col, Form, Row, message, notification } from "antd";
 import { isMobile } from 'react-device-detect';
 import { callCreateRole, callFetchPermission, callUpdateRole } from "@/config/api";
 import { IPermission } from "@/types/backend";
@@ -149,7 +149,8 @@ const ModalRole = (props: IProps) => {
                 form={form}
                 onFinish={submitRole}
                 submitter={{
-                    render: (_: any, dom: any) => <FooterToolbar>{dom}</FooterToolbar>,
+                    render: (_: any, dom: any) =>
+                        <Button>{dom}</Button>,
                     submitButtonProps: {
                         icon: <CheckSquareOutlined />
                     },

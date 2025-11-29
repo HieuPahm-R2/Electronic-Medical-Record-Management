@@ -1,61 +1,192 @@
-import { IPatient } from "@/types/backend";
+import { IMedicalExam, IPatient } from "@/types/backend";
 import {
     ProForm,
-    ProFormDatePicker,
     ProFormDateTimePicker,
-    ProFormSelect,
     ProFormText,
     ProFormTextArea,
     ProFormCheckbox,
     ProCard,
 } from '@ant-design/pro-components';
-import { Row, Col, Typography, Space, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Row, Col, Typography, Space, Button, Form, message, notification, Select } from 'antd';
+import { useEffect, useState } from "react";
+import { callCreateMedicalExam, callFetchMexByPatientId, callUpdateMedicamExam, getAllDepartments } from "@/config/api";
+import { ISelect } from "../user/UserModal";
 interface IProps {
     openModal: boolean;
     setOpenModal: (v: boolean) => void;
+    setDataInit: (v: any) => void;
     dataInit?: IPatient | null;
     reloadTable: () => void;
+    isReset: boolean;
 }
 const { Text } = Typography;
 const relatedDiseasesLeft = [
-    { id: '01', label: 'Dị ứng', name: 'di_ung' },
-    { id: '02', label: 'Ma túy', name: 'ma_tuy' },
-    { id: '03', label: 'Rượu bia', name: 'ruou_bia' },
+    { id: '01', label: 'Dị ứng', name: 'hasAllergy', date: 'allergyMonths' },
+    { id: '02', label: 'Ma túy', name: 'usesDrugs', date: 'drugsMonths' },
+    { id: '03', label: 'Rượu bia', name: 'usesAlcohol', date: 'alcoholMonths' },
 ];
 
 const relatedDiseasesRight = [
-    { id: '04', label: 'Thuốc lá, thuốc lào', name: 'thuoc_la' },
-    { id: '05', label: 'Khác', name: 'khac' },
+    { id: '04', label: 'Thuốc lá, thuốc lào', name: 'usesTobacco', date: 'tobaccoMonths' },
+    { id: '05', label: 'Khác', name: 'hasOther', date: 'otherMonths' },
 ];
-const MedicalExam = () => {
+
+const MedicalExam = (props: IProps) => {
+    const { openModal, setOpenModal, reloadTable, dataInit, isReset, setDataInit } = props;
+    const [dataUpdateMex, setDataUpdateMex] = useState<IMedicalExam>();
+    const [departments, setDepartments] = useState<ISelect[]>([]);
+    const [initalVal, setInitalVal] = useState<any>();
+    const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (isReset) {
+            handleReset()
+        }
+    }, [isReset]);
+
+    useEffect(() => {
+        const fetchMexs = async () => {
+            const res = await callFetchMexByPatientId(dataInit?.id as string);
+            if (res && res.data) {
+                setDataUpdateMex(res.data)
+            }
+        }
+        const fetchAllDepart = async () => {
+            const res = await getAllDepartments(`page=0&size=20`);
+            console.log(res)
+            if (res && res.data) {
+                const list = res.data.result;
+                const temp = list.map(item => {
+                    return {
+                        label: item.name as string,
+                        value: item.id as string
+                    }
+                })
+                setDepartments(temp)
+            }
+        }
+        fetchAllDepart()
+        console.log(dataInit)
+        if (dataInit?.id) {
+            fetchMexs()
+        }
+    }, [dataInit?.id])
+
+    useEffect(() => {
+        if (dataUpdateMex?.id) {
+            console.log(departments)
+            const initialValue = {
+                id: dataUpdateMex?.id,
+                patient_id: dataInit?.id,
+                arrivalTime: dataUpdateMex.arrivalTime,
+                receptionTime: dataUpdateMex.receptionTime,
+                referralSource: dataUpdateMex.referralSource,
+                symptoms: dataUpdateMex.symptoms,
+                reason: dataUpdateMex.reason,
+                daysOfSymptoms: dataUpdateMex.daysOfSymptoms,
+                hasAllergys: dataUpdateMex.hasAllergy,
+                allergyMonths: dataUpdateMex.allergyMonths,
+                usesDrugs: dataUpdateMex.usesDrugs,
+                drugsMonths: dataUpdateMex.drugsMonths,
+                usesAlcohol: dataUpdateMex.usesAlcohol,
+                alcoholMonths: dataUpdateMex.alcoholMonths,
+                usesTobacco: dataUpdateMex.usesTobacco,
+                tobaccoMonths: dataUpdateMex.tobaccoMonths,
+                hasOther: dataUpdateMex.hasOther,
+                otherMonths: dataUpdateMex.otherMonths,
+                otherDescription: dataUpdateMex.otherDescription,
+                personalMedicalHistory: dataUpdateMex.personalMedicalHistory,
+                familyMedicalHistory: dataUpdateMex.familyMedicalHistory,
+                department: departments[0]
+
+            }
+            setInitalVal(initialValue)
+            form.setFieldsValue(initialValue)
+
+        }
+    }, [dataUpdateMex, dataInit?.id]);
+
+    const submitUser = async (valuesForm: any) => {
+        if (dataUpdateMex?.id) {
+            //update
+            const bl = {
+                id: dataUpdateMex.id,
+                patient: dataInit?.id,
+                arrivalTime: valuesForm.arrivalTime,
+                receptionTime: valuesForm.receptionTime,
+                referralSource: valuesForm.referralSource,
+                symptoms: valuesForm.symptoms,
+                reason: valuesForm.reason,
+                daysOfSymptoms: valuesForm.daysOfSymptoms,
+                hasAllergys: valuesForm.hasAllergy,
+                allergyMonths: valuesForm.allergyMonths,
+                usesDrugs: valuesForm.usesDrugs,
+                drugsMonths: valuesForm.drugsMonths,
+                usesAlcohol: valuesForm.usesAlcohol,
+                alcoholMonths: valuesForm.alcoholMonths,
+                usesTobacco: valuesForm.usesTobacco,
+                tobaccoMonths: valuesForm.tobaccoMonths,
+                hasOther: valuesForm.hasOther,
+                otherMonths: valuesForm.otherMonths,
+                otherDescription: valuesForm.otherDescription,
+                personalMedicalHistory: valuesForm.personalMedicalHistory,
+                familyMedicalHistory: valuesForm.familyMedicalHistory,
+                department: {
+                    id: departments[0].value
+                }
+
+            }
+            const res = await callUpdateMedicamExam(bl);
+            if (res.data) {
+                message.success("Cập nhật thành công");
+                handleReset();
+                reloadTable();
+            } else {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: res.message
+                });
+            }
+        } else {
+            //create
+            const user = { ...valuesForm }
+            const res = await callCreateMedicalExam(user);
+            if (res.data) {
+                message.success("Thêm mới thành công");
+                handleReset();
+                reloadTable();
+            } else {
+                notification.error({
+                    message: 'Có lỗi xảy ra',
+                    description: res.message
+                });
+            }
+        }
+    }
+
+    const handleReset = async () => {
+        form.resetFields();
+        setDataInit(null)
+        reloadTable()
+        setDepartments([])
+        setOpenModal(false);
+    }
     return (
         <div style={{ padding: 24, background: '#f5f5f5' }}>
             <ProForm
                 layout="vertical"
-                grid={true} // Bật chế độ Grid
+                grid={true}
+                form={form}
+                initialValues={initalVal}
                 submitter={{
-                    // Tùy chỉnh nút submit
-                    render: (props, dom) => {
-                        return (
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                icon={<PlusOutlined />}
-                                style={{
-                                    backgroundColor: '#6b5ce7', // Màu tím giống ảnh
-                                    borderColor: '#6b5ce7',
-                                    marginTop: 16,
-                                }}
-                            >
-                                Cập nhật
-                            </Button>
-                        );
-                    },
+                    render: (_, dom) => (
+                        <Button type="primary" htmlType='submit' icon={<span>＋</span>}>
+                            {<>{dataUpdateMex?.id ? "Cập nhật" : "Tạo mới"}</>}
+                        </Button>
+                    ),
                 }}
-                onFinish={async (values) => {
-                    console.log('Form Values:', values);
-                }}
+                onFinish={submitUser}
+
             >
                 <ProFormDateTimePicker
                     placeholder="-- thời gian đến --"
@@ -70,29 +201,28 @@ const MedicalExam = () => {
                     colProps={{ md: 6, xs: 12 }}
                     rules={[{ required: true, message: 'Vui lòng chọn thời gian tiếp nhận' }]}
                 />
-                <ProFormSelect
+                <ProForm.Item
                     name="department"
-                    label={<span>Khoa tiếp nhận <span style={{ color: 'red' }}>*</span></span>}
-                    placeholder="-- Khoa tiếp nhận --"
                     colProps={{ md: 6, xs: 12 }}
+                    label={<span>Khoa tiếp nhận <span style={{ color: 'red' }}>*</span></span>}
                     rules={[{ required: true, message: 'Vui lòng chọn khoa' }]}
-                    options={[
-                        { label: 'Khoa Cấp Cứu', value: 'cap_cuu' },
-                        { label: 'Khoa Nội', value: 'noi' },
-                    ]}
-                />
-                <ProFormSelect
-                    name="referralPlace"
+                >
+                    <Select
+                        defaultValue={null}
+                        showSearch
+                        allowClear
+                        placeholder="-- Khoa tiếp nhận --"
+                        options={departments}
+                    />
+                </ProForm.Item>
+
+                <ProFormText
+                    name="referralSource"
                     label="Nơi giới thiệu"
                     placeholder="-- Nơi giới thiệu --"
                     colProps={{ md: 6, xs: 12 }}
-                    options={[
-                        { label: 'Bệnh viện tuyến dưới', value: 'bv_tuyen_duoi' },
-                        { label: 'Tự đến', value: 'tu_den' },
-                    ]}
                 />
 
-                {/* --- Triệu chứng và Lý do --- */}
                 <ProFormText
                     name="symptoms"
                     label="Triệu chứng"
@@ -109,22 +239,23 @@ const MedicalExam = () => {
 
                 {/* --- Hàng 3 --- */}
                 <ProFormText
-                    name="daysManifested"
+                    name="daysOfSymptoms"
                     label="Số ngày biểu hiện"
+                    placeholder="12 ngày..."
                     colProps={{ md: 4, xs: 12 }}
                 />
                 <Col span={20} />
 
                 {/* --- Hàng 4--- */}
                 <ProFormTextArea
-                    name="personalHistory"
+                    name="personalMedicalHistory"
                     label="Tiền sử bệnh của bản thân"
                     placeholder="Nội dung"
                     colProps={{ md: 12, xs: 24 }}
                     fieldProps={{ rows: 4 }}
                 />
                 <ProFormTextArea
-                    name="familyHistory"
+                    name="familyMedicalHistory"
                     label="Tiền sử bệnh của gia đình"
                     placeholder="Nội dung"
                     colProps={{ md: 12, xs: 24 }}
@@ -153,12 +284,12 @@ const MedicalExam = () => {
                                         <Row key={item.id} gutter={16} style={{ marginBottom: 12, alignItems: 'center' }}>
                                             <Col span={2}>{item.id}</Col>
                                             <Col span={10}>
-                                                <ProFormCheckbox name={`${item.name}_check`} noStyle>
+                                                <ProFormCheckbox name={`${item.name}`} noStyle>
                                                     {item.label}
                                                 </ProFormCheckbox>
                                             </Col>
                                             <Col span={12}>
-                                                <ProFormText name={`${item.name}_duration`} noStyle />
+                                                <ProFormText name={`${item.date}`} noStyle />
                                             </Col>
                                         </Row>
                                     ))}
@@ -177,12 +308,13 @@ const MedicalExam = () => {
                                         <Row key={item.id} gutter={16} style={{ marginBottom: 12, alignItems: 'center' }}>
                                             <Col span={2}>{item.id}</Col>
                                             <Col span={10}>
-                                                <ProFormCheckbox name={`${item.name}_check`} noStyle>
+                                                <ProFormCheckbox name={`${item.name}`} noStyle>
                                                     {item.label}
                                                 </ProFormCheckbox>
                                             </Col>
+
                                             <Col span={12}>
-                                                <ProFormText name={`${item.name}_duration`} noStyle />
+                                                <ProFormText name={`${item.date}`} noStyle />
                                             </Col>
                                         </Row>
                                     ))}

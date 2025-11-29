@@ -1,8 +1,6 @@
 import DataTable from "@/components/admin/DataTable";
 import ManageMedical from "@/components/admin/patients/ManageMedical";
-import ModalPatient from "@/components/admin/patients/ManageMedical";
 import MPatientCreateAndUpdate from "@/components/admin/patients/PatientModal";
-import ModalPatientCreate from "@/components/admin/patients/PatientModal";
 import Access from "@/components/share/Access";
 import { callDeletePatient } from "@/config/api";
 import { ALL_PERMISSIONS } from "@/constant/permission";
@@ -61,6 +59,11 @@ const PatientTable = () => {
             hideInSearch: true,
         },
         {
+            title: "id",
+            dataIndex: "id",
+            hidden: true
+        },
+        {
             title: "Mã bệnh nhân",
             dataIndex: "patientCode",
             sorter: true,
@@ -73,6 +76,7 @@ const PatientTable = () => {
         {
             title: "Secret",
             dataIndex: "nationality",
+            hidden: true
         },
         {
             title: "Secret",
@@ -183,8 +187,6 @@ const PatientTable = () => {
                             </span>
                         </Popconfirm>
                     </Access>
-
-
                 </Space>
             ),
         },

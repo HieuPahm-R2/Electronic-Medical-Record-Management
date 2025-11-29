@@ -8,7 +8,8 @@ interface IProps {
     dataInit?: IPatient | null;
     reloadTable: () => void;
 }
-const Radiology = () => {
+const Radiology = (props: IProps) => {
+    const { openModal, setOpenModal, reloadTable, dataInit } = props;
     return (
         <div style={{ background: "#fff", padding: 24, borderRadius: 8 }}>
             <ProForm

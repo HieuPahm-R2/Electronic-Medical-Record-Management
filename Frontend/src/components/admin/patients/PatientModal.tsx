@@ -20,7 +20,8 @@ const MPatientCreateAndUpdate = (props: IProps) => {
     useEffect(() => {
         if (dataInit) {
             form.setFieldsValue({
-                dateOfBirth: dayjs(dataInit.dateOfBirth)   // "2005-05-15"
+                dateOfBirth: dayjs(dataInit.dateOfBirth),
+                insuranceExpired: dayjs(dataInit.insuranceExpired)
             });
         }
     }, [dataInit]);
@@ -202,7 +203,7 @@ const MPatientCreateAndUpdate = (props: IProps) => {
                                 name="insuranceExpired"
                                 rules={[{ required: true, message: 'Vui lòng không bỏ trống!' }]}
                             >
-                                <DatePicker onChange={onChangeDate} />
+                                <DatePicker onChange={onChangeDate} needConfirm />
                             </Form.Item>
                         </Col>
                         <Col span={6}>

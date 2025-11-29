@@ -81,7 +81,7 @@ export interface IMedicalExam {
     personalMedicalHistory?: string;
     familyMedicalHistory?: string;
 
-    patient?: IPatient;
+    patient?: string;
     department?: IDepartment;
 }
 
@@ -98,7 +98,7 @@ export interface IVitalSign {
     pulse_rate: number;
     respiratory_rate?: number;
     notes?: string;
-    patient_id?: number;
+    patient_id?: string;
     medical_exam_id?: IMedicalExamRes;
 }
 
@@ -161,14 +161,16 @@ export interface IClinicalInfo {
 }
 
 export interface IDepartment {
-    id?: number;
+    id?: string;
     name?: string;
+    description?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface IClinicalService {
     id?: string;
     serviceName?: string;
-
 }
 
 export interface IMedicalExamRes {

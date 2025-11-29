@@ -15,7 +15,7 @@ const LayoutApp = (props: IProps) => {
 
     useEffect(() => {
         console.log('[LayoutApp] useEffect fired - isRefreshToken:', isRefreshToken, 'error:', errorRefreshToken)
-        if (isRefreshToken == true) {
+        if (isRefreshToken === true) {
             console.log('[LayoutApp] refresh token error -> navigating to /login')
             localStorage.removeItem('access_token')
             message.error(errorRefreshToken)

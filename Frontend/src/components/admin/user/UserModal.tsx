@@ -161,7 +161,6 @@ const ModalUser = (props: IProps) => {
                             name="role"
                             label="Vai trò"
                             rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
-
                         >
                             <DebounceSelect
                                 allowClear

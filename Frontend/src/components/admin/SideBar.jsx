@@ -108,7 +108,7 @@ const SideNav = (props) => {
                         <span
                             className="icon"
                             style={{
-                                background: page === "ttable-appointment" ? color : "",
+                                background: page === "table-appointment" ? color : "",
                             }}
                         >
                             {tables}
