@@ -113,6 +113,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
             arrResult.add(new Permission("Upload video", "/api/v1/upload/video", "POST", "EPISODES"));
             arrResult.add(new Permission("Upload file", "/api/v1/files", "POST", "FILES"));
+            arrResult.add(new Permission("Get all departments with pagination", "/api/v1/departments", "GET", "DEPARTMENTS"));
 
 
             this.permissionRepository.saveAll(arrResult);

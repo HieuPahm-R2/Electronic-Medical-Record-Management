@@ -7,6 +7,7 @@ import com.turkraft.springfilter.parser.FilterParser;
 import com.turkraft.springfilter.parser.node.FilterNode;
 import group29.hust.dtos.request.BloodTestDTO;
 import group29.hust.dtos.request.ClinicalServiceDTO;
+import group29.hust.dtos.request.MedicalExamDTO;
 import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.exception.BadActionException;
 import group29.hust.model.BloodTest;
@@ -140,7 +141,30 @@ public class BloodTestService implements IBloodTestService {
         existingBloodTest.setUrea( dto.getUrea());
 
         BloodTest updatedBloodTest = bloodTestRepository.save(existingBloodTest);
-        return modelMapper.map(updatedBloodTest, BloodTestDTO.class);
+        MedicalExamDTO me = MedicalExamDTO.builder()
+                .id(updatedBloodTest.getMedicalExamination().getId())
+                .build();
+        return BloodTestDTO.builder()
+                .id(updatedBloodTest.getId())
+                .hb(updatedBloodTest.getHb())
+                .glucose(updatedBloodTest.getGlucose())
+                .hct(updatedBloodTest.getHct())
+                .mch(updatedBloodTest.getMch())
+                .mcv(updatedBloodTest.getMcv())
+                .neut(updatedBloodTest.getNeut())
+                .wbc(updatedBloodTest.getWbc())
+                .urea(updatedBloodTest.getUrea())
+                .conclusion(updatedBloodTest.getConclusion())
+                .imageUrl(updatedBloodTest.getImageUrl())
+                .patientId(updatedBloodTest.getPatient().getId())
+                .clinicalServices(ClinicalServiceDTO.builder()
+                        .id(updatedBloodTest.getClinicalServices().getId())
+                        .serviceName(updatedBloodTest.getClinicalServices().getServiceName())
+                        .build())
+                .bloodType(updatedBloodTest.getBloodType())
+                .bloodGroup(updatedBloodTest.getBloodGroup())
+                .medicalExamination(me)
+                .build();
     }
 
     @Override
@@ -164,9 +188,34 @@ public BloodTestDTO getByMedicalExamId(Long medicalExamId) {
     @Override
     public BloodTestDTO getByPatientId(Long patientId) {
         BloodTest res = bloodTestRepository.findByPatientId(patientId);
-        if(res != null) {
-            return modelMapper.map(res, BloodTestDTO.class);
+        if(res == null) {
+            throw new BadActionException("Blood test not found with id: ");
         }
-        throw new BadActionException("Blood test not found with id: ");
+        var clinical = res.getClinicalServices();
+        ClinicalServiceDTO cs = ClinicalServiceDTO.builder()
+                .id(clinical != null ? res.getClinicalServices().getId() : null)
+                .serviceName(clinical != null ? res.getClinicalServices().getServiceName() : "")
+                .build();
+        MedicalExamDTO me = MedicalExamDTO.builder()
+                .id(res.getMedicalExamination().getId())
+                .build();
+        return BloodTestDTO.builder()
+                .id(res.getId())
+                .hb(res.getHb())
+                .glucose(res.getGlucose())
+                .hct(res.getHct())
+                .mch(res.getMch())
+                .mcv(res.getMcv())
+                .neut(res.getNeut())
+                .wbc(res.getWbc())
+                .urea(res.getUrea())
+                .bloodGroup(res.getBloodGroup())
+                .bloodType(res.getBloodType())
+                .conclusion(res.getConclusion())
+                .imageUrl(res.getImageUrl())
+                .patientId(res.getPatient().getId())
+                .medicalExamination(me)
+                .clinicalServices(cs)
+                .build();
     }
 }

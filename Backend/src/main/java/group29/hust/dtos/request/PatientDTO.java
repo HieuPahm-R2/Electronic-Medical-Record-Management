@@ -18,8 +18,10 @@ public class PatientDTO {
     private String patientCode;
     @JsonProperty("fullName")
     private String fullName;
+
     @JsonProperty("dateOfBirth")
     private LocalDate dateOfBirth;
+
     private String email;
     private String phone;
     private String nationality;
@@ -28,8 +30,10 @@ public class PatientDTO {
     private String identityCard;
     @JsonProperty("insuranceNumber")
     private String insuranceNumber;
+
     @JsonProperty("insuranceExpired")
     private LocalDate insuranceExpired;
+
     private String gender;
     private String career;
     @JsonProperty("relativeName")

@@ -49,6 +49,7 @@ public class Patient extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String insuranceNumber;
 
+    @Column(name = "insurance_expired")
     private LocalDate insuranceExpired;
 
     @Column(length = 10, nullable = false)

@@ -97,6 +97,6 @@ public class MedicalExam {
     @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
     private Radiology radiologyResults;
 
-    @OneToOne(mappedBy = "medicalExamination")
+    @OneToOne(mappedBy = "medicalExamination", cascade = CascadeType.ALL)
     private BloodTest bloodTests;
 }

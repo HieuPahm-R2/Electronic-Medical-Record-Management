@@ -1,6 +1,7 @@
 package group29.hust.service.impl;
 
 import group29.hust.dtos.request.VitalSignDTO;
+import group29.hust.dtos.response.MedicalExamRes;
 import group29.hust.exception.BadActionException;
 import group29.hust.model.MedicalExam;
 import group29.hust.model.Patient;
@@ -59,9 +60,6 @@ public class VitalSignService implements IVitalSignService {
         // Check if exists
         VitalSign vitalSign = vitalSignRepository.findById(dto.getId())
                 .orElseThrow(() -> new BadActionException("Vital sign not found with ID: " + dto.getId()));
-        
-        // Update fields from DTO
-        modelMapper.map(dto, vitalSign);
 
         if (dto.getPatientId() != null && 
             (vitalSign.getPatient() == null || !vitalSign.getPatient().getId().equals(dto.getPatientId()))) {
@@ -69,9 +67,39 @@ public class VitalSignService implements IVitalSignService {
                     .orElseThrow(() -> new BadActionException("Patient not found with ID: " + dto.getPatientId()));
             vitalSign.setPatient(patient);
         }
+        vitalSign.setBloodGroup(dto.getBloodGroup());
+        vitalSign.setBloodType(dto.getBloodType());
+        vitalSign.setHeight(dto.getHeight());
+        vitalSign.setWeight(dto.getWeight());
+        vitalSign.setDiastolicBp(dto.getDiastolicBp());
+        vitalSign.setHeartRate(dto.getHeartRate());
+        vitalSign.setTemperature(dto.getTemperature());
+        vitalSign.setNotes(dto.getNotes());
+        vitalSign.setPulseRate(dto.getPulseRate());
+        vitalSign.setRespiratoryRate(dto.getRespiratoryRate());
+        vitalSign.setSystolicBp(dto.getSystolicBp());
         VitalSign updatedVitalSign = vitalSignRepository.save(vitalSign);
-        
-        return modelMapper.map(updatedVitalSign, VitalSignDTO.class);
+        MedicalExamRes mes = MedicalExamRes.builder()
+                .id(updatedVitalSign.getMedicalExam().getId())
+                .patientId(updatedVitalSign.getPatient().getId())
+                .build();
+
+        return VitalSignDTO.builder()
+                .id(updatedVitalSign.getId())
+                .bloodGroup(updatedVitalSign.getBloodGroup())
+                .bloodType(updatedVitalSign.getBloodType())
+                .height(updatedVitalSign.getHeight())
+                .weight(updatedVitalSign.getWeight())
+                .diastolicBp(updatedVitalSign.getDiastolicBp())
+                .heartRate(updatedVitalSign.getHeartRate())
+                .temperature(updatedVitalSign.getTemperature())
+                .notes(updatedVitalSign.getNotes())
+                .patientId(updatedVitalSign.getPatient().getId())
+                .pulseRate(updatedVitalSign.getPulseRate())
+                .systolicBp(updatedVitalSign.getSystolicBp())
+                .respiratoryRate(updatedVitalSign.getRespiratoryRate())
+                .medicalExam(mes)
+                .build();
     }
 
     @Override

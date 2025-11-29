@@ -1,5 +1,6 @@
 package group29.hust.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import group29.hust.model.Department;
 import group29.hust.model.Patient;
 import jakarta.persistence.*;
@@ -16,8 +17,10 @@ import java.time.LocalDateTime;
 public class MedicalExamDTO {
     private Long id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime arrivalTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime receptionTime;
 
     private String referralSource;
@@ -53,7 +56,7 @@ public class MedicalExamDTO {
 
     private String familyMedicalHistory;
 
-    private PatientDTO patient;
+    private Long patient;
 
     private DepartmentDTO department;
 

@@ -14,15 +14,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RadiologyDTO {
+    @JsonProperty("patient_id")
+    private Long patientId;
+
     private Long id;
 
     @JsonProperty("image_path")
     private String imagePath;
 
     private String conclusion;
-
-    @JsonProperty("patient_id")
-    private Long patientId;
 
     @JsonProperty("clinical_service_id")
     private ClinicalServiceDTO clinicalService;

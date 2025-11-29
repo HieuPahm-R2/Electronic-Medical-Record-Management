@@ -7,6 +7,7 @@ import com.turkraft.springfilter.parser.FilterParser;
 import com.turkraft.springfilter.parser.node.FilterNode;
 import group29.hust.dtos.request.BloodTestDTO;
 import group29.hust.dtos.request.ClinicalServiceDTO;
+import group29.hust.dtos.request.PatientDTO;
 import group29.hust.dtos.request.RadiologyDTO;
 import group29.hust.dtos.response.MedicalExamRes;
 import group29.hust.dtos.response.PaginationResultDTO;
