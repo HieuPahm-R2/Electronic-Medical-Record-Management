@@ -1,9 +1,20 @@
 import React, { useState } from 'react'
 import { IconButton, Button, Typography } from "@material-tailwind/react";
 import { PlayIcon } from "@heroicons/react/24/solid";
+import HomeSubscribe from './HomeSubscribe';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const HomeHero = () => {
-
+    const [openForm, setOpenForm] = useState<boolean>(false);
+    const isAuthenticatedb = useSelector((state: any) => state.account.isAuthenticated);
+    const navigate = useNavigate()
+    const handleOnFormModal = () => {
+        if (!isAuthenticatedb) {
+            navigate("/login")
+        }
+        setOpenForm(true)
+    }
     return (
         <div className="relative min-h-screen w-full bg-[url('src/assets/images/vinmec-bg.jpg')] bg-cover bg-no-repeat bg-center">
             <div className="absolute inset-0 h-full w-full bg-gray-900/60" />
@@ -23,7 +34,7 @@ const HomeHero = () => {
                         Đặt lịch hẹn nhanh chóng, tiện lợi
                     </Typography>
                     <div className="flex items-center gap-4">
-                        <Button variant="gradient" color="white">
+                        <Button variant="gradient" color="white" onClick={handleOnFormModal}>
                             Đặt Lịch Ngay
                         </Button>
                         <IconButton className="rounded-full bg-white p-6">
@@ -32,6 +43,7 @@ const HomeHero = () => {
                     </div>
                 </div>
             </div>
+            <HomeSubscribe openForm={openForm} setOpenForm={setOpenForm} />
         </div>
     )
 }

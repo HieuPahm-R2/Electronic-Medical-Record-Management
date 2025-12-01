@@ -175,11 +175,10 @@ export interface IMedicalExamRes {
     department?: string;
 }
 export interface IAppointment {
-    key: number;
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
+    id?: string;
+    name?: string;
+    email?: string;
+    phone?: string;
     createdAt?: string;
     updatedAt?: string;
     status?: 'PENDING' | 'SCHEDULED' | 'CANCELED';

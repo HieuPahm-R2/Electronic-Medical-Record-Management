@@ -1,5 +1,5 @@
 import instance from './axios.custom';
-import { IBackendRes, IBloodTest, IClinicalInfo, IClinicalService, IDepartment, IDiagnose, IMedicalExam, IModelPaginate, IPatient, IPermission, IRadiology, IRole, IUser, IVitalSign } from '@/types/backend';
+import { IAppointment, IBackendRes, IBloodTest, IClinicalInfo, IClinicalService, IDepartment, IDiagnose, IMedicalExam, IModelPaginate, IPatient, IPermission, IRadiology, IRole, IUser, IVitalSign } from '@/types/backend';
 
 export const callCreateRole = (role: IRole): Promise<IBackendRes<IRole>> => {
     return instance.post('/api/v1/add-role', { ...role })
@@ -186,4 +186,17 @@ Module Department
  */
 export const getAllDepartments = (query: string): Promise<IBackendRes<IModelPaginate<IDepartment>>> => {
     return instance.get(`/api/v1/departments?${query}`);
+}
+/**
+ * 
+Module Appointment
+ */
+export const callCreateAppointment = (vs: IAppointment): Promise<IBackendRes<IAppointment>> => {
+    return instance.post(`/api/v1/appointments`, { ...vs });
+}
+export const callUpdateAppointment = (bl: IAppointment): Promise<IBackendRes<IAppointment>> => {
+    return instance.put(`/api/v1/appointments`, { ...bl })
+}
+export const getAllAppointments = (query: string): Promise<IBackendRes<IModelPaginate<IAppointment>>> => {
+    return instance.get(`/api/v1/appointments?${query}`);
 }
