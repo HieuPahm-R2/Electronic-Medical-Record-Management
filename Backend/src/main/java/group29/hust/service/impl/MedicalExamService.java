@@ -7,7 +7,6 @@ import com.turkraft.springfilter.parser.FilterParser;
 import com.turkraft.springfilter.parser.node.FilterNode;
 import group29.hust.dtos.request.DepartmentDTO;
 import group29.hust.dtos.request.MedicalExamDTO;
-import group29.hust.dtos.request.PatientDTO;
 import group29.hust.dtos.response.PaginationResultDTO;
 import group29.hust.exception.BadActionException;
 import group29.hust.model.*;
@@ -49,7 +48,6 @@ public class MedicalExamService implements IMedicalExamService {
     @Override
     @Transactional
     public MedicalExamDTO insert(MedicalExamDTO dto) {
-
         MedicalExam savedMedicalExam = new MedicalExam();
         if(dto.getPatient() != null){
             Patient ps = this.patientRepository.findById(dto.getPatient()).orElseThrow(
@@ -57,13 +55,6 @@ public class MedicalExamService implements IMedicalExamService {
             );
             savedMedicalExam.setPatient(ps);
         }
-        if(dto.getDepartment().getId() != null){
-            Department ds = this.departmentRepository.findById(dto.getDepartment().getId()).orElseThrow(
-                    () -> new BadActionException("Department not found with id: " + dto.getDepartment().getId())
-            );
-            savedMedicalExam.setDepartment(ds);
-        }
-        savedMedicalExam.setAlcoholMonths(dto.getAlcoholMonths());
         savedMedicalExam.setArrivalTime(LocalDateTime.now());
         savedMedicalExam.setReceptionTime(LocalDateTime.now());
         medicalExamRepository.save(savedMedicalExam);

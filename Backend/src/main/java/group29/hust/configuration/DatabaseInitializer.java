@@ -65,12 +65,14 @@ public class DatabaseInitializer implements CommandLineRunner {
             arrResult.add(new Permission("Get Clinical info by id", "/api/v1/clinical-info/{id}", "GET", "CLINICAL_INFOS"));
             arrResult.add(new Permission("Get All Clinical services", "/api/v1/clinical-info/service-name", "GET", "CLINICAL_INFOS"));
             arrResult.add(new Permission("Get Clinical info by patient Id", "/api/v1/clinical-info/patient/{id}", "GET", "CLINICAL_INFOS"));
+            arrResult.add(new Permission("Get Clinical info by MedicalExam Id", "/api/v1/clinical-info/medical-exam/{id}", "GET", "CLINICAL_INFOS"));
 
             arrResult.add(new Permission("Create a vital sign", "/api/v1/vital-signs", "POST", "VITAL_SIGNS"));
             arrResult.add(new Permission("Update a vital sign", "/api/v1/vital-signs", "PUT", "VITAL_SIGNS"));
             arrResult.add(new Permission("Delete a vital sign", "/api/v1/vital-signs/{id}", "DELETE", "VITAL_SIGNS"));
             arrResult.add(new Permission("Get vital sign by id", "/api/v1/vital-signs/{id}", "GET", "VITAL_SIGNS"));
             arrResult.add(new Permission("Get vital sign with patient id", "/api/v1/vital-signs/patient/{id}", "GET", "VITAL_SIGNS"));
+            arrResult.add(new Permission("Get vital sign with medicalExam id", "/api/v1/vital-signs/medical-exam/{id}", "GET", "VITAL_SIGNS"));
 
             arrResult.add(new Permission("Create a blood test", "/api/v1/blood-tests", "POST", "BLOOD_TESTS"));
             arrResult.add(new Permission("Update a blood test", "/api/v1/blood-tests", "PUT", "BLOOD_TESTS"));
@@ -91,7 +93,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             arrResult.add(new Permission("Delete a diagnose final", "/api/v1/diagnose-final/{id}", "DELETE", "DIAGNOSE_FINALS"));
             arrResult.add(new Permission("Get diagnose final by id", "/api/v1/diagnose-final/{id}", "GET", "DIAGNOSE_FINALS"));
             arrResult.add(new Permission("Get df with pagination by patient", "/api/v1/diagnose-final/patient/{id}", "GET", "DIAGNOSE_FINALS"));
-            arrResult.add(new Permission("Get df with pagination by medical exam", "/api/v1/diagnose-final/medical-exam/{id}", "GET", "DIAGNOSE_FINALS"));
+            arrResult.add(new Permission("Get df by medical exam", "/api/v1/diagnose-final/medical-exam/{id}", "GET", "DIAGNOSE_FINALS"));
 
             arrResult.add(new Permission("Create a appointment", "/api/v1/appointments", "POST", "APPOINTMENTS"));
             arrResult.add(new Permission("Update a appointment", "/api/v1/appointments", "PUT", "APPOINTMENTS"));

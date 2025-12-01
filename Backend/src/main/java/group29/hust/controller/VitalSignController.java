@@ -33,7 +33,7 @@ public class VitalSignController {
     }
 
     @GetMapping("/medical-exam/{id}")
-    @MessageApi("Get vital sign record by ID")
+    @MessageApi("Get vital sign record by medical-exam")
     public ResponseEntity<VitalSignDTO> getVitalSignByMedicalExamId(@PathVariable Long id) {
         VitalSignDTO vitalSignDTO = vitalSignService.findVitalSignWithMedicalExamId(id);
         return ResponseEntity.ok(vitalSignDTO);

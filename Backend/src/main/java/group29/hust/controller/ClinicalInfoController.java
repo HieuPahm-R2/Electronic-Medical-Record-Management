@@ -24,7 +24,7 @@ public class ClinicalInfoController {
     private final IClinicalInfoService clinicalInfoService;
     private final ClinicalInfoRepository clinicalInfoRepository;
 
-    @PostMapping("")
+    @PostMapping
     @MessageApi("Add clinical information")
     public ResponseEntity<?> createClinicalInfo(@Valid @RequestBody ClinicalInfoDTO clinicalInfo) {
         try {
@@ -49,8 +49,20 @@ public class ClinicalInfoController {
                     .body("Error retrieving clinical information: " + e.getMessage());
         }
     }
+    @GetMapping("/medical-exam/{id}")
+    @MessageApi("Get clinical information by ID")
+    public ResponseEntity<?> getClinicalInfoByMedicalExam(@PathVariable("id") Long id) {
+        try {
+            ClinicalInfoDTO clinicalInfo = clinicalInfoService.findClinicalInfoWithMedicalExamId(id);
+            return ResponseEntity.ok(clinicalInfo);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Error retrieving clinical information: " + e.getMessage());
+        }
+    }
 
-    @PutMapping("")
+    @PutMapping
     @MessageApi("Update clinical information")
     public ResponseEntity<?> updateClinicalInfo(@Valid @RequestBody ClinicalInfoDTO clinicalInfo) {
         try {

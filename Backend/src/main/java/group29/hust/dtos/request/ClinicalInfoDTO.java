@@ -30,13 +30,9 @@ public class ClinicalInfoDTO {
     @JsonProperty("genitourinary_diagnosis")
     private String genitourinaryDiagnosis;
 
-    @NotNull(message = "Bone diagnosis is required")
     @JsonProperty("bone_diagnosis")
     private String boneDiagnosis;
 
-    @NotNull(message = "RHM diagnosis is required")
-    @JsonProperty("rhm_diagnosis")
-    private String rhmDiagnosis;
 
     @JsonProperty("digestive_diagnosis")
     private String digestiveDiagnosis;

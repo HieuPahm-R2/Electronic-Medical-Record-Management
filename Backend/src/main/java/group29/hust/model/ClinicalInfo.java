@@ -32,9 +32,6 @@ public class ClinicalInfo {
     @Column(name = "bone_diagnosis", nullable = false, columnDefinition = "TEXT")
     private String boneDiagnosis;
 
-    @Column(name = "rhm_diagnosis", nullable = false, columnDefinition = "TEXT")
-    private String rhmDiagnosis;
-
     @Column(name = "digestive_diagnosis", nullable = false, columnDefinition = "TEXT")
     private String digestiveDiagnosis;
 

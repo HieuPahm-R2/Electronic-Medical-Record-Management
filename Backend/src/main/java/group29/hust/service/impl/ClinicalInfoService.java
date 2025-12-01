@@ -69,7 +69,6 @@ public class ClinicalInfoService implements IClinicalInfoService {
         ClinicalInfo clinicalInfo = clinicalInfoRepository.findById(dto.getId())
                 .orElseThrow(() -> new BadActionException("Clinical information not found with ID: " + dto.getId()));
         if(dto.getMedicalExam() != null){
-
             clinicalInfo.setMedicalExam(medicalExamRepository.findById(dto.getMedicalExam())
             .orElseThrow(() -> new BadActionException("Medical examination not found with ID: ")));
         }
@@ -83,7 +82,6 @@ public class ClinicalInfoService implements IClinicalInfoService {
         clinicalInfo.setCirculatoryDiagnosis(dto.getCirculatoryDiagnosis());
         clinicalInfo.setGenitourinaryDiagnosis(dto.getGenitourinaryDiagnosis());
         clinicalInfo.setNervousDiagnosis(dto.getNervousDiagnosis());
-        clinicalInfo.setRhmDiagnosis(dto.getRhmDiagnosis());
         ClinicalInfo cs = clinicalInfoRepository.save(clinicalInfo);
 
         Set<ClinicalServiceDTO> re = cs.getClinicalServices().stream().map(
@@ -104,7 +102,6 @@ public class ClinicalInfoService implements IClinicalInfoService {
                 .circulatoryDiagnosis(cs.getCirculatoryDiagnosis())
                 .genitourinaryDiagnosis(cs.getGenitourinaryDiagnosis())
                 .nervousDiagnosis(cs.getNervousDiagnosis())
-                .rhmDiagnosis(cs.getRhmDiagnosis())
                 .medicalExam(cs.getMedicalExam().getId())
                 .otherDiagnoses(cs.getOtherDiagnoses())
                 .respiratoryDiagnosis(cs.getRespiratoryDiagnosis())
@@ -127,7 +124,28 @@ public class ClinicalInfoService implements IClinicalInfoService {
         if (clinicalInfo == null) {
             throw new BadActionException("Clinical information not found for medical exam with ID: " + medicalExamId);
         }
-        return ClinicalInfoDTO.builder().build();
+        Set<ClinicalServiceDTO> re = clinicalInfo.getClinicalServices().stream().map(
+                item -> {
+                    ClinicalServiceDTO csdto = new ClinicalServiceDTO();
+                    csdto.setId(item.getId());
+                    csdto.setServiceName(item.getServiceName());
+                    return csdto;
+                }
+        ).collect(Collectors.toSet());
+        return ClinicalInfoDTO.builder()
+                .respiratoryDiagnosis(clinicalInfo.getRespiratoryDiagnosis())
+                .clinicalServices(re)
+                .id(clinicalInfo.getId())
+                .medicalExam(clinicalInfo.getMedicalExam().getId())
+                .nervousDiagnosis(clinicalInfo.getNervousDiagnosis())
+                .otherDiagnoses(clinicalInfo.getOtherDiagnoses())
+                .boneDiagnosis(clinicalInfo.getBoneDiagnosis())
+                .circulatoryDiagnosis(clinicalInfo.getCirculatoryDiagnosis())
+                .digestiveDiagnosis(clinicalInfo.getDigestiveDiagnosis())
+                .genitourinaryDiagnosis(clinicalInfo.getGenitourinaryDiagnosis())
+                .syndrome(clinicalInfo.getSyndrome())
+                .entDiagnosis(clinicalInfo.getEntDiagnosis())
+                .build();
     }
 
     @Override

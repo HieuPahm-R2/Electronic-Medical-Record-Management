@@ -107,7 +107,7 @@ public class BloodTestService implements IBloodTestService {
         BloodTest existingBloodTest = bloodTestRepository.findById(dto.getId())
                 .orElseThrow(() -> new BadActionException("Blood test not found with id: " + dto.getId()));
 
-        if (dto.getClinicalServices() != null) {
+        if (dto.getClinicalServices().getId() != null) {
             ClinicalService cs = clinicalRepository.findById(dto.getClinicalServices().getId()).orElseThrow(
                     () -> new BadActionException("Clinical service not found with ID: " + dto.getClinicalServices().getId()));
             existingBloodTest.setClinicalServices(cs);
