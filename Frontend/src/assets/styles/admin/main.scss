@@ -43,7 +43,7 @@ body {
     padding: 33px 20px;
 
     .brand img {
-      height: 30px;
+      height: 80px;
     }
 
     hr {
@@ -55,10 +55,12 @@ body {
 
     .brand {
       font-weight: 600;
+      display: flex;
+      align-items: center;
 
       span {
         vertical-align: middle;
-        margin-left: 3px;
+        margin-left: 15px;
       }
     }
 

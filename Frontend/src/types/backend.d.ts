@@ -98,7 +98,6 @@ export interface IVitalSign {
     pulse_rate: number;
     respiratory_rate?: number;
     notes?: string;
-    patient_id?: string;
     medical_exam_id?: IMedicalExamRes;
 }
 
@@ -117,7 +116,6 @@ export interface IBloodTest {
     blood_group?: string;
     blood_type?: string;
     image_url?: string;
-    patient_id?: string;
     clinical_services?: IClinicalService;
     medical_exam_id?: IMedicalExam;
 }
@@ -144,15 +142,13 @@ export interface IDiagnose {
 
 export interface IClinicalInfo {
     id?: number;
-    patient_id?: IPatient; // Lưu ý: Java đặt tên biến là 'patient' nhưng JsonProperty là 'patient_id'
-    medical_exam_id?: IMedicalExam; // Java: medicalExam -> Json: medical_exam_id
+    medical_exam_id?: string;
     clinical_services?: IClinicalService[]; // Set -> Array
 
     circulatory_diagnosis?: string;
     respiratory_diagnosis?: string;
     genitourinary_diagnosis?: string;
     bone_diagnosis?: string;
-    rhm_diagnosis?: string;
     digestive_diagnosis?: string;
     nervous_diagnosis?: string;
     ent_diagnosis?: string;
@@ -174,7 +170,7 @@ export interface IClinicalService {
 }
 
 export interface IMedicalExamRes {
-    id?: number;
+    id?: string;
     patientId?: number;
     department?: string;
 }

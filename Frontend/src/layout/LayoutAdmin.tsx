@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
-import { Layout, Drawer, Affix } from "antd";
+import { Layout, Drawer, Affix, Result } from "antd";
 import HeaderAdmin from "../components/admin/Header";
 import FooterAdmin from "../components/admin/Footer";
 import SideNav from "../components/admin/SideBar";
@@ -16,6 +16,7 @@ const LayoutAdmin = () => {
     const [sidenavColor, setSideNavColor] = useState("#1890ff");
     const isAdminRoute = window.location.pathname.startsWith('/admin')
     const user = useSelector((state: any) => state.account.user);
+    const isLoading = useSelector((state: any) => state.account.isLoading)
     const userRole = user?.role?.name;
     const [fixed, setFixed] = useState(false);
 
@@ -92,7 +93,19 @@ const LayoutAdmin = () => {
 
             </Layout>
         </Layout>
-    ) : <Error403 />;
+    ) : <>
+        {isLoading === false ?
+            <Result
+                status="403"
+                title="Truy cập bị từ chối"
+                subTitle="Xin lỗi, bạn không có quyền hạn (permission) truy cập thông tin này"
+            />
+            :
+            <>
+                {/* render nothing */}
+            </>
+        }
+    </>;
 }
 
 export default LayoutAdmin

@@ -101,8 +101,8 @@ const ManageMedical = (props: IProps) => {
         })
         if (res && res.data) {
             setOpenModal(false)
-            message.loading("Chờ xử lý!", 3)
-            setTimeout(message.success("Tạo thành công"), 3000)
+            message.loading("Chờ xử lý!", 2)
+            setTimeout(message.success("Tạo thành công"), 2000)
             reloadTable
         }
     }
@@ -152,12 +152,14 @@ const ManageMedical = (props: IProps) => {
                                     {
                                         key: 'vitalsign',
                                         label: `Nhập sinh hiệu`,
-                                        children: <VitalSign isReset={isReset} setDataInit={setDataInit} openModal={openModal} setOpenModal={setOpenModal} reloadTable={reloadTable} />,
+                                        children: <VitalSign dataLab={dataLab} setDataInit={setDataInit}
+                                            reloadTable={reloadTable} />,
                                     },
                                     {
                                         key: 'clinical',
                                         label: `Khám lâm sàng tổng quát`,
-                                        children: <Clinical dataInit={dataInit} openModal={openModal} setOpenModal={setOpenModal} reloadTable={reloadTable} />,
+                                        children: <Clinical dataLab={dataLab} setDataInit={setDataInit}
+                                            reloadTable={reloadTable} />
                                     },
                                     {
                                         key: 'bloodtest',
@@ -168,12 +170,14 @@ const ManageMedical = (props: IProps) => {
                                     {
                                         key: 'radiology',
                                         label: `Chuẩn đoán hình ảnh`,
-                                        children: <Radiology dataInit={dataInit} openModal={openModal} setOpenModal={setOpenModal} reloadTable={reloadTable} />,
+                                        children: <Radiology dataLab={dataLab} setDataInit={setDataInit}
+                                            reloadTable={reloadTable} />,
                                     },
                                     {
                                         key: 'diagnose',
                                         label: `Chẩn đoán`,
-                                        children: <Diagnose dataInit={dataInit} openModal={openModal} setOpenModal={setOpenModal} reloadTable={reloadTable} />,
+                                        children: <Diagnose dataLab={dataLab} setDataInit={setDataInit}
+                                            reloadTable={reloadTable} />,
                                     },
 
                                 ]}

@@ -138,7 +138,6 @@ const MedicalExam = (props: IProps) => {
             if (res.data) {
                 message.success("Cập nhật thành công");
                 handleReset();
-                reloadTable();
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -152,7 +151,6 @@ const MedicalExam = (props: IProps) => {
             if (res.data) {
                 message.success("Thêm mới thành công");
                 handleReset();
-                reloadTable();
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -165,8 +163,8 @@ const MedicalExam = (props: IProps) => {
     const handleReset = async () => {
         form.resetFields();
         setDataInit(null)
-        reloadTable()
         setDepartments([])
+        reloadTable()
     }
     return (
         <div style={{ padding: 24, background: '#f5f5f5' }}>

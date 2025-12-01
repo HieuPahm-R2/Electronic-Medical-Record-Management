@@ -127,7 +127,7 @@ export const callFetchClinicalInfoByPatientId = (id: string): Promise<IBackendRe
 export const callUpdateClinicalInfo = (bl: IClinicalInfo): Promise<IBackendRes<IClinicalInfo>> => {
     return instance.put(`/api/v1/clinical-info`, { ...bl })
 }
-export const callFetchClinicalInfoByMex = (id: string): Promise<IBackendRes<IBloodTest>> => {
+export const callFetchClinicalInfoByMex = (id: string): Promise<IBackendRes<IClinicalInfo>> => {
     return instance.get(`/api/v1/clinical-info/medical-exam/${id}`);
 }
 /**
@@ -143,7 +143,7 @@ export const callFetchRadioByPatientId = (id: string): Promise<IBackendRes<IRadi
 export const callUpdateRadiology = (bl: IRadiology): Promise<IBackendRes<IRadiology>> => {
     return instance.put(`/api/v1/radiology`, { ...bl })
 }
-export const callFetchRadiologyByMex = (id: string): Promise<IBackendRes<IBloodTest>> => {
+export const callFetchRadiologyByMex = (id: string): Promise<IBackendRes<IRadiology>> => {
     return instance.get(`/api/v1/radiology/medical-exam/${id}`);
 }
 
@@ -160,7 +160,7 @@ export const callFetchDiagnoseByPatientId = (id: string): Promise<IBackendRes<ID
 export const callUpdateDiagnose = (bl: IDiagnose): Promise<IBackendRes<IDiagnose>> => {
     return instance.put(`/api/v1/diagnose-final`, { ...bl })
 }
-export const callFetchDiagnoseByMex = (id: string): Promise<IBackendRes<IBloodTest>> => {
+export const callFetchDiagnoseByMex = (id: string): Promise<IBackendRes<IDiagnose>> => {
     return instance.get(`/api/v1/diagnose-final/medical-exam/${id}`);
 }
 /**

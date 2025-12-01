@@ -50,7 +50,6 @@ const BloodTest = (props: IProps) => {
 
     const [form] = Form.useForm();
 
-
     useEffect(() => {
         const fetchBls = async () => {
             const res = await callFetchBloodTestByMex(dataLab?.id as string);
@@ -105,11 +104,11 @@ const BloodTest = (props: IProps) => {
                     fileList: arrThumbnail
                 },
                 serviceName: clinicalServices[0],
-                medicalExam: dataUpdateBl?.medical_exam_id,
+                medicalExam: dataUpdateBl?.medical_exam_id?.id,
             }
             // Cập nhật State cho DebounceSelect để đồng bộ
-            // Đồng bộ cả dataLogo để logic validate/submit hoạt động đúng
             setDataLogo(arrThumbnail);
+            console.log(initialValue)
             setInitalVal(initialValue)
             form.setFieldsValue(initialValue)
         }
@@ -192,6 +191,12 @@ const BloodTest = (props: IProps) => {
             setLoadingUpload(false);
         }
     };
+    const handleReset = async () => {
+        form.resetFields();
+        setClinicalServices([])
+        setDataInit(null)
+        window.location.reload();
+    }
     const submitUser = async (valuesForm: any) => {
         const { serviceName, imagePath, comment, glu, ure, rbc, hb, hct, mcv, mch, wbc, neut, bloodGroup, bloodType } = valuesForm;
         if (dataLogo.length === 0) {
@@ -219,13 +224,15 @@ const BloodTest = (props: IProps) => {
                     id: serviceName.value,
                     serviceName: ""
                 },
-                medical_exam_id: dataUpdateBl?.medical_exam_id,
+                medical_exam_id: {
+                    id: dataUpdateBl.medical_exam_id?.id
+                },
             }
+            console.log(bl)
             const res = await callUpdateBloodTest(bl);
             if (res.data) {
                 message.success("Cập nhật thành công");
                 handleReset();
-                reloadTable();
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -251,11 +258,7 @@ const BloodTest = (props: IProps) => {
         }
     }
 
-    const handleReset = async () => {
-        form.resetFields();
-        setClinicalServices([])
-        setDataInit(null)
-    }
+
     return (
         <>
             <ProForm
@@ -270,7 +273,6 @@ const BloodTest = (props: IProps) => {
                     ),
                 }}
                 onFinish={submitUser}
-
             >
                 <Row gutter={48}>
                     <Col xs={24} lg={12}>
@@ -292,14 +294,6 @@ const BloodTest = (props: IProps) => {
                             labelCol={{ span: 24 }}
                             label="Ảnh kết quả xét nghiệm"
                             name="imagePath"
-                        // rules={[{
-                        //     required: true,
-                        //     message: 'Vui lòng không bỏ trống',
-                        //     validator: () => {
-                        //         if (dataLogo.length > 0) return Promise.resolve();
-                        //         else return Promise.reject(false);
-                        //     }
-                        // }]}
                         >
                             <ConfigProvider locale={enUS}>
                                 <Upload
@@ -314,10 +308,6 @@ const BloodTest = (props: IProps) => {
                                     onRemove={handleRemoveFile}
                                     onPreview={handlePreview}
                                     fileList={dataLogo}
-                                // showUploadList={{
-                                //     showPreviewIcon: true,
-                                //     showRemoveIcon: true,
-                                // }}
                                 >
                                     <div>
                                         {loadingUpload ? <LoadingOutlined /> : <PlusOutlined />}

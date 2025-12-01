@@ -1,46 +1,36 @@
-import { callCreateVitalSign, callFetchVitalByPatientId, callUpdateVitalSign } from '@/config/api';
-import { IPatient, IVitalSign } from '@/types/backend';
+import { callCreateVitalSign, callFetchVitalByMex, callFetchVitalByPatientId, callUpdateVitalSign } from '@/config/api';
+import { IMedicalExam, IPatient, IVitalSign } from '@/types/backend';
+import { ProForm } from '@ant-design/pro-components';
 import { Form, Input, Select, Button, message, notification } from 'antd';
 import { useEffect, useState } from 'react';
 
 interface IProps {
-    openModal: boolean;
     setDataInit: (v: any) => void;
-    setOpenModal: (v: boolean) => void;
-    dataInit?: IPatient | null;
     reloadTable: () => void;
-    isReset: boolean;
+    dataLab?: IMedicalExam | null
 }
 const VitalSign = (props: IProps) => {
-    const { openModal, setOpenModal, reloadTable, dataInit, isReset, setDataInit } = props;
+    const { reloadTable, setDataInit, dataLab } = props;
     const [dataUpdateMex, setDataUpdateMex] = useState<IVitalSign>();
     const [initalVal, setInitalVal] = useState<any>();
     const [form] = Form.useForm();
 
     useEffect(() => {
-        if (isReset) {
-            handleReset()
-        }
-    }, [isReset]);
-
-    useEffect(() => {
         const fetchMexs = async () => {
-            const res = await callFetchVitalByPatientId(dataInit?.id as string);
+            const res = await callFetchVitalByMex(dataLab?.id as string);
             if (res && res.data) {
                 setDataUpdateMex(res.data)
             }
         }
-        console.log(dataInit)
-        if (dataInit?.id) {
+        if (dataLab?.id) {
             fetchMexs()
         }
-    }, [dataInit?.id])
+    }, [dataLab?.id])
 
     useEffect(() => {
         if (dataUpdateMex?.id) {
             const initialValue = {
                 id: dataUpdateMex?.id,
-                patient_id: dataInit?.id,
                 temperature: dataUpdateMex.temperature,
                 height: dataUpdateMex.height,
                 weight: dataUpdateMex.weight,
@@ -50,30 +40,31 @@ const VitalSign = (props: IProps) => {
                 sbp: dataUpdateMex.systolic_bp,
                 dbp: dataUpdateMex.diastolic_bp,
                 pulse: dataUpdateMex.pulse_rate,
+                respiratory_rate: dataUpdateMex.respiratory_rate,
                 note: dataUpdateMex.notes,
             }
             setInitalVal(initialValue)
             form.setFieldsValue(initialValue)
         }
-    }, [dataUpdateMex, dataInit?.id]);
+    }, [dataUpdateMex, dataLab?.id]);
 
     const submitUser = async (valuesForm: any) => {
+        const { temperature, height, weight, heart_rate, blood_group, blood_type, sbp, dbp, pulse, note, respiratory_rate } = valuesForm
         if (dataUpdateMex?.id) {
             //update
             const bl = {
                 id: dataUpdateMex.id,
-                temperature: dataUpdateMex.temperature,
-                height: dataUpdateMex.height,
-                weight: dataUpdateMex.weight,
-                heart_rate: dataUpdateMex.heart_rate,
-                blood_group: dataUpdateMex.blood_group,
-                blood_type: dataUpdateMex.blood_type,
-                systolic_bp: dataUpdateMex.systolic_bp,
-                diastolic_bp: dataUpdateMex.diastolic_bp,
-                pulse_rate: dataUpdateMex.pulse_rate,
-                respiratory_rate: dataUpdateMex.respiratory_rate,
-                notes: dataUpdateMex.notes,
-                patient_id: dataInit?.id,
+                temperature: temperature,
+                height: height,
+                weight: weight,
+                heart_rate: heart_rate,
+                blood_group: blood_group,
+                blood_type: blood_type,
+                systolic_bp: sbp,
+                diastolic_bp: dbp,
+                pulse_rate: pulse,
+                respiratory_rate: respiratory_rate,
+                notes: note,
                 medical_exam_id: {
                     id: dataUpdateMex.medical_exam_id?.id
                 }
@@ -82,7 +73,13 @@ const VitalSign = (props: IProps) => {
             if (res.data) {
                 message.success("Cập nhật thành công");
                 handleReset();
-                reloadTable();
+                // reload page after a short delay so user sees the success message
+                setTimeout(() => {
+                    if (typeof window !== 'undefined') {
+                        reloadTable?.();
+                        window.location.reload();
+                    }
+                }, 700);
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -96,7 +93,13 @@ const VitalSign = (props: IProps) => {
             if (res.data) {
                 message.success("Thêm mới thành công");
                 handleReset();
-                reloadTable();
+                // reload page after a short delay so user sees the success message
+                setTimeout(() => {
+                    if (typeof window !== 'undefined') {
+                        reloadTable?.();
+                        window.location.reload();
+                    }
+                }, 700);
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -109,11 +112,21 @@ const VitalSign = (props: IProps) => {
     const handleReset = async () => {
         form.resetFields();
         setDataInit(null)
-        reloadTable()
-        setOpenModal(false);
     }
     return (
-        <Form layout="vertical">
+        <ProForm
+            form={form}
+            initialValues={initalVal}
+            layout="vertical"
+            submitter={{
+                render: (_, dom) => (
+                    <Button type="primary" htmlType='submit' icon={<span>＋</span>}>
+                        {<>{dataUpdateMex?.id ? "Cập nhật" : "Tạo mới"}</>}
+                    </Button>
+                ),
+            }}
+            onFinish={submitUser}
+        >
             <Form.Item label="Nhiệt độ °C" name="temperature" rules={[{ required: true }]}>
                 <Input />
             </Form.Item>
@@ -141,9 +154,8 @@ const VitalSign = (props: IProps) => {
             <Form.Item label="Loại máu" name="blood_type">
                 <Select
                     options={[
-                        { value: 'jack', label: 'Jack' },
-                        { value: 'lucy', label: 'Lucy' },
-                        { value: 'Yiminghe', label: 'yiminghe' },
+                        { value: 'RH', label: 'RH-' },
+                        { value: 'RH-', label: 'RH+' },
                         { value: 'disabled', label: 'Disabled', disabled: true }
                     ]}
                 />
@@ -159,14 +171,15 @@ const VitalSign = (props: IProps) => {
             <Form.Item label="Mạch đập (lần/phút)" name="pulse">
                 <Input placeholder="triệu chứng" />
             </Form.Item>
+            <Form.Item label="Nhịp thở (lần/phút)" name="respiratory_rate">
+                <Input placeholder="triệu chứng" />
+            </Form.Item>
 
             <Form.Item label="Ghi chú" name="note">
                 <Input.TextArea rows={3} placeholder="Nội dung" />
             </Form.Item>
-            <Form.Item>
-                <Button type="primary">Cập nhật</Button>
-            </Form.Item>
-        </Form>
+
+        </ProForm>
     )
 }
 
