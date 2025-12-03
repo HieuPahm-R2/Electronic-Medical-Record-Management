@@ -60,6 +60,11 @@ const RegisterPage = () => {
 
     const onFinish = async (values) => {
         const { fullName, email, password } = values;
+        const user = {
+            username: fullName,
+            email,
+            password,
+        }
         setIsSumbit(true);
         const result = await registerAPI(fullName, email, password, 2);
         setIsSumbit(false)

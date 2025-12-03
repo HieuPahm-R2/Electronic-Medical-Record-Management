@@ -105,6 +105,11 @@ const PatientTable = () => {
             sorter: true,
         },
         {
+            title: "Insurance",
+            dataIndex: "insuranceExpired",
+            hidden: true
+        },
+        {
             title: "Thời gian tạo",
             dataIndex: "createdAt",
             width: 200,

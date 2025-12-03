@@ -26,7 +26,7 @@ const ViewDetailUser = (props: IProps) => {
             >
                 <Descriptions title="" bordered column={2} layout="vertical">
                     <Descriptions.Item label="Tên hiển thị">
-                        {dataInit?.fullName}
+                        {dataInit?.username}
                     </Descriptions.Item>
                     <Descriptions.Item label="Email">{dataInit?.email}</Descriptions.Item>
 
@@ -36,13 +36,13 @@ const ViewDetailUser = (props: IProps) => {
 
 
                     <Descriptions.Item label="Ngày tạo">
-                        {dataInit && dataInit.createdTime
-                            ? dayjs(dataInit.createdTime).format("DD-MM-YYYY HH:mm:ss")
+                        {dataInit && dataInit.createdAt
+                            ? dayjs(dataInit.createdAt).format("DD-MM-YYYY HH:mm:ss")
                             : ""}
                     </Descriptions.Item>
                     <Descriptions.Item label="Ngày sửa">
-                        {dataInit && dataInit.updatedTime
-                            ? dayjs(dataInit.updatedTime).format("DD-MM-YYYY HH:mm:ss")
+                        {dataInit && dataInit.updatedAt
+                            ? dayjs(dataInit.updatedAt).format("DD-MM-YYYY HH:mm:ss")
                             : ""}
                     </Descriptions.Item>
                 </Descriptions>

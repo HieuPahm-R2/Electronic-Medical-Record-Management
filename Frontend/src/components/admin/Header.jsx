@@ -11,7 +11,7 @@ import {
     DownOutlined,
 } from "@ant-design/icons";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 const ButtonContainer = styled.div`
@@ -179,9 +179,9 @@ const HeaderAdmin = (props) => {
 
     const { name, subName, onPress, handleSidenavColor, handleFixedNavbar } = props;
     const { Title, Text } = Typography
+    const navigate = useNavigate();
 
     const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
-    // const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
 
     let items = [
         {

@@ -45,7 +45,7 @@ const ModalUser = (props: IProps) => {
             //update
             const user = {
                 id: dataInit.id,
-                fullName,
+                username: fullName,
                 email,
                 password,
                 role: { id: role.value, name: "" },
@@ -65,7 +65,7 @@ const ModalUser = (props: IProps) => {
         } else {
             //create
             const user = {
-                fullName,
+                username: fullName,
                 email,
                 password,
                 role: { id: role.value, name: "" },

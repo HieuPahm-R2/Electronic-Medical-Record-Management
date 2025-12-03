@@ -16,7 +16,7 @@ export interface IModelPaginate<T> {
 }
 export interface IUser {
     id?: string;
-    fullName: string;
+    username: string;
     email: string;
     password?: string;
     role?: {
@@ -176,9 +176,11 @@ export interface IMedicalExamRes {
 }
 export interface IAppointment {
     id?: string;
-    name?: string;
-    email?: string;
+    full_name?: string;
+    contact?: string;
+    appointment_start_time?: string;
     phone?: string;
+    notes?: string;
     createdAt?: string;
     updatedAt?: string;
     status?: 'PENDING' | 'SCHEDULED' | 'CANCELED';

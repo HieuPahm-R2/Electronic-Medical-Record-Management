@@ -15,9 +15,9 @@ export const callUploadImage = (file: any, folder: string) => {
     });
 }
 // authentication
-export const registerAPI = (fullName: string, email: string, password: string, roleId: IRole) => {
+export const registerAPI = (username: string, email: string, password: string, roleId: IRole) => {
     return instance.post(`/api/v1/auth/register`, {
-        fullName, email, password,
+        username, email, password,
         role: {
             "id": roleId
         }

@@ -1,5 +1,5 @@
 import { callCreateAppointment } from "@/config/api";
-import { DatePicker, DatePickerProps, Form, Input, Modal } from "antd"
+import { DatePicker, DatePickerProps, Form, Input, message, Modal, notification } from "antd"
 
 interface IProps {
     openForm: boolean,
@@ -12,11 +12,30 @@ const HomeSubscribe = (props: IProps) => {
     const onOk = (value: DatePickerProps['value']) => {
         console.log('onOk: ', value);
     };
-    const onSubmit = (values: any) => {
-        const { contact, fullName, date, note } = values
-        console.log("Form values:", { contact, fullName, date, note })
-        // const res = await callCreateAppointment();
-        console.log("ok")
+    const onSubmit = async (values: any) => {
+        const { contact, fullName, date, phone, note } = values
+        console.log("Form values:", { contact, fullName, phone, date, note })
+        const app = {
+            full_name: fullName,
+            contact: contact,
+            phone: phone,
+            appointment_start_time: date,
+            notes: note
+        }
+        const res = await callCreateAppointment(app);
+        if (res && res.data) {
+            form.resetFields();
+            setOpenForm(false)
+            notification.success({
+                message: "Đặt lịch hẹn thành công",
+                description: "Kiểm tra Gmail để nhận thư hẹn khám"
+            })
+        } else {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: res.message
+            });
+        }
     }
     return (
         <Modal open={openForm}
@@ -96,6 +115,11 @@ const HomeSubscribe = (props: IProps) => {
 
                         <Form.Item name="contact">
                             <Input type='email' placeholder='Địa chỉ email'
+                                className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#007bff]" />
+                        </Form.Item>
+
+                        <Form.Item name="phone">
+                            <Input type='phone' placeholder='Số điện thoại'
                                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#007bff]" />
                         </Form.Item>
 
