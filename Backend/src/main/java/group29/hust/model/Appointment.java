@@ -20,7 +20,7 @@ public class Appointment extends BaseEntity{
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "Not to blank here..!")
+    @NotBlank(message = "Not to blank name..!")
     private String fullName;
 
     @Column(name = "appointment_start_time", nullable = false)
@@ -31,15 +31,17 @@ public class Appointment extends BaseEntity{
     private AppointmentStatus status = AppointmentStatus.PENDING;
 
     @Lob
-    @NotBlank(message = "Not to blank here..!")
     @Column(name = "contact")
     private String contact;
+
+    @NotBlank(message = "Not to blank phone..!")
+    @Column(name = "phone")
+    private String phone;
 
     @Lob
     @Column(name = "notes")
     private String notes;
 
-    // Relationship with ClinicalService (many-to-many)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "appointment_clinical_service",

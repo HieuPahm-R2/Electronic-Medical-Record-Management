@@ -1,5 +1,6 @@
 package group29.hust.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -46,6 +47,8 @@ public class PatientService implements IPatientService {
         DiagnoseFinal dg = new DiagnoseFinal();
 
         me.setPatient(res);
+        me.setArrivalTime(LocalDateTime.now());
+        me.setReceptionTime(LocalDateTime.now());
         MedicalExam meFinal = medicalExamRepository.save(me);
         // set value vital sign
         vt.setMedicalExamination(meFinal);
@@ -148,6 +151,7 @@ public class PatientService implements IPatientService {
                             .nationality(data.getNationality())
                             .identityCard(data.getIdentityCard())
                             .insuranceNumber(data.getInsuranceNumber())
+                            .insuranceExpired(data.getInsuranceExpired())
                             .relativeName(data.getRelativeName())
                             .relativePhone(data.getRelativePhone())
                             .gender(data.getGender())

@@ -25,6 +25,8 @@ public class AppointmentDTO {
 
     private String contact;
 
+    private String phone;
+
     @JsonProperty("appointment_start_time")
     private LocalDateTime appointmentStartTime;
 

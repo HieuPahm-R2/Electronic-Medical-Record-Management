@@ -47,6 +47,7 @@ public class AppointmentService implements IAppointmentService {
         appointment.setFullName(dto.getFullName());
         appointment.setStatus(AppointmentStatus.PENDING);  // Default status for new appointments
         appointment.setContact(dto.getContact());
+        appointment.setPhone(dto.getPhone());
         appointment.setNotes(dto.getNotes());
         if(dto.getClinicalServices() != null){
             Set<Long> reqSkills = dto.getClinicalServices().stream().map(ClinicalService::getId).collect(Collectors.toSet());
@@ -81,6 +82,9 @@ public class AppointmentService implements IAppointmentService {
         
         if (dto.getStatus() != null) {
             existingAppointment.setStatus(dto.getStatus());
+        }
+        if(dto.getPhone() != null){
+            existingAppointment.setPhone(dto.getPhone());
         }
 
         if (dto.getContact() != null) {
