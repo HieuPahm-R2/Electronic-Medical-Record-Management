@@ -74,7 +74,6 @@ const BloodTest = (props: IProps) => {
         if (dataLab?.id) {
             fetchBls();
         }
-
     }, [dataLab?.id])
 
     useEffect(() => {

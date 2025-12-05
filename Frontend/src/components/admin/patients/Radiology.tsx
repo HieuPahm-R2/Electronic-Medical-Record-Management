@@ -27,11 +27,14 @@ const Radiology = (props: IProps) => {
 
     const [form] = Form.useForm();
     useEffect(() => {
+        console.log(dataLab?.id)
         const fetchBls = async () => {
             const res = await callFetchRadiologyByMex(dataLab?.id as string);
+            console.log(res)
             if (res && res.data) {
                 setDataUpdateBl(res.data)
             }
+            console.log(dataUpdateBl)
         }
         async function fetchList(name?: string) {
             const res = await fetchAllClinicalSerives(`page=0&size=100&serviceName=/${name}/i`);
@@ -69,7 +72,6 @@ const Radiology = (props: IProps) => {
                 },
                 note: dataUpdateBl.conclusion,
                 serviceName: clinicalServices[0],
-                medicalExam: dataUpdateBl?.medical_exam_id?.id,
             }
             // Cập nhật State cho DebounceSelect để đồng bộ
             setDataLogo(arrThumbnail);
@@ -174,11 +176,12 @@ const Radiology = (props: IProps) => {
                 image_path: dataLogo[0].name,
                 conclusion: note,
                 clinical_service_id: {
-                    id: serviceName.value,
+                    // serviceName có thể là string (value) hoặc object {value,label} nếu dùng labelInValue
+                    id: typeof serviceName === 'object' ? serviceName.value : serviceName,
                     serviceName: ""
                 },
                 medical_exam_id: {
-                    id: dataUpdateBl.medical_exam_id?.id
+                    id: dataLab?.id
                 },
             }
             console.log(bl)

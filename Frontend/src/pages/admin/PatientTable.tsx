@@ -147,7 +147,7 @@ const PatientTable = () => {
             width: 50,
             render: (_value, entity, _index, _action) => (
                 <Space>
-                    <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.MEDICAL_EXAMS.GET_PAGINATE_BY_PATIENT} hideChildren>
                         <EditOutlined
                             style={{
                                 fontSize: 20,
@@ -160,7 +160,7 @@ const PatientTable = () => {
                             }}
                         />
                     </Access>
-                    <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.PATIENTS.UPDATE} hideChildren>
                         <UserSwitchOutlined
                             style={{
                                 fontSize: 20,
@@ -175,7 +175,7 @@ const PatientTable = () => {
                     </Access>
 
 
-                    <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.PATIENTS.DELETE} hideChildren>
                         <Popconfirm
                             placement="leftTop"
                             title={"Xác nhận xóa user"}
@@ -282,13 +282,15 @@ const PatientTable = () => {
                     rowSelection={false}
                     toolBarRender={(_action, _rows): any => {
                         return (
-                            <Button
-                                icon={<PlusOutlined />}
-                                type="primary"
-                                onClick={() => setOpenModalCreate(true)}
-                            >
-                                Thêm mới
-                            </Button>
+                            <Access permission={ALL_PERMISSIONS.PATIENTS.CREATE} hideChildren>
+                                <Button
+                                    icon={<PlusOutlined />}
+                                    type="primary"
+                                    onClick={() => setOpenModalCreate(true)}
+                                >
+                                    Thêm mới
+                                </Button>
+                            </Access>
                         );
                     }}
                 />

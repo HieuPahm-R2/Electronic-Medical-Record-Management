@@ -45,32 +45,48 @@ const router = createBrowserRouter([
       {
         path: "table-patients",
         element:
-          <PatientTable />
+          <ProtectedRoute><PatientTable /></ProtectedRoute>
+
       },
       {
         path: "table-appointment",
         element:
-          <AppointmentTable />
+          <ProtectedRoute>
+            <AppointmentTable />
+          </ProtectedRoute>
+
       },
       {
         path: "table-summary",
         element:
-          <MedicalRecordSummary />
+          <ProtectedRoute>
+            <MedicalRecordSummary />
+          </ProtectedRoute>
+
       },
       {
         path: "table-users",
         element:
-          <UserPage />
+          <ProtectedRoute>
+            <UserPage />
+          </ProtectedRoute>
+
       },
       {
         path: "table-role",
         element:
-          <RolePage />
+          <ProtectedRoute>
+            <RolePage />
+          </ProtectedRoute>
+
       },
       {
         path: "table-permission",
         element:
-          <PermissionPage />
+          <ProtectedRoute>
+            <PermissionPage />
+          </ProtectedRoute>
+
       },
     ]
   },

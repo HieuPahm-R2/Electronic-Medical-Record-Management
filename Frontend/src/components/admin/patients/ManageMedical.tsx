@@ -45,7 +45,6 @@ const ManageMedical = (props: IProps) => {
             if (Array.isArray(apiRaw)) {
                 mockApiReponse = apiRaw;
             } else if (apiRaw && typeof apiRaw === 'object') {
-                // Try common shapes: { data: { result: [...] } } or { data: [...] }
                 if (Array.isArray((apiRaw as any).data?.result)) {
                     mockApiReponse = (apiRaw as any).data.result;
                 } else if (Array.isArray((apiRaw as any).data)) {
@@ -55,13 +54,13 @@ const ManageMedical = (props: IProps) => {
                 }
             }
 
-            // --- LOGIC SẮP XẾP QUAN TRỌNG ---
+            //  SẮP XẾP
             const sortedExams = mockApiReponse.sort((a, b) => {
                 // Chuyển string về timestamp để so sánh (bảo vệ trường hợp undefined)
                 const timeA = a.arrivalTime ? new Date(a.arrivalTime).getTime() : 0;
                 const timeB = b.arrivalTime ? new Date(b.arrivalTime).getTime() : 0;
 
-                // Sắp xếp giảm dần (Mới nhất lên đầu) -> b - a
+                // Sắp xếp giảm dần
                 return timeB - timeA;
             });
             setExams(sortedExams);
@@ -73,7 +72,7 @@ const ManageMedical = (props: IProps) => {
     };
     // Cập nhật dataLab khi người dùng chọn một exam
     const handleCollapseChange = (key: string | number | string[] | number[]) => {
-        const selectedKey = Array.isArray(key) ? key[0] : key;
+        const selectedKey = Array.isArray(key) ? key[key.length - 1] : key;
         const selectedExam = exams.find(exam => String(exam.id) === selectedKey);
         if (selectedExam) {
             setDataLab(selectedExam);
@@ -81,10 +80,9 @@ const ManageMedical = (props: IProps) => {
         setActiveExamKey(selectedKey);
     };
     const renderPanelHeader = (exam: IMedicalExam, index: number) => {
-        // Tính số thứ tự lần khám: Tổng số - index hiện tại (vì đang sort giảm dần)
+        // stt lần khám: sort giảm dần
         const visitNumber = exams.length - index;
 
-        // Format ngày tháng: 06/08/2022 16:19:00
         const timeDisplay = moment(exam.arrivalTime).format('DD/MM/YYYY HH:mm:ss');
 
         return (

@@ -18,7 +18,6 @@ const Access = (props: AccessProps) => {
 
     const permissions = useAppSelector(state => state.account.user.role.permissions) as IPermission[] | undefined;
 
-
     useEffect(() => {
         if (permissions?.length) {
             const check = permissions.find((item: IPermission) =>

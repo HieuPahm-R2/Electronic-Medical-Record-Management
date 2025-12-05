@@ -121,7 +121,7 @@ export interface IBloodTest {
 }
 
 export interface IRadiology {
-    id?: number;
+    id?: string;
     image_path?: string;
     conclusion?: string;
     patient_id?: number;
@@ -130,7 +130,7 @@ export interface IRadiology {
 }
 
 export interface IDiagnose {
-    id?: number;
+    id?: string;
     main_disease?: string;
     comorbidity?: string;
     conclusion?: string;

@@ -3,6 +3,8 @@ import { Table, Tabs, Button, Card, Tag, message, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { IAppointment } from '@/types/backend';
 import { callUpdateAppointment, getAllAppointments } from '@/config/api';
+import Access from '@/components/share/Access';
+import { ALL_PERMISSIONS } from '@/constant/permission';
 
 
 const AppointmentTable: React.FC = () => {
@@ -92,37 +94,43 @@ const AppointmentTable: React.FC = () => {
             key: '1',
             label: `Chưa xác nhận (${pendingList?.length})`,
             children: (
-                <Table
-                    columns={getColumns('pending')}
-                    dataSource={pendingList}
-                    onChange={onChange}
-                    pagination={{
-                        current: current,
-                        pageSize: pageSize,
-                        total: total,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-                        showSizeChanger: true
-                    }}
-                    rowKey="id"
-                />
+                <Access permission={ALL_PERMISSIONS.APPOINTMENTS.GET_PAGINATE}>
+                    <Table
+                        columns={getColumns('pending')}
+                        dataSource={pendingList}
+                        onChange={onChange}
+                        pagination={{
+                            current: current,
+                            pageSize: pageSize,
+                            total: total,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                            showSizeChanger: true
+                        }}
+                        rowKey="id"
+                    />
+                </Access>
+
             ),
         },
         {
             key: '2',
             label: `Đã xác nhận (${confirmedList?.length})`,
             children: (
-                <Table
-                    columns={getColumns('confirmed')}
-                    dataSource={confirmedList}
-                    pagination={{
-                        current: current,
-                        pageSize: pageSize,
-                        total: total,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-                        showSizeChanger: true
-                    }}
-                    rowKey="id"
-                />
+                <Access permission={ALL_PERMISSIONS.APPOINTMENTS.GET_PAGINATE}>
+                    <Table
+                        columns={getColumns('confirmed')}
+                        dataSource={confirmedList}
+                        pagination={{
+                            current: current,
+                            pageSize: pageSize,
+                            total: total,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                            showSizeChanger: true
+                        }}
+                        rowKey="id"
+                    />
+                </Access>
+
             ),
         },
     ];
