@@ -34,8 +34,8 @@ public class Radiology {
 
     // relationships: ---
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinical_service_id", nullable = false, unique = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinical_service_id")
     private ClinicalService clinicalService;
 
     @OneToOne(fetch = FetchType.LAZY)

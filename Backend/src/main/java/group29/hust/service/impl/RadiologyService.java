@@ -43,13 +43,13 @@ public class RadiologyService implements IRadiologyService {
     private MedicalExamRes convertDtoMedicalExam(Radiology data){
         return MedicalExamRes.builder()
                 .department(data.getMedicalExamination().getDepartment().getName())
-                .id(data.getId())
+                .id(data.getMedicalExamination().getId())
                 .build();
     }
     private ClinicalServiceDTO convertDtoClinical(Radiology data){
         return ClinicalServiceDTO.builder()
-                .serviceName(data.getClinicalService().getServiceName())
-                .id(data.getClinicalService().getId())
+                .serviceName(data.getClinicalService() != null ? data.getClinicalService().getServiceName() : "")
+                .id(data.getClinicalService() != null ? data.getClinicalService().getId() : null)
                 .build();
     }
 

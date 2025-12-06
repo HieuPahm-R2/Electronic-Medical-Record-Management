@@ -1,8 +1,8 @@
 spring:
   datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3310/HustEt3260?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
     username: root
     password: 12102005
-    url: jdbc:mysql://localhost:3307/HustEt3260
   jpa:
     hibernate:
       ddl-auto: update
@@ -46,4 +46,4 @@ server:
 #config upload file
 hieupham:
   upload-file:
-    base-uri: file:///D:/WhatWeDone-Will/QuanLyBenhAn/storage/
+    base-uri: file:///D:/WhatWeDone-Will/EMR-restful-project/storage/

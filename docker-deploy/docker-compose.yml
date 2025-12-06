@@ -1,0 +1,39 @@
+services:
+  nginx:
+    image: nginx:1.23
+    volumes:
+      - ../frontend/dist:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+    ports:
+      - "80:80"
+      - "443:443"
+  db-mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=HustEt3260
+      - MYSQL_ROOT_PASSWORD=12102005
+    ports:
+      - "3310:3306"
+    expose:
+      - "3306"
+
+  backend-spring:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql:3306/HustEt3260
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=12102005
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - HIEUPAHM_UPLOAD_FILE_BASE_URI=file:///uploads/
+    depends_on:
+      - db-mysql
+    volumes:
+      - ../docker-storage/:/uploads/
+    #run command: docker compose -p emr-restful-project up -d
+    #Chạy lệnh docker compose up -d --build để apply cấu hình mới và build lại backend.
