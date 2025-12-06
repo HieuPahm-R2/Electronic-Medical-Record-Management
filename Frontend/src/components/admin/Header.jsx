@@ -182,10 +182,16 @@ const HeaderAdmin = (props) => {
     const navigate = useNavigate();
 
     const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
+    const handleLogout = async () => {
+        await LogoutAPI();
+        dispatch(runLogoutAction(null));
+        message.success("Logout successfully");
+        navigate("/")
 
+    }
     let items = [
         {
-            label: <label>Quản lý tài khoản</label>,
+            label: <label>Quay về trang chủ</label>,
             key: 'account',
         },
         {
@@ -194,7 +200,7 @@ const HeaderAdmin = (props) => {
         },
     ];
     const handleMenuClick = ({ key }) => {
-        if (key === 'admin') navigate('/admin');
+        if (key === 'account') navigate('/admin');
         if (key === 'logout') handleLogout();
     }
 
@@ -213,7 +219,7 @@ const HeaderAdmin = (props) => {
                 <Col span={24} md={6}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <NavLink to="/">Pages</NavLink>
+                            <NavLink to="/">Trang chủ</NavLink>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item style={{ textTransform: "capitalize" }}>
                             {name.replace("/", "")}
@@ -300,7 +306,7 @@ const HeaderAdmin = (props) => {
                                 <div className="ant-docment">
                                     <ButtonContainer>
                                         <Button style={{ backgroundColor: "#52c41a" }} size="large">
-                                            Anihoyo free watching Anime
+                                            DHBKHN - ET
                                         </Button>
                                         <Button size="large">VIEW DOCUMENTATION</Button>
                                     </ButtonContainer>

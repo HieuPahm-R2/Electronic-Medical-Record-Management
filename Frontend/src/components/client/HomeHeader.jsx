@@ -76,9 +76,9 @@ const HomeHeader = () => {
             key: 'logout',
         },
     ];
-    if (user?.role?.name === "ADMIN") {
+    if (user?.role?.name === "ADMIN" || user?.role?.name === "NURSE" || user?.role?.name === "DOCTOR" || user?.role?.name === "RECEPTIONIST") {
         items.unshift({
-            label: <label>Administrator Dashboard</label>,
+            label: <label>Trang quản trị bệnh nhân</label>,
             key: 'admin',
         })
     }

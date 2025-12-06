@@ -27,7 +27,7 @@ const LayoutAdmin = () => {
 
     let { pathname } = useLocation();
     pathname = pathname.replace("/", "");
-    return isAdminRoute && userRole === 'ADMIN' ? (
+    return isAdminRoute && (userRole === 'ADMIN' || userRole === 'NURSE' || userRole === 'DOCTOR' || userRole === 'RECEPTIONIST') ? (
         <Layout
             className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""} `}
         >

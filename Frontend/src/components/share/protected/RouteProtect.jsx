@@ -7,7 +7,8 @@ const RoleCheck = (props) => {
     const isAdmin = window.location.pathname.startsWith("/admin")
     const user = useSelector(state => state.account.user)
     const userRole = user?.role?.name
-    if (isAdmin && (userRole === 'ADMIN' || userRole === 'DOCTOR' || userRole === 'NURSE' || userRole === 'RECEPTIONIST')
+    console.log(userRole)
+    if ((isAdmin && (userRole === 'ADMIN' || userRole === 'DOCTOR' || userRole === 'NURSE' || userRole === 'RECEPTIONIST'))
         || !isAdmin && (userRole === 'USER' || userRole === 'ADMIN' || userRole === 'DOCTOR' || userRole === 'NURSE' || userRole === 'RECEPTIONIST')) {
         return (<>{props.children}</>)
     } else {

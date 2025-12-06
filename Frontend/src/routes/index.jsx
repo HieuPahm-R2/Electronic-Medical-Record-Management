@@ -45,7 +45,9 @@ const router = createBrowserRouter([
       {
         path: "table-patients",
         element:
-          <ProtectedRoute><PatientTable /></ProtectedRoute>
+          <ProtectedRoute>
+            <PatientTable />
+          </ProtectedRoute>
 
       },
       {

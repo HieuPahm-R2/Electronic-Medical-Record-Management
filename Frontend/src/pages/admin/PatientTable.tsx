@@ -249,7 +249,7 @@ const PatientTable = () => {
 
     return (
         <div>
-            <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATE}>
+            <Access permission={ALL_PERMISSIONS.PATIENTS.GET_PAGINATE}>
                 <DataTable<IPatient>
                     actionRef={tableRef}
                     headerTitle="Danh sách bệnh nhân"
