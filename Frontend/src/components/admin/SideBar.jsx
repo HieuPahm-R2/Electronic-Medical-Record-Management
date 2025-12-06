@@ -1,6 +1,6 @@
 import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
-import logo from "../../assets/logos/logo-hust.png";
+import logo from "../../../public/logo-hust.png";
 
 const SideNav = (props) => {
     const { color } = props;

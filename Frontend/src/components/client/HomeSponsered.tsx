@@ -1,8 +1,6 @@
-import React from 'react'
-
 import { Typography } from "@material-tailwind/react";
 import { Image } from 'antd';
-
+import logo1 from "../../../public/vinmec-bg.jpg";
 const SPONSORS = [
     "coinbase",
     "spotify",
@@ -25,8 +23,8 @@ const HomeSponsered = () => {
                             width={180}
                             height={250}
                             key={key}
-                            src={`/src/assets/logos/logo-${logo}.svg`}
-                            fallback={`/src/assets/logos/logo-${logo}.png`}
+                            src={`/logo-${logo}.svg`}
+                            fallback={`/logo-${logo}.png`}
                             alt={logo}
                             className="w-30"
                         />

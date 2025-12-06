@@ -1,4 +1,7 @@
 import { Typography, Button, IconButton, Carousel } from "@material-tailwind/react";
+import logo1 from "../../../public/vin1.jpg";
+import logo2 from "../../../public/vin2.png";
+import logo3 from "../../../public/vin3.jpg";
 const CURRENT_YEAR = new Date().getFullYear();
 const LINKS = ["Company", "About Us", "Team", "Products", "Blog"];
 const HomeFooter = () => {
@@ -10,17 +13,17 @@ const HomeFooter = () => {
 
                     <Carousel className="rounded-xl h-40 md:h-56 overflow-hidden">
                         <img
-                            src="../../../public/vin1.jpg"
+                            src={logo1}
                             alt="image 1"
                             className="h-full w-full object-cover"
                         />
                         <img
-                            src="../../../public/vin2.png"
+                            src={logo2}
                             alt="image 2"
                             className="h-full w-full object-cover"
                         />
                         <img
-                            src="../../../public/vin3.jpg"
+                            src={logo3}
                             alt="image 3"
                             className="h-full w-full object-cover"
                         />

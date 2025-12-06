@@ -4,6 +4,7 @@ import { PlayIcon } from "@heroicons/react/24/solid";
 import HomeSubscribe from './HomeSubscribe';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import logo1 from "../../../public/vinmec-bg.jpg";
 
 const HomeHero = () => {
     const [openForm, setOpenForm] = useState<boolean>(false);
@@ -16,7 +17,7 @@ const HomeHero = () => {
         setOpenForm(true)
     }
     return (
-        <div className="relative min-h-screen w-full bg-[url('src/assets/images/vinmec-bg.jpg')] bg-cover bg-no-repeat bg-center">
+        <div className="relative min-h-screen w-full bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `url(${logo1})` }}>
             <div className="absolute inset-0 h-full w-full bg-gray-900/60" />
             <div className="grid min-h-screen px-8">
                 <div className="container relative z-10 my-auto mx-auto grid place-items-center text-center">

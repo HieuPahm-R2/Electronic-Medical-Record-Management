@@ -4,8 +4,6 @@ import { MenuUnfoldOutlined } from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
 import LineChart from '../../components/admin/chart/lineChart';
 
-
-
 const AdminHome = () => {
     const { Title, Text } = Typography;
 

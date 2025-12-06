@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { Layout, Drawer, Affix, Result } from "antd";
 import HeaderAdmin from "../components/admin/Header";
 import FooterAdmin from "../components/admin/Footer";
 import SideNav from "../components/admin/SideBar";
 import { useSelector } from "react-redux";
-import "../assets/styles/admin/main.scss"
-import "../assets/styles/admin/responsive.scss"
+import "../../public/main.scss"
+import "../../public/responsive.scss"
+import "../../public/reset.scss"
 import Error403 from "@/components/errors/ForbiddenPage";
 
 const { Header: AntHeader, Content, Sider } = Layout;

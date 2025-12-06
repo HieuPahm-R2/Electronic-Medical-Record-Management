@@ -1,6 +1,6 @@
 import { CloseOutlined, SearchOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react';
-import "../../../assets/styles/admin/search.scss"
+import "../../../../public/search.scss"
 import { sfLike } from 'spring-filter-query-builder';
 import { callFetchPatient } from '@/config/api';
 import { IPatient } from '@/types/backend';
