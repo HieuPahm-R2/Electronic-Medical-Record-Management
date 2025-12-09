@@ -49,6 +49,8 @@ public class MedicalExamService implements IMedicalExamService {
     @Transactional
     public MedicalExamDTO insert(MedicalExamDTO dto) {
         MedicalExam savedMedicalExam = new MedicalExam();
+        Department dep = new Department();
+        dep.setId(1L);
         if(dto.getPatient() != null){
             Patient ps = this.patientRepository.findById(dto.getPatient()).orElseThrow(
                     () -> new BadActionException("Patient not found with id: " + dto.getId())
@@ -57,6 +59,7 @@ public class MedicalExamService implements IMedicalExamService {
         }
         savedMedicalExam.setArrivalTime(LocalDateTime.now());
         savedMedicalExam.setReceptionTime(LocalDateTime.now());
+        savedMedicalExam.setDepartment(dep);
         medicalExamRepository.save(savedMedicalExam);
 
         VitalSign vt = new VitalSign();
@@ -94,8 +97,8 @@ public class MedicalExamService implements IMedicalExamService {
         MedicalExam medicalExam = medicalExamRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Medical examination not found with id: " + id));
         DepartmentDTO departmentDTO = DepartmentDTO.builder()
-                .id(medicalExam.getDepartment().getId())
-                .name(medicalExam.getDepartment().getName())
+                .id(medicalExam.getDepartment().getId() == null ? 1 : medicalExam.getDepartment().getId())
+                .name(medicalExam.getDepartment().getName() == null ? "" : medicalExam.getDepartment().getName())
                 .build();
         return MedicalExamDTO.builder()
                 .id(medicalExam.getId())

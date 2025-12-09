@@ -26,7 +26,7 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
 
     private MedicalExamRes convertDtoMedicalExam(DiagnoseFinal data){
         return MedicalExamRes.builder()
-                .id(data.getId())
+                .id(data.getMedicalExamination().getId())
                 .build();
     }
 
@@ -95,7 +95,7 @@ public class DiagnoseFinalService implements IDiagnoseFinalService {
             (existingDiagnoseFinal.getMedicalExamination() == null || 
              !dto.getMedicalExam().getId().equals(existingDiagnoseFinal.getMedicalExamination().getId()))) {
             MedicalExam medicalExam = medicalExamRepository.findById(dto.getMedicalExam().getId())
-                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: "));
+                    .orElseThrow(() -> new BadActionException("Medical examination not found with id: " + dto.getMedicalExam().getId()));
             existingDiagnoseFinal.setMedicalExamination(medicalExam);
         }
         

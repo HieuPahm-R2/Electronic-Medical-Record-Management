@@ -49,10 +49,10 @@ public class BloodTest {
     @Column(name = "neut", precision = 38, scale = 2)
     private BigDecimal neut;
 
-    @Column(name = "blood_group", nullable = false)
+    @Column(name = "blood_group")
     private String bloodGroup;
 
-    @Column(name = "blood_type", nullable = false)
+    @Column(name = "blood_type")
     private String bloodType;
 
     @Column(name = "image_url",columnDefinition = "nvarchar(4000)")

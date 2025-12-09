@@ -38,12 +38,6 @@ const MedicalExam = (props: IProps) => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        if (dataLab?.id) {
-            form.resetFields();
-        }
-    }, [dataLab?.id]);
-
-    useEffect(() => {
         const fetchMexs = async () => {
             console.log(dataLab)
             const res = await callFetchMexById(dataLab?.id as string);
@@ -166,6 +160,7 @@ const MedicalExam = (props: IProps) => {
         form.resetFields();
         setDataInit(null)
         setDepartments([])
+        window.location.reload();
         reloadTable()
     }
     return (

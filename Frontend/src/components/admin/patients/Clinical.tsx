@@ -151,7 +151,6 @@ const Clinical = (props: IProps) => {
             >
                 <Select
                     mode="multiple"
-                    defaultValue={null}
                     showSearch
                     allowClear
                     options={clinicalServices}

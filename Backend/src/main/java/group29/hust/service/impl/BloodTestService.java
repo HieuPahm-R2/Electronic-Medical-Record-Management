@@ -147,7 +147,7 @@ public class BloodTestService implements IBloodTestService {
                 .conclusion(updatedBloodTest.getConclusion())
                 .imageUrl(updatedBloodTest.getImageUrl())
                 .clinicalServices(ClinicalServiceDTO.builder()
-                        .id(updatedBloodTest.getClinicalServices().getId())
+                        .id(updatedBloodTest.getClinicalServices().getId() != null ? updatedBloodTest.getClinicalServices().getId() : 1)
                         .serviceName(updatedBloodTest.getClinicalServices().getServiceName())
                         .build())
                 .bloodType(updatedBloodTest.getBloodType())

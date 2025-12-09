@@ -21,6 +21,7 @@ export const Diagnose = (props: IProps) => {
         const fetchBls = async () => {
             const res = await callFetchDiagnoseByMex(dataLab?.id as string);
             if (res && res.data) {
+                console.log(dataLab?.id)
                 setDataUpdateBl(res.data)
             }
         }
@@ -30,10 +31,11 @@ export const Diagnose = (props: IProps) => {
     }, [dataLab?.id])
 
     useEffect(() => {
+        console.log(dataUpdateBl)
         if (dataUpdateBl?.id) {
             const initialValue = {
                 id: dataUpdateBl?.id,
-                mainDease: dataUpdateBl.main_disease,
+                mainDisease: dataUpdateBl.main_disease,
                 subDisease: dataUpdateBl.comorbidity,
                 diagnosis: dataUpdateBl.conclusion,
                 prognosis: dataUpdateBl.prognosis,
@@ -48,6 +50,7 @@ export const Diagnose = (props: IProps) => {
     }, [dataUpdateBl, dataLab?.id]);
     const handleReset = async () => {
         form.resetFields();
+        window.location.reload();
         setDataInit(null)
     }
     const submitUser = async (valuesForm: any) => {
@@ -63,7 +66,7 @@ export const Diagnose = (props: IProps) => {
                 prognosis: prognosis,
                 treatment_plan: treatmentPlan,
                 medical_exam_id: {
-                    id: dataUpdateBl.medical_exam_id?.id
+                    id: dataLab?.id
                 },
             }
             console.log(bl)
@@ -101,6 +104,8 @@ export const Diagnose = (props: IProps) => {
     return (
         <div style={{ background: "#fff", padding: 24, borderRadius: 8 }}>
             <ProForm
+                form={form}
+                initialValues={initalVal}
                 submitter={{
                     render: (_, dom) => (
                         <Button type="primary" htmlType='submit' icon={<span>＋</span>}>

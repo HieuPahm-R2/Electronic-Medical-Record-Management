@@ -198,6 +198,7 @@ const BloodTest = (props: IProps) => {
     }
     const submitUser = async (valuesForm: any) => {
         const { serviceName, imagePath, comment, glu, ure, rbc, hb, hct, mcv, mch, wbc, neut, bloodGroup, bloodType } = valuesForm;
+        console.log(serviceName.value)
         if (dataLogo.length === 0) {
             message.error('Vui lòng upload ảnh Logo')
             return;
@@ -219,10 +220,7 @@ const BloodTest = (props: IProps) => {
                 blood_group: bloodGroup,
                 blood_type: bloodType,
                 image_url: dataLogo[0].name,
-                clinical_services: {
-                    id: serviceName.value,
-                    serviceName: ""
-                },
+                clinical_services: serviceName,
                 medical_exam_id: {
                     id: dataUpdateBl.medical_exam_id?.id
                 },

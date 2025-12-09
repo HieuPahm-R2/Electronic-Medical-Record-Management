@@ -81,6 +81,7 @@ public class ClinicalInfoService implements IClinicalInfoService {
         clinicalInfo.setSyndrome(dto.getSyndrome());
         clinicalInfo.setCirculatoryDiagnosis(dto.getCirculatoryDiagnosis());
         clinicalInfo.setGenitourinaryDiagnosis(dto.getGenitourinaryDiagnosis());
+        clinicalInfo.setOtherDiagnoses(dto.getOtherDiagnoses());
         clinicalInfo.setNervousDiagnosis(dto.getNervousDiagnosis());
         ClinicalInfo cs = clinicalInfoRepository.save(clinicalInfo);
 

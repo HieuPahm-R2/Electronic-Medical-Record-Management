@@ -2,7 +2,7 @@ export const ALL_PERMISSIONS = {
     PATIENTS: {
         GET_PAGINATE: { method: "GET", apiPath: '/api/v1/patients', module: "PATIENTS" },
         CREATE: { method: "POST", apiPath: '/api/v1/add-patient', module: "PATIENTS" },
-        UPDATE: { method: "PUT", apiPath: '/api/v1/upadte-patient', module: "PATIENTS" },
+        UPDATE: { method: "PUT", apiPath: '/api/v1/update-patient', module: "PATIENTS" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/delete-patient/{id}', module: "PATIENTS" },
     },
     PERMISSIONS: {

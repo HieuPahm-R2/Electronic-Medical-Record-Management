@@ -33,9 +33,8 @@ public class DiagnoseFinalController {
         return ResponseEntity.ok(diagnoseFinalDTO);
     }
     
-    @PutMapping("/{id}")
-    public ResponseEntity<DiagnoseFinalDTO> updateDiagnoseFinal(@PathVariable Long id, @Valid @RequestBody DiagnoseFinalDTO diagnoseFinalDTO) {
-        diagnoseFinalDTO.setId(id);
+    @PutMapping
+    public ResponseEntity<DiagnoseFinalDTO> updateDiagnoseFinal(@RequestBody DiagnoseFinalDTO diagnoseFinalDTO) {
         DiagnoseFinalDTO updatedDiagnoseFinal = diagnoseFinalService.update(diagnoseFinalDTO);
         return ResponseEntity.ok(updatedDiagnoseFinal);
     }

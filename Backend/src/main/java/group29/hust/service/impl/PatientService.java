@@ -45,8 +45,11 @@ public class PatientService implements IPatientService {
         ClinicalInfo clinicalInfo = new ClinicalInfo();
         BloodTest bt = new BloodTest();
         DiagnoseFinal dg = new DiagnoseFinal();
+        Department dep = new Department();
+        dep.setId(1L);
 
         me.setPatient(res);
+        me.setDepartment(dep);
         me.setArrivalTime(LocalDateTime.now());
         me.setReceptionTime(LocalDateTime.now());
         MedicalExam meFinal = medicalExamRepository.save(me);
