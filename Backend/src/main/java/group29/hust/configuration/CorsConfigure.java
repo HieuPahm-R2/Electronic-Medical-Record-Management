@@ -15,8 +15,7 @@ public class CorsConfigure {
                 CorsConfiguration configuration = new CorsConfiguration();
                 // Set only one origin to avoid multiple Access-Control-Allow-Origin headers
                 configuration.setAllowedOriginPatterns(
-                                Arrays.asList("http://localhost:3000", "http://localhost:4173",
-                                                "http://localhost:5173"));
+                                Arrays.asList("http://localhost:3000", "http://localhost:4173","https://prod29.io.vn","https://www.prod29.io.vn", "http://localhost:5173"));
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed
                                                                                                            // methods
                 configuration.setAllowedHeaders(

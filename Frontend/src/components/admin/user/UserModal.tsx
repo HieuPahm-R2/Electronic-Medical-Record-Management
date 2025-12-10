@@ -40,12 +40,12 @@ const ModalUser = (props: IProps) => {
     }, [dataInit]);
 
     const submitUser = async (valuesForm: any) => {
-        const { fullName, email, password, role } = valuesForm;
+        const { username, email, password, role } = valuesForm;
         if (dataInit?.id) {
             //update
             const user = {
                 id: dataInit.id,
-                username: fullName,
+                username: username,
                 email,
                 password,
                 role: { id: role.value, name: "" },
@@ -65,7 +65,7 @@ const ModalUser = (props: IProps) => {
         } else {
             //create
             const user = {
-                username: fullName,
+                username: username,
                 email,
                 password,
                 role: { id: role.value, name: "" },
@@ -150,7 +150,7 @@ const ModalUser = (props: IProps) => {
                     <Col lg={6} md={6} sm={24} xs={24}>
                         <ProFormText
                             label="Họ & Tên"
-                            name="fullName"
+                            name="username"
                             rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
                             placeholder="Nhập tên hiển thị"
                         />
