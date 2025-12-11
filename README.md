@@ -1,7 +1,7 @@
 
 # Hệ thống Quản Lý Bệnh Án Điện Tử (EMR)
 
-Một nền tảng quản lý bệnh án hiện đại được xây dựng với công nghệ web tiên tiến. Dự án được thực hiện cho học phần ET3260 - Kiểm thử phần mềm ứng dụng.
+Một nền tảng quản lý bệnh án hiện đại được xây dựng với công nghệ web tiên tiến. Dự án được thực hiện cho học phần ET3260 - Kỹ thuật phần mềm ứng dụng.
 
 ## 📋 Mục Đích
 
