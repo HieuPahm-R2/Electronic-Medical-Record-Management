@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { DribbbleOutlined, TwitterOutlined, InstagramOutlined, GithubOutlined } from "@ant-design/icons";
 import { registerAPI } from "../../config/api.fast";
 import { useState } from "react";
-
+import logo1 from "../../../public/Google-icon.png";
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
 
@@ -123,9 +123,6 @@ const RegisterPage = () => {
                         <div className="sign-up-gateways">
                             <Button type="false">
                                 <img src={logo1} alt="logo 1" />
-                            </Button>
-                            <Button type="false">
-                                <img src={logo3} alt="logo 3" />
                             </Button>
                         </div>
                         <p className="text-center my-25 font-semibold text-muted">Or</p>
