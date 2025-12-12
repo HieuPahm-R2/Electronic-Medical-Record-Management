@@ -46,4 +46,4 @@ server:
 #config upload file
 hieupham:
   upload-file:
-    base-uri: file:///D:/WhatWeDone-Will/EMR-restful-project/storage/
+    base-uri: ${HIEUPAHM_UPLOAD_FILE_BASE_URI:file:///D:/WhatWeDone-Will/EMR-restful-project/storage/}
