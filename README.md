@@ -2,7 +2,10 @@
 # Hệ thống Quản Lý Bệnh Án Điện Tử (EMR)
 
 Một nền tảng quản lý bệnh án hiện đại được xây dựng với công nghệ web tiên tiến. Dự án được thực hiện cho học phần ET3260 - Kỹ thuật phần mềm ứng dụng.
+## 👥 Đóng Góp
 
+Các contributors của dự án:
+- [@HieuPahmr2](https://github.com/HieuPahm-R2)
 ## 📋 Mục Đích
 
 Hệ thống EMR (Electronic Medical Records) cung cấp giải pháp toàn diện để:
@@ -185,10 +188,6 @@ spring:
 VITE_API_URL=http://localhost:8085/api
 ```
 
-## 👥 Đóng Góp
-
-Các contributors của dự án:
-- [@HieuPahmr2](https://github.com/HieuPahm-R2)
 
 ## 📝 Hướng Dẫn Phát Triển
 
