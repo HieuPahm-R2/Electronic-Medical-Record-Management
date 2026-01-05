@@ -76,7 +76,8 @@ const HomeHeader = () => {
             key: 'logout',
         },
     ];
-    if (user?.role?.name === "ADMIN" || user?.role?.name === "NURSE" || user?.role?.name === "DOCTOR" || user?.role?.name === "RECEPTIONIST") {
+    if (user?.role?.name === "ADMIN" || user?.role?.name === "NURSE" || user?.role?.name === "KTV"
+        || user?.role?.name === "DOCTOR" || user?.role?.name === "RECEPTIONIST") {
         items.unshift({
             label: <label>Trang quản trị bệnh nhân</label>,
             key: 'admin',

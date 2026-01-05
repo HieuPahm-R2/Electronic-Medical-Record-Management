@@ -31,6 +31,40 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./initDB.sql:/docker-entrypoint-initdb.d/init.sql
+  ## Using a host bind-mount for Elasticsearch data
+  # Host path: ../elk-data -> will be mounted to /usr/share/elasticsearch/data
+  # rest-password: docker exec -it <tên_hoặc_id_container> /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+  # new pass: 2ryVa4TX4VhYg*Xuup41
+  #kể từ phiên bản Elasticsearch 8.0 trở đi, các tính năng bảo mật đã được tự động kích hoạt theo mặc định.
+  #cờ -k (hoặc --insecure) để bảo curl lờ đi việc chứng chỉ không an toàn, và thêm thông tin tài khoản
+  #vd: curl -k -u elastic:2ryVa4TX4VhYg*Xuup41 https://localhost:9200
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.8
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=datasearch
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.initial_master_nodes=elasticsearch
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - ../elk-data:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.18.8
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
 
   backend-spring:
     build:
@@ -48,5 +82,5 @@ services:
       - db-mysql
     volumes:
       - ../docker-storage/:/uploads/
-    #run command: docker compose -p emr-restful-project up -d
-    #Chạy lệnh docker compose up -d --build để apply cấu hình mới và build lại backend.
+#run command: docker compose -p emr-restful-project up -d
+#Chạy lệnh docker compose up -d --build để apply cấu hình mới và build lại backend.
