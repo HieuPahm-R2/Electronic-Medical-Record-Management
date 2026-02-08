@@ -1,6 +1,6 @@
 import { Navbar as MTNavbar, Collapse, Button, IconButton, Typography } from "@material-tailwind/react";
 import { RectangleStackIcon, UserCircleIcon, CommandLineIcon, XMarkIcon, Bars3Icon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LogoutAPI } from '@/config/api.fast';
@@ -46,11 +46,11 @@ const HomeHeader = () => {
     const [isScrolling, setIsScrolling] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const isAuthenticatedb = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
     console.log(user)
+
     const handleMenuClick = ({ key }) => {
         if (key === 'account') setIsModalOpen(true);
         if (key === 'admin') navigate('/admin');
@@ -66,23 +66,30 @@ const HomeHeader = () => {
     // link to access avatar
     const urlAvatarTemp = `${import.meta.env.VITE_BACKEND_URL}/storage/temp/user33.svg`;
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/storage/avatar/${user?.avatar}`;
-    let items = [
-        {
-            label: <label>Quản lý tài khoản</label>,
-            key: 'account',
-        },
-        {
-            label: <label>Đăng xuất</label>,
-            key: 'logout',
-        },
-    ];
-    if (user?.role?.name === "ADMIN" || user?.role?.name === "NURSE" || user?.role?.name === "KTV"
-        || user?.role?.name === "DOCTOR" || user?.role?.name === "RECEPTIONIST") {
-        items.unshift({
-            label: <label>Trang quản trị bệnh nhân</label>,
-            key: 'admin',
-        })
-    }
+
+    const items = useMemo(() => {
+        const baseItems = [
+            {
+                label: <label>Quản lý tài khoản</label>,
+                key: 'account',
+            },
+            {
+                label: <label>Đăng xuất</label>,
+                key: 'logout',
+            },
+        ];
+
+        if (user?.role?.name === "ADMIN" || user?.role?.name === "NURSE" || user?.role?.name === "KTV"
+            || user?.role?.name === "DOCTOR" || user?.role?.name === "RECEPTIONIST") {
+            baseItems.unshift({
+                label: <label>Trang quản trị bệnh nhân</label>,
+                key: 'admin',
+            })
+        }
+
+        return baseItems;
+    }, [user?.role?.name])
+
 
     useEffect(() => {
         window.addEventListener(
