@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3310/HustEt3260?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
     username: root
-    password: 12102005
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: update

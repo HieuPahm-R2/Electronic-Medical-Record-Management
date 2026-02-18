@@ -74,4 +74,22 @@ export const ALL_PERMISSIONS = {
     DEPARTMENTS: {
         GET_PAGINATE: { method: "GET", apiPath: '/api/v1/departments', module: "DEPARTMENTS" },
     },
+    PRESCRIPTIONS: {
+        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/prescriptions', module: "PRESCRIPTIONS" },
+        CREATE: { method: "POST", apiPath: '/api/v1/prescriptions', module: "PRESCRIPTIONS" },
+        UPDATE: { method: "PUT", apiPath: '/api/v1/prescriptions', module: "PRESCRIPTIONS" },
+        DELETE: { method: "DELETE", apiPath: '/api/v1/prescriptions/{id}', module: "PRESCRIPTIONS" },
+    },
+    MEDICINES: {
+        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/medicines', module: "MEDICINES" },
+        CREATE: { method: "POST", apiPath: '/api/v1/medicines', module: "MEDICINES" },
+        UPDATE: { method: "PUT", apiPath: '/api/v1/medicines', module: "MEDICINES" },
+        DELETE: { method: "DELETE", apiPath: '/api/v1/medicines/{id}', module: "MEDICINES" },
+    },
+    PAYMENTS: {
+        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/payments', module: "PAYMENTS" },
+        CREATE: { method: "POST", apiPath: '/api/v1/payments', module: "PAYMENTS" },
+        UPDATE: { method: "PUT", apiPath: '/api/v1/payments', module: "PAYMENTS" },
+        DELETE: { method: "DELETE", apiPath: '/api/v1/payments/{id}', module: "PAYMENTS" },
+    },
 }

@@ -9,11 +9,15 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - restfulemr
     command: '/bin/sh -c ''while :; do sleep 720h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
   certbot:
     container_name: my-certbot
     image: certbot/dns-nsone:v2.11.0
     restart: unless-stopped
+    networks:
+      - restfulemr
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
@@ -27,12 +31,16 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB;FLUSHALL
+    networks:
+      - restfulemr
   db-mysql:
     image: mysql:8.0
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE=HustEt3260
       - MYSQL_ROOT_PASSWORD=12102005
+    networks:
+      - restfulemr
     ports:
       - "3310:3306"
     expose:
@@ -40,40 +48,80 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./initDB.sql:/docker-entrypoint-initdb.d/init.sql
-  ## Using a host bind-mount for Elasticsearch data
-  # Host path: ../elk-data -> will be mounted to /usr/share/elasticsearch/data
-  # rest-password: docker exec -it <tên_hoặc_id_container> /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
-  # new pass: 2ryVa4TX4VhYg*Xuup41
-  #kể từ phiên bản Elasticsearch 8.0 trở đi, các tính năng bảo mật đã được tự động kích hoạt theo mặc định.
-  #cờ -k (hoặc --insecure) để bảo curl lờ đi việc chứng chỉ không an toàn, và thêm thông tin tài khoản
-  #vd: curl -k -u elastic:2ryVa4TX4VhYg*Xuup41 https://localhost:9200
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.8
-    container_name: elasticsearch
-    environment:
-      - node.name=elasticsearch
-      - cluster.name=datasearch
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - cluster.initial_master_nodes=elasticsearch
-      - xpack.security.enabled=false
-      - xpack.security.enrollment.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - "9200:9200"
+    # The 'setup' service runs a one-off script which initializes users inside
+  # Elasticsearch — such as 'logstash_internal' and 'kibana_system' — with the
+  # values of the passwords defined in the '.env' file. It also creates the
+  # roles required by some of these users.
+  setup:
+    profiles:
+      - elk-setup
+    build:
+      context: elk-setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
     volumes:
-      - ../elk-data:/usr/share/elasticsearch/data
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.18.8
-    ports:
-      - "5601:5601"
+      - ./elk-setup/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./elk-setup/lib.sh:/lib.sh:ro,Z
+      - ./elk-setup/roles:/roles:ro,Z
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    network_mode: service:elasticsearch
+    depends_on:
+      - elasticsearch
+
+  # The 'kibana-genkeys' service runs a one-off command which generates and
+  # prints encryption keys for Kibana.
+  kibana-genkeys:
+    profiles:
+      - setup
+    build:
+      context: kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    command:
+      - bin/kibana-encryption-keys
+      - generate
+    network_mode: none
+  ## Using a host bind-mount for Elasticsearch data
+  # rest-password: docker exec -it <tên_hoặc_id_container> /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - elasticsearch:/usr/share/elasticsearch/data:Z
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      discovery.type: single-node
+    networks:
+      - restfulemr
+    restart: unless-stopped
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - 5601:5601
+    environment:
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    networks:
+      - restfulemr
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
 
   backend-spring:
     build:
@@ -87,9 +135,18 @@ services:
       - SPRING_DATASOURCE_PASSWORD=12102005
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - HIEUPAHM_UPLOAD_FILE_BASE_URI=file:///uploads/
+    networks:
+      - restfulemr
     depends_on:
       - db-mysql
     volumes:
       - ../docker-storage/:/uploads/
+
+volumes:
+  elasticsearch:
+
+networks:
+  restfulemr:
+    driver: bridge
 #run command: docker compose -p emr-restful-project up -d
 #Chạy lệnh docker compose up -d --build để apply cấu hình mới và build lại backend.

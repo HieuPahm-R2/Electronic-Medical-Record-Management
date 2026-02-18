@@ -97,7 +97,7 @@ const AdminHome = () => {
     const count = [
         {
             today: "Doanh thu hôm nay",
-            title: "$53,000",
+            title: "12,253,000 VND",
             persent: "+30%",
             icon: dollor,
             bnb: "bnb2",
@@ -108,13 +108,6 @@ const AdminHome = () => {
             persent: "+20%",
             icon: profile,
             bnb: "bnb2",
-        },
-        {
-            today: "Số bệnh nhân mới",
-            title: "1,200",
-            persent: "-20%",
-            icon: heart,
-            bnb: "redtext",
         },
         {
             today: "Số lượng xuất viện",
@@ -155,9 +148,9 @@ const AdminHome = () => {
                             key={index}
                             xs={24}
                             sm={24}
-                            md={12}
-                            lg={6}
-                            xl={6}
+                            md={8}
+                            lg={8}
+                            xl={8}
                             className="mb-24"
                         >
                             <Card className="criclebox ">
@@ -165,7 +158,7 @@ const AdminHome = () => {
                                     <Row align="middle" gutter={[24, 0]}>
                                         <Col xs={18}>
                                             <span>{c.today}</span>
-                                            <Title level={3}>
+                                            <Title level={4}>
                                                 {c.title} <small className={c.bnb}>{c.persent}</small>
                                             </Title>
                                         </Col>

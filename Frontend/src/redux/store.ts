@@ -4,6 +4,9 @@ import accountReducer from './slice/accountSlice';
 import permissionReducer from './slice/permissionSlice';
 import userReducer from './slice/userSlice';
 import patientReducer from './slice/patientSlice';
+import medicineReducer from './slice/medicineSlice';
+import prescriptionReducer from './slice/prescriptionSlice';
+import paymentReducer from './slice/paymentSlice';
 import { injectStore } from '../config/axios.custom';
 
 
@@ -14,6 +17,9 @@ export const store = configureStore({
         permission: permissionReducer,
         user: userReducer,
         patient: patientReducer,
+        prescription: prescriptionReducer,
+        medicine: medicineReducer,
+        payment: paymentReducer,
     }
 })
 injectStore(store.dispatch);

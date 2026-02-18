@@ -116,6 +116,45 @@ const SideNav = (props) => {
                         <span className="label">Quản Lý Lịch Hẹn</span>
                     </NavLink>
                 </Menu.Item>
+                <Menu.Item key="8">
+                    <NavLink to="/admin/table-prescriptions" className={({ isActive }) => isActive ? 'active' : ''}>
+                        <span
+                            className="icon"
+                            style={{
+                                background: page === "table-prescriptions" ? color : "",
+                            }}
+                        >
+                            {tables}
+                        </span>
+                        <span className="label">Quản Lý Đơn Thuốc</span>
+                    </NavLink>
+                </Menu.Item>
+                <Menu.Item key="9">
+                    <NavLink to="/admin/table-medicines" className={({ isActive }) => isActive ? 'active' : ''}>
+                        <span
+                            className="icon"
+                            style={{
+                                background: page === "table-medicines" ? color : "",
+                            }}
+                        >
+                            {tables}
+                        </span>
+                        <span className="label">Quản Lý Thuốc</span>
+                    </NavLink>
+                </Menu.Item>
+                <Menu.Item key="10">
+                    <NavLink to="/admin/table-fees" className={({ isActive }) => isActive ? 'active' : ''}>
+                        <span
+                            className="icon"
+                            style={{
+                                background: page === "table-medicines" ? color : "",
+                            }}
+                        >
+                            {tables}
+                        </span>
+                        <span className="label">Quản Lý Viện Phí</span>
+                    </NavLink>
+                </Menu.Item>
 
                 <Menu.Item className="menu-item-header" key="6">
                     Account Pages

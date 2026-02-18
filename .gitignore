@@ -1,6 +1,7 @@
 storage
 elk-data
 docker-deploy/mysql-data
+docker-deploy/.env
 .vscode/*
 !.vscode/extensions.json
 .idea

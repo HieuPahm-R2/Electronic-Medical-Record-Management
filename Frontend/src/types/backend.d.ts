@@ -209,3 +209,31 @@ export interface IRole {
     createdAt?: string;
     updatedAt?: string;
 }
+
+export interface IPayment {
+    id?: string;
+    patientId?: string;
+    patientCode?: string;
+    patientName?: string;
+    invoiceNumber?: string;
+    invoiceDate?: string;
+    serviceCharge?: number;
+    medicineCharge?: number;
+    examinationFee?: number;
+    treatmentFee?: number;
+    laboratoryFee?: number;
+    radiologyFee?: number;
+    otherCharge?: number;
+    discount?: number;
+    discountReason?: string;
+    totalAmount?: number;
+    amountPaid?: number;
+    remainingAmount?: number;
+    paymentStatus?: 'UNPAID' | 'PARTIAL' | 'PAID' | 'CANCELLED';
+    paymentMethod?: 'CASH' | 'BANK' | 'INSURANCE' | 'OTHER';
+    paymentDate?: string;
+    notes?: string;
+    createdBy?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
