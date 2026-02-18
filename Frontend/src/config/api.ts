@@ -1,5 +1,7 @@
 import instance from './axios.custom';
-import { IAppointment, IBackendRes, IBloodTest, IClinicalInfo, IClinicalService, IDepartment, IDiagnose, IMedicalExam, IModelPaginate, IPatient, IPermission, IRadiology, IRole, IUser, IVitalSign } from '@/types/backend';
+import { IAppointment, IBackendRes, IBloodTest, IClinicalInfo, IClinicalService, IDepartment, IDiagnose, IMedicalExam, IModelPaginate, IPatient, IPermission, IRadiology, IRole, IUser, IVitalSign, IPayment } from '@/types/backend';
+import { IPrescription } from '@/types/medical';
+import { IMedicine } from '@/types/medicine';
 
 export const callCreateRole = (role: IRole): Promise<IBackendRes<IRole>> => {
     return instance.post('/api/v1/add-role', { ...role })
@@ -199,4 +201,88 @@ export const callUpdateAppointment = (bl: IAppointment): Promise<IBackendRes<IAp
 }
 export const getAllAppointments = (query: string): Promise<IBackendRes<IModelPaginate<IAppointment>>> => {
     return instance.get(`/api/v1/appointments?${query}`);
+}
+
+/**
+ * 
+Module Prescription
+ */
+export const callFetchPrescription = (query: string): Promise<IBackendRes<IModelPaginate<IPrescription>>> => {
+    return instance.get(`/api/v1/prescriptions?${query}`);
+}
+
+export const callCreatePrescription = (pr: IPrescription): Promise<IBackendRes<IPrescription>> => {
+    return instance.post(`/api/v1/prescriptions`, { ...pr });
+}
+
+export const callUpdatePrescription = (pr: IPrescription): Promise<IBackendRes<IPrescription>> => {
+    return instance.put(`/api/v1/prescriptions`, { ...pr })
+}
+
+export const callDeletePrescription = (id: string): Promise<IBackendRes<IPrescription>> => {
+
+    return instance.delete(`/api/v1/prescriptions/${id}`);
+
+}
+
+
+
+/**
+
+ * 
+
+Module Medicine
+
+ */
+
+
+
+export const callFetchMedicine = (query: string): Promise<IBackendRes<IModelPaginate<IMedicine>>> => {
+
+    return instance.get(`/api/v1/medicines?${query}`);
+
+}
+
+
+
+export const callCreateMedicine = (md: IMedicine): Promise<IBackendRes<IMedicine>> => {
+
+    return instance.post(`/api/v1/medicines`, { ...md });
+
+}
+
+
+
+export const callUpdateMedicine = (md: IMedicine): Promise<IBackendRes<IMedicine>> => {
+
+    return instance.put(`/api/v1/medicines`, { ...md })
+
+}
+
+
+
+export const callDeleteMedicine = (id: string): Promise<IBackendRes<IMedicine>> => {
+
+    return instance.delete(`/api/v1/medicines/${id}`);
+
+}
+
+/**
+ * 
+Module Payment/Revenue
+ */
+export const callFetchPayment = (query: string): Promise<IBackendRes<IModelPaginate<IPayment>>> => {
+    return instance.get(`/api/v1/payments?${query}`);
+}
+
+export const callCreatePayment = (payment: IPayment): Promise<IBackendRes<IPayment>> => {
+    return instance.post(`/api/v1/payments`, { ...payment });
+}
+
+export const callUpdatePayment = (payment: IPayment): Promise<IBackendRes<IPayment>> => {
+    return instance.put(`/api/v1/payments`, { ...payment })
+}
+
+export const callDeletePayment = (id: string): Promise<IBackendRes<IPayment>> => {
+    return instance.delete(`/api/v1/payments/${id}`);
 }

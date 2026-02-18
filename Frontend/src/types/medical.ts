@@ -1,13 +1,20 @@
-// Cấu hình tĩnh của một chỉ số xét nghiệm
-export interface LabTestConfig {
-    label: string;
-    normalRange: string;
+// Frontend/src/types/medical.ts
+
+export interface IMedicine {
+    id?: string;
+    name: string;
     unit: string;
+    quantity: number;
+    usage: string;
 }
 
-
-//được merge để hiển thị lên Table Antd
-export interface LabTableData extends LabTestConfig {
-    key: string;
-    result: number | string;
+export interface IPrescription {
+    id?: string;
+    diagnose: string;
+    doctor: string;
+    patient: string;
+    reExamination: number; // in days
+    medicines: IMedicine[];
+    createdAt?: string;
+    updatedAt?: string;
 }

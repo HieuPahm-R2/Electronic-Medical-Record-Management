@@ -1,7 +1,6 @@
 package group29.hust.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -82,56 +81,11 @@ public class PatientService implements IPatientService {
     @Transactional
     @Override
     public PatientDTO update(PatientDTO dto) throws BadActionException {
-        Optional<Patient> patient = patientRepository.findById(dto.getId());
-        if (patient.isEmpty()) {
-            throw new BadActionException("Patient not found with id: " + dto.getId());
-        }
-        if (dto.getFullName() != null) {
-            patient.get().setFullName(dto.getFullName());
-        }
-        if (dto.getDateOfBirth() != null) {
-            patient.get().setDateOfBirth(dto.getDateOfBirth());
-        }
-        if (dto.getEmail() != null) {
-            patient.get().setEmail(dto.getEmail());
-        }
-        if (dto.getPhone() != null) {
-            patient.get().setPhone(dto.getPhone());
-        }
-        if (dto.getNationality() != null) {
-            patient.get().setNationality(dto.getNationality());
-        }
-        if (dto.getAddress() != null) {
-            patient.get().setAddress(dto.getAddress());
-        }
-        if (dto.getIdentityCard() != null) {
-            patient.get().setIdentityCard(dto.getIdentityCard());
-        }
-        if (dto.getInsuranceNumber() != null) {
-            patient.get().setInsuranceNumber(dto.getInsuranceNumber());
-        }
-        if(dto.getInsuranceExpired() != null){
-            patient.get().setInsuranceExpired(dto.getInsuranceExpired());
-        }
-        if (dto.getRelativeName() != null) {
-            patient.get().setRelativeName(dto.getRelativeName());
-        }
-        if (dto.getRelativePhone() != null) {
-            patient.get().setRelativePhone(dto.getRelativePhone());
-        }
-        if (dto.getGender() != null) {
-            patient.get().setGender(dto.getGender());
-        }
-        if (dto.getCareer() != null) {
-            patient.get().setCareer(dto.getCareer());
-        }
-        if (dto.getEthnicity() != null) {
-            patient.get().setEthnicity(dto.getEthnicity());
-        }
-        if (dto.getReligion() != null) {
-            patient.get().setReligion(dto.getReligion());
-        }
-        return modelMapper.map(patientRepository.save(patient.get()), PatientDTO.class);
+        Patient patient = patientRepository.findById(dto.getId())
+                .orElseThrow(() -> new BadActionException("Patient not found with id: " + dto.getId()));
+
+        modelMapper.map(dto, patient);
+        return modelMapper.map(patientRepository.save(patient), PatientDTO.class);
     }
 
     @Transactional

@@ -1,39 +1,38 @@
 import DataTable from "@/components/admin/DataTable";
-import ManageMedical from "@/components/admin/patients/ManageMedical";
-import MPatientCreateAndUpdate from "@/components/admin/patients/PatientModal";
 import Access from "@/components/share/Access";
-import { callDeletePatient } from "@/config/api";
+import { callDeleteMedicine } from "@/config/api";
 import { ALL_PERMISSIONS } from "@/constant/permission";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { fetchPatient } from "@/redux/slice/patientSlice";
-import { IModelPaginate, IPatient } from "@/types/backend";
-import { BookOutlined, DeleteOutlined, EditOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { fetchMedicine } from "@/redux/slice/medicineSlice";
+import { IModelPaginate } from "@/types/backend";
+import { IMedicine } from "@/types/medicine";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Button, message, notification, Popconfirm, Space } from "antd";
 import dayjs from "dayjs";
 import queryString from "query-string";
 import { useRef, useState } from "react";
 import { sfLike } from "spring-filter-query-builder";
+import MedicineModal from "@/components/admin/medicines/MedicineModal";
 
 
-const PatientTable = () => {
+const MedicineTable = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [dataInit, setDataInit] = useState<IPatient | null>(null);
-    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
-    const [openModalMex, setOpenModalMex] = useState<boolean>(false);
+    const [dataInit, setDataInit] = useState<IMedicine | null>(null);
 
     const tableRef = useRef<ActionType>();
 
-    const isFetching = useAppSelector((state) => state.patient.isFetching);
-    const meta = useAppSelector((state) => state.patient.meta);
-    const users = useAppSelector((state) => state.patient.result);
+    const isFetching = useAppSelector((state) => state.medicine.isFetching);
+    const meta = useAppSelector((state) => state.medicine.meta);
+    const medicines = useAppSelector((state) => state.medicine.result);
     const dispatch = useAppDispatch();
 
-    const handleDeleteUser = async (id: string | undefined) => {
+
+    const handleDeleteMedicine = async (id: string | undefined) => {
         if (id) {
-            const res = await callDeletePatient(id);
+            const res = await callDeleteMedicine(id);
             if (+res.statusCode === 200) {
-                message.success("Xóa User thành công");
+                message.success("Xóa thuốc thành công");
                 reloadTable();
             } else {
                 notification.error({
@@ -48,11 +47,11 @@ const PatientTable = () => {
         tableRef?.current?.reload();
     };
 
-    const columns: ProColumns<IPatient>[] = [
+    const columns: ProColumns<IMedicine>[] = [
         {
             title: "STT",
             key: "index",
-            width: 20,
+            width: 50,
             align: "center",
             render: (text, record, index) => {
                 return <>{index + 1 + (meta.page - 1) * meta.pageSize}</>;
@@ -60,56 +59,58 @@ const PatientTable = () => {
             hideInSearch: true,
         },
         {
-            title: "CCCD",
-            dataIndex: "indetityCard",
-            hidden: true
-        },
-        {
-            title: "Họ & Tên",
-            dataIndex: "fullName",
+            title: "Tên thuốc",
+            dataIndex: "name",
             sorter: true,
         },
         {
-            title: "id",
-            dataIndex: "id",
-            hidden: true
-        },
-        {
-            title: "Mã bệnh nhân",
-            dataIndex: "patientCode",
-            sorter: true,
-        },
-
-        {
-            title: "Quốc tịnh",
-            dataIndex: "nationality",
-            hidden: true
-        },
-
-        {
-            title: "Secret",
-            dataIndex: "relativeName",
-            hidden: true
-        },
-        {
-            title: "Secret",
-            dataIndex: "relativePhone",
-            hidden: true
-        },
-        {
-            title: "Số điện thoại",
-            dataIndex: "phone",
+            title: "Mã thuốc",
+            dataIndex: "code",
             sorter: true,
         },
         {
-            title: "Địa chỉ",
-            dataIndex: "address",
+            title: "Số lượng",
+            dataIndex: "quantity",
+            sorter: true,
+            hideInSearch: true,
+        },
+        {
+            title: "Đơn vị",
+            dataIndex: "unit",
+            sorter: true,
+            hideInSearch: true,
+        },
+        {
+            title: "Nhà cung cấp",
+            dataIndex: "supplier",
             sorter: true,
         },
         {
-            title: "Insurance",
-            dataIndex: "insuranceExpired",
-            hidden: true
+            title: "Giá nhập",
+            dataIndex: "importPrice",
+            sorter: true,
+            hideInSearch: true,
+        },
+        {
+            title: "Giá bán",
+            dataIndex: "exportPrice",
+            sorter: true,
+            hideInSearch: true,
+        },
+        {
+            title: "Ngày hết hạn",
+            dataIndex: "expiredAt",
+            sorter: true,
+            render: (text, record, index, action) => {
+                return (
+                    <>
+                        {record.expiredAt
+                            ? dayjs(record.expiredAt).format("DD-MM-YYYY")
+                            : ""}
+                    </>
+                );
+            },
+            hideInSearch: true,
         },
         {
             title: "Thời gian tạo",
@@ -128,28 +129,12 @@ const PatientTable = () => {
             hideInSearch: true,
         },
         {
-            title: "Thời gian cập nhật",
-            dataIndex: "updatedAt",
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>
-                        {record.updatedAt
-                            ? dayjs(record.updatedAt).format("DD-MM-YYYY HH:mm:ss")
-                            : ""}
-                    </>
-                );
-            },
-            hideInSearch: true,
-        },
-        {
             title: "Actions",
             hideInSearch: true,
             width: 50,
             render: (_value, entity, _index, _action) => (
                 <Space>
-                    <Access permission={ALL_PERMISSIONS.MEDICAL_EXAMS.GET_PAGINATE_BY_PATIENT} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.MEDICINES.UPDATE} hideChildren>
                         <EditOutlined
                             style={{
                                 fontSize: 20,
@@ -162,27 +147,12 @@ const PatientTable = () => {
                             }}
                         />
                     </Access>
-                    <Access permission={ALL_PERMISSIONS.PATIENTS.UPDATE} hideChildren>
-                        <UserSwitchOutlined
-                            style={{
-                                fontSize: 20,
-                                color: "blue",
-                            }}
-                            type=""
-                            onClick={() => {
-                                setOpenModalCreate(true)
-                                setDataInit(entity);
-                            }}
-                        />
-                    </Access>
-
-
-                    <Access permission={ALL_PERMISSIONS.PATIENTS.DELETE} hideChildren>
+                    <Access permission={ALL_PERMISSIONS.MEDICINES.DELETE} hideChildren>
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa user"}
-                            description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            onConfirm={() => handleDeleteUser(entity.id)}
+                            title={"Xác nhận xóa thuốc"}
+                            description={"Bạn có chắc chắn muốn xóa thuốc này ?"}
+                            onConfirm={() => handleDeleteMedicine(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
@@ -209,22 +179,28 @@ const PatientTable = () => {
         };
 
         const clone = { ...params };
-        if (clone.fullName) q.filter = `${sfLike("fullName", clone.fullName)}`;
-        if (clone.identityCard) {
-            q.filter = clone.fullName
-                ? q.filter + " and " + `${sfLike("identityCard", clone.identityCard)}`
-                : `${sfLike("identityCard", clone.identityCard)}`;
+        if (clone.name) q.filter = `${sfLike("name", clone.name)}`;
+        if (clone.code) {
+            q.filter = clone.name
+                ? q.filter + " and " + `${sfLike("code", clone.code)}`
+                : `${sfLike("code", clone.code)}`;
         }
+        if (clone.supplier) {
+            q.filter = q.filter
+                ? q.filter + " and " + `${sfLike("supplier", clone.supplier)}`
+                : `${sfLike("supplier", clone.supplier)}`;
+        }
+
 
         if (!q.filter) delete q.filter;
         let temp = queryString.stringify(q);
 
         let sortBy = "";
-        if (sort && sort.fullName) {
-            sortBy = sort.fullName === "ascend" ? "sort=fullName,asc" : "sort=fullName,desc";
+        if (sort && sort.name) {
+            sortBy = sort.name === "ascend" ? "sort=name,asc" : "sort=name,desc";
         }
-        if (sort && sort.identityCard) {
-            sortBy = sort.identityCard === "ascend" ? "sort=identityCard,asc" : "sort=identityCard,desc";
+        if (sort && sort.code) {
+            sortBy = sort.code === "ascend" ? "sort=code,asc" : "sort=code,desc";
         }
         if (sort && sort.createdAt) {
             sortBy =
@@ -232,14 +208,7 @@ const PatientTable = () => {
                     ? "sort=createdAt,asc"
                     : "sort=createdAt,desc";
         }
-        if (sort && sort.updatedAt) {
-            sortBy =
-                sort.updatedAt === "ascend"
-                    ? "sort=updatedAt,asc"
-                    : "sort=updatedAt,desc";
-        }
 
-        //mặc định sort theo updated time
         if (Object.keys(sortBy).length === 0) {
             temp = `${temp}&sort=updatedAt,desc`;
         } else {
@@ -251,18 +220,18 @@ const PatientTable = () => {
 
     return (
         <div>
-            <Access permission={ALL_PERMISSIONS.PATIENTS.GET_PAGINATE}>
-                <DataTable<IPatient>
+            <Access permission={ALL_PERMISSIONS.MEDICINES.GET_PAGINATE}>
+                <DataTable<IMedicine>
                     actionRef={tableRef}
-                    headerTitle="Danh sách bệnh nhân"
+                    headerTitle="Danh mục thuốc"
                     rowKey="id"
                     loading={isFetching}
                     columns={columns}
-                    dataSource={users}
+                    dataSource={medicines}
                     request={async (params: any, sort: any, filter: any) => {
                         const query = buildQuery(params, sort, filter);
-                        const res = await dispatch(fetchPatient({ query })).unwrap();
-                        const page = res.data as IModelPaginate<IPatient> | undefined;
+                        const res = await dispatch(fetchMedicine({ query })).unwrap();
+                        const page = res.data as IModelPaginate<IMedicine> | undefined;
                         return {
                             data: page?.result ?? [],
                             total: page?.meta?.total ?? 0,
@@ -284,11 +253,11 @@ const PatientTable = () => {
                     rowSelection={false}
                     toolBarRender={(_action, _rows): any => {
                         return (
-                            <Access permission={ALL_PERMISSIONS.PATIENTS.CREATE} hideChildren>
+                            <Access permission={ALL_PERMISSIONS.MEDICINES.CREATE} hideChildren>
                                 <Button
                                     icon={<PlusOutlined />}
                                     type="primary"
-                                    onClick={() => setOpenModalCreate(true)}
+                                    onClick={() => setOpenModal(true)}
                                 >
                                     Thêm mới
                                 </Button>
@@ -297,24 +266,15 @@ const PatientTable = () => {
                     }}
                 />
             </Access>
-            <ManageMedical
+            <MedicineModal
                 openModal={openModal}
                 setOpenModal={setOpenModal}
-                setOpenModalCreate={setOpenModalCreate}
                 reloadTable={reloadTable}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
             />
-            <MPatientCreateAndUpdate
-                openModalCreate={openModalCreate}
-                setOpenModalCreate={setOpenModalCreate}
-                reloadTable={reloadTable}
-                dataInit={dataInit}
-                setDataInit={setDataInit}
-            />
-
         </div>
     );
 };
 
-export default PatientTable
+export default MedicineTable;

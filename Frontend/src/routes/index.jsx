@@ -15,6 +15,9 @@ import ProtectedRoute from "@/components/share/protected/RouteProtect";
 import PatientTable from "@/pages/admin/PatientTable";
 import AppointmentTable from "@/pages/admin/AppointmentTable";
 import MedicalRecordSummary from "@/pages/admin/MedicalRecordSummary";
+import PrescriptionTable from "@/pages/admin/PrescriptionTable";
+import MedicineTable from "@/pages/admin/MedicineTable";
+import PaymentTable from "@/pages/admin/PaymentTable";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +67,28 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <MedicalRecordSummary />
           </ProtectedRoute>
+
+      },
+      {
+        path: "table-prescriptions",
+        element:
+          <ProtectedRoute>
+            <PrescriptionTable />
+          </ProtectedRoute>
+
+      },
+      {
+        path: "table-medicines",
+        element:
+          <ProtectedRoute>
+            <MedicineTable />
+          </ProtectedRoute>
+
+      },
+      {
+        path: "table-fees",
+        element:
+          <PaymentTable />
 
       },
       {

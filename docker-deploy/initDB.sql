@@ -306,11 +306,11 @@ DROP TABLE IF EXISTS `medical_examinations`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `medical_examinations` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `patient_id` int NOT NULL,
+  `patient_id` bigint NOT NULL,
   `arrival_time` datetime(6) DEFAULT NULL,
   `reception_time` datetime(6) DEFAULT NULL,
   `referral_source` varchar(255) DEFAULT NULL,
-  `department_id` int DEFAULT NULL,
+  `department_id` bigint DEFAULT NULL,
   `symptoms` text,
   `reason` text,
   `days_of_symptoms` int DEFAULT NULL,
